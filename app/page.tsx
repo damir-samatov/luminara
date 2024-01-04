@@ -1,5 +1,7 @@
-const Home = () => {
-  return <h1 className="border-2 bg-red-500 p-1">Hello World!!!</h1>;
+import { DashboardLayout } from "@/components/DashboardLayout";
+
+const HomePage = () => {
+  return <DashboardLayout>HOME PAGE CONTENT</DashboardLayout>;
 };
 
-export default Home;
+export default HomePage;
