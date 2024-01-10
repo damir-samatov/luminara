@@ -1,5 +1,4 @@
-import { FC, ReactNode, Suspense } from "react";
-import { Counter } from "@/components/Counter";
+import { FC, ReactNode } from "react";
 
 type AuthLayoutProps = {
   children: ReactNode;
@@ -7,10 +6,8 @@ type AuthLayoutProps = {
 
 const AuthLayout: FC<AuthLayoutProps> = ({ children }) => {
   return (
-    <div>
-      <Counter />
-      <p>AUTH</p>
-      <Suspense fallback="Loading...">{children}</Suspense>
+    <div className="flex h-[100vh] w-[100vw] items-center justify-center">
+      {children}
     </div>
   );
 };
