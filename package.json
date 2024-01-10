@@ -8,7 +8,7 @@
     "start": "next start",
     "db:push": "prisma db push",
     "db:pull": "prisma db pull",
-    "db:studio": "prisma db studio",
+    "db:studio": "prisma studio",
     "lint": "next lint",
     "prepare": "husky install"
   },
@@ -19,7 +19,8 @@
     "@heroicons/react": "^2.1.1",
     "next": "14.0.4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "svix": "^1.15.0"
   },
   "devDependencies": {
     "@prisma/client": "^5.8.0",
