@@ -13,6 +13,23 @@ model User {
   username       String @unique
   imageUrl       String
 
+  subscribedTo Subscription[] @relation("SubscribedTo")
+  subscribedBy Subscription[] @relation("SubscribedBy")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Subscription {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String @db.ObjectId
+  subscriberId String @db.ObjectId
+
+  user       User @relation(name: "SubscribedTo", fields: [userId], references: [id], onDelete: Cascade)
+  subscriber User @relation(name: "SubscribedBy", fields: [subscriberId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, subscriberId])
 }
