@@ -6,9 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "db:push": "prisma db push",
-    "db:pull": "prisma db pull",
-    "db:studio": "prisma studio",
+    "db-push": "prisma db push",
+    "db-pull": "prisma db pull",
+    "db-studio": "prisma studio",
     "lint": "next lint",
     "prepare": "husky install"
   },
