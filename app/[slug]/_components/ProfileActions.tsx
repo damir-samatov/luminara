@@ -2,14 +2,21 @@
 import { FC, useState } from "react";
 import { onSubscribe, onUnsubscribe } from "@/actions/subscription.actions";
 import Link from "next/link";
+import { onBan, onUnban } from "@/actions/ban.actions";
 
 type ProfileProps = {
   isSubscribed: boolean;
+  isBanned: boolean;
   userId: string;
 };
 
-export const ProfileActions: FC<ProfileProps> = ({ isSubscribed, userId }) => {
+export const ProfileActions: FC<ProfileProps> = ({
+  isSubscribed,
+  isBanned,
+  userId,
+}) => {
   const [hasSubscribed, setHasSubscribed] = useState<boolean>(isSubscribed);
+  const [hasBanned, setHasBanned] = useState<boolean>(isBanned);
   const [error, setError] = useState<string | null>(null);
 
   const subscribe = async () => {
@@ -32,6 +39,26 @@ export const ProfileActions: FC<ProfileProps> = ({ isSubscribed, userId }) => {
     }
   };
 
+  const ban = async () => {
+    try {
+      const res = await onBan(userId);
+      if (res.success) return setHasBanned(true);
+      setError(res.message);
+    } catch {
+      setError("Something went wrong");
+    }
+  };
+
+  const unban = async () => {
+    try {
+      const res = await onUnban(userId);
+      if (res.success) return setHasBanned(false);
+      setError(res.message);
+    } catch {
+      setError("Something went wrong");
+    }
+  };
+
   return (
     <div>
       <div>
@@ -41,6 +68,11 @@ export const ProfileActions: FC<ProfileProps> = ({ isSubscribed, userId }) => {
         <button onClick={unsubscribe}>Unsubscribe</button>
       ) : (
         <button onClick={subscribe}>Subscribe</button>
+      )}
+      {hasBanned ? (
+        <button onClick={unban}>Unban</button>
+      ) : (
+        <button onClick={ban}>Ban</button>
       )}
       {error && <div className="text-red-400">{error}</div>}
     </div>

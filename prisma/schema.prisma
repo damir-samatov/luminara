@@ -18,6 +18,9 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  banned   Ban[] @relation("BannedBy")
+  bannedBy Ban[] @relation("Banned")
 }
 
 model Subscription {
@@ -29,7 +32,19 @@ model Subscription {
   subscriber User @relation(name: "SubscribedBy", fields: [subscriberId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
   @@unique([userId, subscriberId])
+}
+
+model Ban {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  userId   String @db.ObjectId
+  bannedId String @db.ObjectId
+
+  user       User @relation(name: "BannedBy", fields: [userId], references: [id], onDelete: Cascade)
+  bannedUser User @relation(name: "Banned", fields: [bannedId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, bannedId])
 }

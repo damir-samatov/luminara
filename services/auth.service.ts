@@ -1,23 +1,20 @@
 "use server";
 import { auth } from "@clerk/nextjs";
-import { db } from "@/lib/db";
+import { getUserByExternalUserId } from "@/services/user.service";
 
 export const getSelf = async () => {
-  const session = auth();
+  try {
+    const session = auth();
 
-  if (!session || !session.userId) {
-    throw new Error("Current user is not logged in");
+    if (!session || !session.userId) return null;
+
+    const user = await getUserByExternalUserId(session.userId);
+
+    if (!user) return null;
+
+    return user;
+  } catch (error) {
+    console.log(error);
+    return null;
   }
-
-  const user = await db.user.findUnique({
-    where: {
-      externalUserId: session.userId,
-    },
-  });
-
-  if (!user) {
-    throw new Error("User not found");
-  }
-
-  return user;
 };
