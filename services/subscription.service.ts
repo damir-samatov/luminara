@@ -1,18 +1,20 @@
 "use server";
 import { db } from "@/lib/db";
 
-export const getSubscription = async (userId: string, subscriberId: string) => {
-  return db.subscription.findFirst({
+export const getSubscription = async (subscriberId: string, userId: string) => {
+  return db.subscription.findUnique({
     where: {
-      userId,
-      subscriberId,
+      userId_subscriberId: {
+        userId,
+        subscriberId,
+      },
     },
   });
 };
 
 export const createSubscription = async (
-  userId: string,
-  subscriberId: string
+  subscriberId: string,
+  userId: string
 ) => {
   return db.subscription.create({
     data: {
@@ -23,13 +25,15 @@ export const createSubscription = async (
 };
 
 export const deleteSubscription = async (
-  userId: string,
-  subscriberId: string
+  subscriberId: string,
+  userId: string
 ) => {
-  return db.subscription.create({
-    data: {
-      userId,
-      subscriberId,
+  return db.subscription.delete({
+    where: {
+      userId_subscriberId: {
+        userId,
+        subscriberId,
+      },
     },
   });
 };

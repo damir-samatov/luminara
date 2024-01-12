@@ -3,7 +3,7 @@ import { getUserByUsername } from "@/services/user.service";
 import { notFound } from "next/navigation";
 import { getSubscription } from "@/services/subscription.service";
 import { getSelf } from "@/services/auth.service";
-import { Profile } from "@/app/[slug]/_components/Profile";
+import { ProfileActions } from "@/app/[slug]/_components/ProfileActions";
 
 type CreatorPageProps = {
   params: {
@@ -24,9 +24,15 @@ const ProfilePage: FC<CreatorPageProps> = async ({ params }) => {
     return notFound();
   }
 
-  const subscription = await getSubscription(user.id, self.id);
+  const subscription = await getSubscription(self.id, user.id);
 
-  return <Profile user={user} isSubscribed={!!subscription} />;
+  return (
+    <div>
+      <p>userId: {user.id}</p>
+      <p>username: {user.username}</p>
+      <ProfileActions isSubscribed={!!subscription} userId={user.id} />
+    </div>
+  );
 };
 
 export default ProfilePage;

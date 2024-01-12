@@ -13,8 +13,8 @@ model User {
   username       String @unique
   imageUrl       String
 
-  subscribedTo Subscription[] @relation("SubscribedTo")
-  subscribedBy Subscription[] @relation("SubscribedBy")
+  subscribedTo Subscription[] @relation("SubscribedBy")
+  subscribedBy Subscription[] @relation("SubscribedTo")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
