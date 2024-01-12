@@ -1,4 +1,4 @@
-import { validateClerkWebhook } from "@/lib/utils/clerk.utils";
+import { validateClerkWebhook } from "@/utils/clerk.utils";
 import { db } from "@/lib/db";
 
 export async function POST(req: Request) {

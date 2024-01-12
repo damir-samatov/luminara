@@ -1,5 +1,4 @@
 "use server";
-
 import { getSelf } from "@/services/auth.service";
 import {
   createSubscription,
