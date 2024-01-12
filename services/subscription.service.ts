@@ -42,3 +42,30 @@ export const deleteSubscription = async (
     },
   });
 };
+
+export const getSubscriptionsByUserId = async (userId: string) => {
+  try {
+    return await db.subscription.findMany({
+      take: 10,
+      where: {
+        subscriberId: userId,
+        user: {
+          banned: {
+            none: {
+              bannedUserId: userId,
+            },
+          },
+        },
+      },
+      include: {
+        user: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};

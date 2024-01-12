@@ -1,13 +1,13 @@
 "use server";
 import { db } from "@/lib/db";
 
-export const getBan = async (userId: string, bannedId: string) => {
+export const getBan = async (userId: string, bannedUserId: string) => {
   try {
     return await db.ban.findUnique({
       where: {
-        userId_bannedId: {
+        userId_bannedUserId: {
           userId,
-          bannedId,
+          bannedUserId,
         },
       },
     });
@@ -17,21 +17,21 @@ export const getBan = async (userId: string, bannedId: string) => {
   }
 };
 
-export const createBan = async (userId: string, bannedId: string) => {
+export const createBan = async (userId: string, bannedUserId: string) => {
   return db.ban.create({
     data: {
       userId,
-      bannedId,
+      bannedUserId,
     },
   });
 };
 
-export const deleteBan = async (userId: string, bannedId: string) => {
+export const deleteBan = async (userId: string, bannedUserId: string) => {
   return db.ban.delete({
     where: {
-      userId_bannedId: {
+      userId_bannedUserId: {
         userId,
-        bannedId,
+        bannedUserId,
       },
     },
   });

@@ -37,14 +37,14 @@ model Subscription {
 }
 
 model Ban {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  userId   String @db.ObjectId
-  bannedId String @db.ObjectId
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String @db.ObjectId
+  bannedUserId String @db.ObjectId
 
   user       User @relation(name: "BannedBy", fields: [userId], references: [id], onDelete: Cascade)
-  bannedUser User @relation(name: "Banned", fields: [bannedId], references: [id], onDelete: Cascade)
+  bannedUser User @relation(name: "Banned", fields: [bannedUserId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
-  @@unique([userId, bannedId])
+  @@unique([userId, bannedUserId])
 }
