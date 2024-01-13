@@ -13,6 +13,8 @@ model User {
   username       String @unique
   imageUrl       String
 
+  stream Stream?
+
   subscribedTo Subscription[] @relation("SubscribedBy")
   subscribedBy Subscription[] @relation("SubscribedTo")
 
@@ -47,4 +49,21 @@ model Ban {
   createdAt DateTime @default(now())
 
   @@unique([userId, bannedUserId])
+}
+
+model Stream {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  title    String
+  imageUrl String
+  userId   String @unique @db.ObjectId
+
+  isLive                  Boolean @default(false)
+  chatDelay               Int     @default(1)
+  isChatEnabled           Boolean @default(true)
+  isChatForSubscribedOnly Boolean @default(true)
+
+  user User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

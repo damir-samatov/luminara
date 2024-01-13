@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getSubscriptions } from "@/actions/subscription.actions";
 import { getRecommendations } from "@/actions/recommendation.actions";
 
-const HomePage = async () => {
+const IndexPage = async () => {
   const [subscriptions, recommendations] = await Promise.all([
     getSubscriptions(),
     getRecommendations(),
@@ -22,7 +22,7 @@ const HomePage = async () => {
       <p>Recommended for you:</p>
       {recommendations.map((recommendation) => (
         <p key={recommendation.id}>
-          <Link href={`/${recommendation.username}`}>
+          <Link href={`/users/${recommendation.username}`}>
             {recommendation.username}
           </Link>
         </p>
@@ -31,4 +31,4 @@ const HomePage = async () => {
   );
 };
 
-export default HomePage;
+export default IndexPage;

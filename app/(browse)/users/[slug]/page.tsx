@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { ProfileActions } from "@/app/[slug]/_components/ProfileActions";
+import { ProfileActions } from "./_components/ProfileActions";
 import { getProfileData } from "@/actions/profile.actions";
 import { notFound } from "next/navigation";
 

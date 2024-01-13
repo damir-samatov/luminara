@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
-import { Navigation } from "@/components/Navigation";
 import "@/public/global.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -13,7 +12,11 @@ export const metadata: Metadata = {
   description: "My App",
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+type BrowseLayoutProps = {
+  children: ReactNode;
+};
+
+const RootLayout: FC<BrowseLayoutProps> = ({ children }) => {
   return (
     <ClerkProvider
       appearance={{
@@ -29,10 +32,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       }}
     >
       <html lang="en">
-        <body className={inter.className}>
-          <Navigation>{children}</Navigation>
-        </body>
+        <body className={inter.className}>{children}</body>
       </html>
     </ClerkProvider>
   );
-}
+};
+
+export default RootLayout;

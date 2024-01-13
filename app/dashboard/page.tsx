@@ -4,8 +4,6 @@ import { redirectToSignIn } from "@clerk/nextjs";
 const DashboardPage = async () => {
   const data = await getDashboardData();
   if (!data.success) return redirectToSignIn();
-  console.log(data);
-
   return (
     <div>
       <h1>Dashboard</h1>
