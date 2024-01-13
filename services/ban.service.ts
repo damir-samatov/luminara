@@ -12,7 +12,7 @@ export const getBan = async (userId: string, bannedUserId: string) => {
       },
     });
   } catch (error) {
-    console.error(error);
+    console.error("getBan", error);
     return null;
   }
 };

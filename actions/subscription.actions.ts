@@ -48,7 +48,7 @@ export const onSubscribe = async (userId: string) => {
     revalidatePath("/", "page");
     return RESPONSES.SUBSCRIBE_SUCCESS;
   } catch (error) {
-    console.error(error);
+    console.error("onSubscribe", error);
     return RESPONSES.SUBSCRIBE_FAILED;
   }
 };
@@ -63,7 +63,7 @@ export const onUnsubscribe = async (userId: string) => {
     revalidatePath("/");
     return RESPONSES.UNSUBSCRIBE_SUCCESS;
   } catch (error) {
-    console.error(error);
+    console.error("onUnsubscribe", error);
     return RESPONSES.UNSUBSCRIBE_FAILED;
   }
 };

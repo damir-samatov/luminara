@@ -1,5 +1,9 @@
 import { validateClerkWebhook } from "@/utils/clerk.utils";
-import { db } from "@/lib/db";
+import {
+  createUser,
+  deleteUserByExternalUserId,
+  updateUser,
+} from "@/services/user.service";
 
 export async function POST(req: Request) {
   try {
@@ -10,14 +14,10 @@ export async function POST(req: Request) {
       webhookEvent.data.username &&
       webhookEvent.data.image_url
     ) {
-      const asd = await db.user.update({
-        where: {
-          externalUserId: webhookEvent.data.id,
-        },
-        data: {
-          username: webhookEvent.data.username,
-          imageUrl: webhookEvent.data.image_url,
-        },
+      await updateUser({
+        externalUserId: webhookEvent.data.id,
+        username: webhookEvent.data.username,
+        imageUrl: webhookEvent.data.image_url,
       });
     }
 
@@ -26,34 +26,27 @@ export async function POST(req: Request) {
       webhookEvent.data.username &&
       webhookEvent.data.image_url
     ) {
-      const asd = await db.user.create({
-        data: {
-          externalUserId: webhookEvent.data.id,
-          username: webhookEvent.data.username,
-          imageUrl: webhookEvent.data.image_url,
-        },
+      await createUser({
+        externalUserId: webhookEvent.data.id,
+        username: webhookEvent.data.username,
+        imageUrl: webhookEvent.data.image_url,
       });
     }
 
     if (webhookEvent.type === "user.deleted" && webhookEvent.data.id) {
-      const asd = await db.user.delete({
-        where: {
-          externalUserId: webhookEvent.data.id,
-        },
-      });
+      await deleteUserByExternalUserId(webhookEvent.data.id);
     }
 
-    console.dir(webhookEvent);
     return Response.json(
-      { msg: "Webhook Processed Successfully!" },
+      { message: "Webhook Processed Successfully!" },
       {
         status: 200,
       }
     );
   } catch (error) {
-    console.error(error);
+    console.error("clerkUserWebhook", error);
     return Response.json(
-      { msg: "Webhook Processed Successfully!", error },
+      { message: "Webhook Failed!", error },
       {
         status: 400,
       }

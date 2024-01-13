@@ -42,7 +42,7 @@ export const onBan = async (userId: string) => {
     await createBan(self.id, userId);
     return RESPONSES.BAN_SUCCESS;
   } catch (error) {
-    console.error(error);
+    console.error("onBan", error);
     return RESPONSES.BAN_FAILED;
   }
 };
@@ -56,7 +56,7 @@ export const onUnban = async (userId: string) => {
     await deleteBan(self.id, userId);
     return RESPONSES.UNBAN_SUCCESS;
   } catch (error) {
-    console.error(error);
+    console.error("onUnban", error);
     return RESPONSES.UNBAN_FAILED;
   }
 };

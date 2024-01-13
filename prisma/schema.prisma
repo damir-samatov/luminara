@@ -16,11 +16,11 @@ model User {
   subscribedTo Subscription[] @relation("SubscribedBy")
   subscribedBy Subscription[] @relation("SubscribedTo")
 
+  bannedUsers Ban[] @relation("BannedBy")
+  bannedBy    Ban[] @relation("Banned")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  banned   Ban[] @relation("BannedBy")
-  bannedBy Ban[] @relation("Banned")
 }
 
 model Subscription {

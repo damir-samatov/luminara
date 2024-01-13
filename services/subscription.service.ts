@@ -12,7 +12,7 @@ export const getSubscription = async (subscriberId: string, userId: string) => {
       },
     });
   } catch (error) {
-    console.error(error);
+    console.error("getSubscription", error);
     return null;
   }
 };
@@ -50,7 +50,7 @@ export const getSubscriptionsByUserId = async (userId: string) => {
       where: {
         subscriberId: userId,
         user: {
-          banned: {
+          bannedUsers: {
             none: {
               bannedUserId: userId,
             },
@@ -65,7 +65,7 @@ export const getSubscriptionsByUserId = async (userId: string) => {
       },
     });
   } catch (error) {
-    console.error(error);
+    console.error("getSubscriptionsByUserId", error);
     return [];
   }
 };

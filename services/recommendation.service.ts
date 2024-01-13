@@ -12,7 +12,7 @@ export const getRecommendationsByUserId = async (userId: string) => {
             subscriberId: userId,
           },
         },
-        banned: {
+        bannedUsers: {
           none: {
             bannedUserId: userId,
           },
@@ -26,7 +26,7 @@ export const getRecommendationsByUserId = async (userId: string) => {
       },
     });
   } catch (error) {
-    console.error(error);
+    console.error("getRecommendationsByUserId", error);
     return [];
   }
 };
