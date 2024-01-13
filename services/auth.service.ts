@@ -14,7 +14,7 @@ export const getSelf = async () => {
 
     return user;
   } catch (error) {
-    console.log(error);
+    console.error("getSelf", error);
     return null;
   }
 };

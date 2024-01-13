@@ -8,7 +8,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { UserButton } from "@clerk/nextjs";
 
-type DashboardProps = {
+type NavigationProps = {
   children?: ReactNode;
 };
 
@@ -28,7 +28,7 @@ const navigationListEl = (
   </nav>
 );
 
-export const DashboardLayout: FC<DashboardProps> = ({ children }) => {
+export const Navigation: FC<NavigationProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -124,7 +124,7 @@ export const DashboardLayout: FC<DashboardProps> = ({ children }) => {
         </div>
 
         <main className="py-10">
-          <div className="px-4 sm:px-6 lg:px-8">{children}</div>
+          <div className="overflow-x-clip px-4 sm:px-6 lg:px-8">{children}</div>
         </main>
       </div>
     </>

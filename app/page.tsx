@@ -1,4 +1,3 @@
-import { DashboardLayout } from "@/components/DashboardLayout";
 import Link from "next/link";
 import { getSubscriptions } from "@/actions/subscription.actions";
 import { getRecommendations } from "@/actions/recommendation.actions";
@@ -10,7 +9,7 @@ const HomePage = async () => {
   ]);
 
   return (
-    <DashboardLayout>
+    <div>
       <p>Subscribed to:</p>
       {subscriptions.map((subscription) => (
         <p key={subscription.id}>
@@ -28,7 +27,7 @@ const HomePage = async () => {
           </Link>
         </p>
       ))}
-    </DashboardLayout>
+    </div>
   );
 };
 
