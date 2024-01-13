@@ -9,7 +9,7 @@ import {
 import { UserButton } from "@clerk/nextjs";
 
 type NavigationProps = {
-  children?: ReactNode;
+  children: ReactNode;
 };
 
 const navigationListEl = (
@@ -39,18 +39,6 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
           className="relative z-50 lg:hidden"
           onClose={setSidebarOpen}
         >
-          <Transition.Child
-            as={Fragment}
-            enter="transition-opacity ease-linear duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="transition-opacity ease-linear duration-300"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0 bg-gray-900/80" />
-          </Transition.Child>
-
           <div className="fixed inset-0 flex">
             <Transition.Child
               as={Fragment}
@@ -85,7 +73,7 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
                     </button>
                   </div>
                 </Transition.Child>
-                <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4 ring-1 ring-white/10">
+                <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4 ring-1 ring-gray-800/10">
                   {navigationListEl}
                 </div>
               </Dialog.Panel>
@@ -101,25 +89,18 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
       </div>
 
       <div className="lg:pl-72">
-        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 bg-gray-800 px-4 sm:gap-x-6 sm:px-6 lg:px-8">
           <button
             type="button"
-            className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
+            className="-m-2.5 p-2.5 lg:hidden"
             onClick={() => setSidebarOpen(true)}
           >
             <span className="sr-only">Open sidebar</span>
-            <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+            <Bars3Icon className="h-6 w-6 text-white" aria-hidden="true" />
           </button>
 
-          <div
-            className="h-6 w-px bg-gray-900/10 lg:hidden"
-            aria-hidden="true"
-          />
-
-          <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-            <div className="flex items-center gap-x-4 lg:gap-x-6">
-              <UserButton afterSignOutUrl="/sign-in" />
-            </div>
+          <div className="ml-auto flex items-center gap-x-4 lg:gap-x-6">
+            <UserButton afterSignOutUrl="/sign-in" />
           </div>
         </div>
 
