@@ -17,6 +17,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <ClerkProvider
       appearance={{
         baseTheme: dark,
+        elements: {
+          formButtonPrimary: "text-white bg-gray-700 hover:bg-gray-600",
+        },
+        layout: {
+          socialButtonsVariant: "blockButton",
+          socialButtonsPlacement: "bottom",
+          shimmer: true,
+        },
       }}
     >
       <html lang="en">
