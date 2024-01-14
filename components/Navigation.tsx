@@ -1,35 +1,18 @@
 "use client";
 import { FC, Fragment, ReactNode, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import {
-  Bars3Icon,
-  Cog6ToothIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { UserButton } from "@clerk/nextjs";
-import Link from "next/link";
 
 type NavigationProps = {
   children: ReactNode;
+  sidebarContent: ReactNode;
 };
 
-const navigationListEl = (
-  <nav className="flex flex-1 flex-col">
-    <ul role="list" className="flex flex-1 flex-col gap-y-7">
-      <li className="mt-auto">
-        <Link
-          href="/dashboard"
-          className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
-        >
-          <Cog6ToothIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
-          Dashboard
-        </Link>
-      </li>
-    </ul>
-  </nav>
-);
-
-export const Navigation: FC<NavigationProps> = ({ children }) => {
+export const Navigation: FC<NavigationProps> = ({
+  children,
+  sidebarContent,
+}) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -74,8 +57,8 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
                     </button>
                   </div>
                 </Transition.Child>
-                <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4 ring-1 ring-gray-800/10">
-                  {navigationListEl}
+                <div className="grow overflow-y-auto bg-gray-900 p-4 ring-1 ring-gray-800/10">
+                  {sidebarContent}
                 </div>
               </Dialog.Panel>
             </Transition.Child>
@@ -83,9 +66,9 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
         </Dialog>
       </Transition.Root>
 
-      <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
-        <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4">
-          {navigationListEl}
+      <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-80 lg:flex-col">
+        <div className="grow overflow-y-auto bg-gray-900 p-4">
+          {sidebarContent}
         </div>
       </div>
 
