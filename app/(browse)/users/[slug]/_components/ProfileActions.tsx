@@ -2,6 +2,7 @@
 import { FC, useState } from "react";
 import { onSubscribe, onUnsubscribe } from "@/actions/subscription.actions";
 import { onBan, onUnban } from "@/actions/ban.actions";
+import { useServerAction } from "@/hooks/useServerAction";
 
 type ProfileProps = {
   isSubscribed: boolean;
@@ -18,58 +19,72 @@ export const ProfileActions: FC<ProfileProps> = ({
   const [hasBanned, setHasBanned] = useState<boolean>(isBanned);
   const [error, setError] = useState<string | null>(null);
 
-  const subscribe = async () => {
-    try {
-      const res = await onSubscribe(userId);
-      if (res.success) return setHasSubscribed(true);
-      setError(res.message);
-    } catch {
-      setError("Something went wrong");
-    }
-  };
+  const [subscribe, isSubscribePending] = useServerAction(
+    onSubscribe,
+    (res) => {
+      if (res.success) setHasSubscribed(true);
+      else setError(res.message);
+    },
+    () => setError("Failed to subscribe")
+  );
 
-  const unsubscribe = async () => {
-    try {
-      const res = await onUnsubscribe(userId);
-      if (res.success) return setHasSubscribed(false);
-      setError(res.message);
-    } catch {
-      setError("Something went wrong");
-    }
-  };
+  const [unsubscribe, isUnsubscribePending] = useServerAction(
+    onUnsubscribe,
+    (res) => {
+      if (res.success) setHasSubscribed(false);
+      else setError(res.message);
+    },
+    () => setError("Failed to unsubscribe")
+  );
 
-  const ban = async () => {
-    try {
-      const res = await onBan(userId);
-      if (res.success) return setHasBanned(true);
-      setError(res.message);
-    } catch {
-      setError("Something went wrong");
-    }
-  };
+  const [ban, isBanPending] = useServerAction(
+    onBan,
+    (res) => {
+      if (res.success) setHasBanned(true);
+      else setError(res.message);
+    },
+    () => setError("Failed to ban")
+  );
 
-  const unban = async () => {
-    try {
-      const res = await onUnban(userId);
-      if (res.success) return setHasBanned(false);
-      setError(res.message);
-    } catch {
-      setError("Something went wrong");
-    }
-  };
+  const [unban, isUnbanPending] = useServerAction(
+    onUnban,
+    (res) => {
+      if (res.success) setHasBanned(false);
+      else setError(res.message);
+    },
+    () => setError("Failed to unban")
+  );
 
   return (
     <div>
-      {hasSubscribed ? (
-        <button onClick={unsubscribe}>Unsubscribe</button>
-      ) : (
-        <button onClick={subscribe}>Subscribe</button>
-      )}
-      {hasBanned ? (
-        <button onClick={unban}>Unban</button>
-      ) : (
-        <button onClick={ban}>Ban</button>
-      )}
+      <div>
+        {!hasSubscribed ? (
+          <button
+            disabled={isSubscribePending}
+            onClick={() => subscribe(userId)}
+          >
+            Subscribe
+          </button>
+        ) : (
+          <button
+            disabled={isUnsubscribePending}
+            onClick={() => unsubscribe(userId)}
+          >
+            Unsubscribe
+          </button>
+        )}
+      </div>
+      <div>
+        {!hasBanned ? (
+          <button disabled={isBanPending} onClick={() => ban(userId)}>
+            Ban
+          </button>
+        ) : (
+          <button disabled={isUnbanPending} onClick={() => unban(userId)}>
+            Unban
+          </button>
+        )}
+      </div>
       {error && <div className="text-red-400">{error}</div>}
     </div>
   );
