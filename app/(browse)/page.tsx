@@ -12,20 +12,22 @@ const IndexPage = async () => {
     <div>
       <p>Subscribed to:</p>
       {subscriptions.map((subscription) => (
-        <p key={subscription.id}>
-          <Link href={`/${subscription.user.username}`}>
-            {subscription.user.username}
-          </Link>
-        </p>
+        <Link
+          key={subscription.id}
+          href={`/users/${subscription.user.username}`}
+        >
+          {subscription.user.username}
+        </Link>
       ))}
 
       <p>Recommended for you:</p>
       {recommendations.map((recommendation) => (
-        <p key={recommendation.id}>
-          <Link href={`/users/${recommendation.username}`}>
-            {recommendation.username}
-          </Link>
-        </p>
+        <Link
+          key={recommendation.id}
+          href={`/users/${recommendation.username}`}
+        >
+          {recommendation.username}
+        </Link>
       ))}
     </div>
   );
