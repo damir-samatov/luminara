@@ -43,7 +43,7 @@ export const getDashboardData = async (): Promise<GetDashboardDataResponse> => {
       },
     };
   } catch (error) {
-    console.log("getDashboardData", error);
+    console.error("getDashboardData", error);
     return { success: false, message: "Something went wrong" };
   }
 };
