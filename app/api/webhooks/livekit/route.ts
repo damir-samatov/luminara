@@ -1,5 +1,5 @@
 import { updateStreamByUserId } from "@/services/stream.service";
-import { validateIngressWebhook } from "@/utils/ingress.utils";
+import { validateIngressWebhook } from "@/helpers/ingress.helpers";
 
 export const POST = async (req: Request) => {
   try {

@@ -1,4 +1,4 @@
-import { validateClerkWebhook } from "@/utils/clerk.utils";
+import { validateClerkWebhook } from "@/helpers/clerk.helpers";
 import {
   createUser,
   deleteUserByExternalUserId,

@@ -1,16 +1,5 @@
 import { headers } from "next/headers";
-import { WebhookReceiver } from "livekit-server-sdk";
-
-if (!process.env.LIVEKIT_API_KEY || !process.env.LIVEKIT_API_SECRET) {
-  throw new Error(
-    "Please add LIVEKIT_API_URL and LIVEKIT_API_KEY from LiveKit Dashboard to .env"
-  );
-}
-
-const livekitWebhookReceiver = new WebhookReceiver(
-  process.env.LIVEKIT_API_KEY,
-  process.env.LIVEKIT_API_SECRET
-);
+import { livekitWebhookReceiver } from "@/lib/livekitWebhookReceiver";
 
 export const validateIngressWebhook = async (req: Request) => {
   const headerPayload = headers();

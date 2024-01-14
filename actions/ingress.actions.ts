@@ -12,6 +12,16 @@ import { TrackSource } from "livekit-server-sdk/dist/proto/livekit_models";
 import { updateStreamByUserId } from "@/services/stream.service";
 import { revalidatePath } from "next/cache";
 
+if (
+  !process.env.LIVEKIT_API_URL ||
+  !process.env.LIVEKIT_API_KEY ||
+  !process.env.LIVEKIT_API_SECRET
+) {
+  throw new Error(
+    "Please add LIVEKIT_API_URL, LIVEKIT_API_KEY and LIVEKIT_API_SECRET from LiveKit Dashboard to .env"
+  );
+}
+
 //TODO: Refactor the heck out of it
 
 const roomService = new RoomServiceClient(
