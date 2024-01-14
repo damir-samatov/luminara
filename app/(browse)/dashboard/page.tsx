@@ -2,16 +2,20 @@ import { getDashboardData } from "@/actions/dashboard.actions";
 import { redirectToSignIn } from "@clerk/nextjs";
 
 const DashboardPage = async () => {
-  const data = await getDashboardData();
-  if (!data.success) return redirectToSignIn();
+  const res = await getDashboardData();
+
+  if (!res.success) return redirectToSignIn();
+
   return (
-    <div>
-      <h1>Dashboard</h1>
-      <p>This is the dashboard page</p>
+    <>
+      <h1>
+        <span className="uppercase">{res.data.self.username}&apos;s</span>
+        <span> Dashboard</span>
+      </h1>
       <pre>
-        <code className="code">{JSON.stringify(data, null, 2)}</code>
+        <code className="code">{JSON.stringify(res.data, null, 4)}</code>
       </pre>
-    </div>
+    </>
   );
 };
 

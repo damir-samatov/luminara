@@ -116,7 +116,7 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
         <div className="grow overflow-y-auto bg-gray-900">{sidebar}</div>
       </div>
 
-      <div className="lg:pl-72">
+      <div className="lg:pl-80">
         <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 bg-gray-800 px-4 sm:gap-x-6 sm:px-6 lg:px-8">
           <button
             type="button"
@@ -132,9 +132,7 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
           </div>
         </div>
 
-        <main className="py-10">
-          <div className="overflow-x-clip px-4 sm:px-6 lg:px-8">{children}</div>
-        </main>
+        <div className="overflow-x-clip">{children}</div>
       </div>
     </>
   );

@@ -1,7 +1,6 @@
 "use client";
 import { FC, useState } from "react";
 import { onSubscribe, onUnsubscribe } from "@/actions/subscription.actions";
-import Link from "next/link";
 import { onBan, onUnban } from "@/actions/ban.actions";
 
 type ProfileProps = {
@@ -61,9 +60,6 @@ export const ProfileActions: FC<ProfileProps> = ({
 
   return (
     <div>
-      <div>
-        <Link href="/">Home</Link>
-      </div>
       {hasSubscribed ? (
         <button onClick={unsubscribe}>Unsubscribe</button>
       ) : (
