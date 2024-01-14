@@ -1,19 +1,65 @@
 "use client";
-import { FC, Fragment, ReactNode, useState } from "react";
+import { FC, Fragment, ReactNode, useEffect, useMemo, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { UserButton } from "@clerk/nextjs";
+import {
+  ArrowLeftStartOnRectangleIcon,
+  Bars3Icon,
+  Cog6ToothIcon,
+  HomeIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
+import { SignOutButton, UserButton } from "@clerk/nextjs";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 type NavigationProps = {
   children: ReactNode;
-  sidebarContent: ReactNode;
 };
 
-export const Navigation: FC<NavigationProps> = ({
-  children,
-  sidebarContent,
-}) => {
+export const Navigation: FC<NavigationProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [setSidebarOpen, pathname]);
+
+  const sidebar = useMemo(
+    () => (
+      <nav className="h-full px-4 py-8">
+        <ul role="list" className="flex h-full flex-1 flex-col gap-y-2">
+          <li>
+            <Link
+              href="/"
+              className="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
+            >
+              <HomeIcon className="h-6 w-6 shrink-0" />
+              Home
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/dashboard"
+              className="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
+            >
+              <Cog6ToothIcon className="h-6 w-6 shrink-0" />
+              Dashboard
+            </Link>
+          </li>
+          <li className="mt-auto">
+            <SignOutButton>
+              <button className="group flex w-full gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white">
+                <ArrowLeftStartOnRectangleIcon className="h-6 w-6 shrink-0" />
+                Sing Out
+              </button>
+            </SignOutButton>
+          </li>
+        </ul>
+      </nav>
+    ),
+    []
+  );
 
   return (
     <>
@@ -57,8 +103,8 @@ export const Navigation: FC<NavigationProps> = ({
                     </button>
                   </div>
                 </Transition.Child>
-                <div className="grow overflow-y-auto bg-gray-900 p-4 ring-1 ring-gray-800/10">
-                  {sidebarContent}
+                <div className="grow overflow-y-auto bg-gray-900 ring-1 ring-gray-800/10">
+                  {sidebar}
                 </div>
               </Dialog.Panel>
             </Transition.Child>
@@ -67,9 +113,7 @@ export const Navigation: FC<NavigationProps> = ({
       </Transition.Root>
 
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-80 lg:flex-col">
-        <div className="grow overflow-y-auto bg-gray-900 p-4">
-          {sidebarContent}
-        </div>
+        <div className="grow overflow-y-auto bg-gray-900">{sidebar}</div>
       </div>
 
       <div className="lg:pl-72">
