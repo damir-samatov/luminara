@@ -45,7 +45,7 @@ export const onSubscribe = async (userId: string) => {
 
   try {
     await createSubscription(self.id, userId);
-    revalidatePath("/", "page");
+    revalidatePath("/");
     return RESPONSES.SUBSCRIBE_SUCCESS;
   } catch (error) {
     console.error("onSubscribe", error);
