@@ -48,6 +48,11 @@ export const createUser = async (userCreateDto: UserCreateDto) => {
       externalUserId,
       username,
       imageUrl,
+      stream: {
+        create: {
+          title: `${username}'s stream`,
+        },
+      },
     },
   });
 };

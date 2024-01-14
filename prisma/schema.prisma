@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextIndex", "fullTextSearch"]
 }
 
 datasource db {
@@ -52,18 +53,24 @@ model Ban {
 }
 
 model Stream {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  title    String
-  imageUrl String
-  userId   String @unique @db.ObjectId
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @unique @db.ObjectId
+  title  String
 
-  isLive                  Boolean @default(false)
-  chatDelay               Int     @default(1)
-  isChatEnabled           Boolean @default(true)
-  isChatForSubscribedOnly Boolean @default(true)
+  imageUrl  String?
+  ingressId String?
+  serverUrl String?
+  streamKey String?
 
-  user User @relation(fields: [userId], references: [id])
+  isLive                   Boolean @default(false)
+  chatDelay                Int     @default(1)
+  isChatEnabled            Boolean @default(true)
+  isChatForSubscribersOnly Boolean @default(true)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@fulltext([title])
 }
