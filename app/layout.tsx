@@ -21,6 +21,9 @@ const RootLayout: FC<BrowseLayoutProps> = ({ children }) => {
     <ClerkProvider
       appearance={{
         baseTheme: dark,
+        variables: {
+          colorPrimary: "white",
+        },
         elements: {
           formButtonPrimary: "text-white bg-gray-700 hover:bg-gray-600",
         },
