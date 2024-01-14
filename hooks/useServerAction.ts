@@ -16,7 +16,7 @@ export const useServerAction = <
       const res = await serverAction(...args);
       onSuccess(res);
     } catch (error) {
-      console.error(error);
+      console.error("useServerAction", error);
       onError();
     } finally {
       setIsLoading(false);
