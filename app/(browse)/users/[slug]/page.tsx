@@ -2,6 +2,7 @@ import { FC } from "react";
 import { ProfileActions } from "./_components/ProfileActions";
 import { getProfileData } from "@/actions/profile.actions";
 import { notFound } from "next/navigation";
+import { StreamPlayer } from "@/app/(browse)/users/[slug]/_components/StreamPlayer";
 
 type CreatorPageProps = {
   params: {
@@ -14,17 +15,18 @@ const ProfilePage: FC<CreatorPageProps> = async ({ params }) => {
 
   if (!res.success) return notFound();
 
-  const { user, isBanned, isSubscribed } = res.data;
+  const { user, isBanned, isSubscribed, stream } = res.data;
 
   return (
     <div>
-      <p>userId: {user.id}</p>
-      <p>username: {user.username}</p>
+      <p>User Id: {user.id}</p>
+      <p>Username: {user.username}</p>
       <ProfileActions
         isSubscribed={isSubscribed}
         isBanned={isBanned}
         userId={user.id}
       />
+      <StreamPlayer user={user} stream={stream} />
     </div>
   );
 };

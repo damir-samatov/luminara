@@ -30,7 +30,7 @@ export const getUserByExternalUserId = async (externalUserId: string) => {
 
 export const getUserByUsername = async (username: string) => {
   try {
-    return await db.user.findFirst({
+    return await db.user.findUnique({
       where: {
         username,
       },

@@ -1,6 +1,7 @@
 import { getDashboardData } from "@/actions/dashboard.actions";
 import { redirectToSignIn } from "@clerk/nextjs";
 import StreamActions from "@/app/(browse)/dashboard/_components/StreamActions";
+import { StreamPlayer } from "@/app/(browse)/users/[slug]/_components/StreamPlayer";
 
 const DashboardPage = async () => {
   const res = await getDashboardData();
@@ -17,6 +18,7 @@ const DashboardPage = async () => {
       <pre>
         <code className="code">{JSON.stringify(res.data, null, 4)}</code>
       </pre>
+      <StreamPlayer user={res.data.self} stream={res.data.stream} />
     </>
   );
 };
