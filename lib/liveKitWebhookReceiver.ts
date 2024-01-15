@@ -6,7 +6,7 @@ if (!process.env.LIVEKIT_API_KEY || !process.env.LIVEKIT_API_SECRET) {
   );
 }
 
-export const livekitWebhookReceiver = new WebhookReceiver(
+export const liveKitWebhookReceiver = new WebhookReceiver(
   process.env.LIVEKIT_API_KEY,
   process.env.LIVEKIT_API_SECRET
 );

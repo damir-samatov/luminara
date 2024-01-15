@@ -1,5 +1,5 @@
 import { headers } from "next/headers";
-import { livekitWebhookReceiver } from "@/lib/livekitWebhookReceiver";
+import { liveKitWebhookReceiver } from "@/lib/liveKitWebhookReceiver";
 
 export const validateIngressWebhook = async (req: Request) => {
   const headerPayload = headers();
@@ -11,5 +11,5 @@ export const validateIngressWebhook = async (req: Request) => {
 
   const body = await req.text();
 
-  return livekitWebhookReceiver.receive(body, authHeader);
+  return liveKitWebhookReceiver.receive(body, authHeader);
 };

@@ -2,51 +2,33 @@
 import {
   CreateIngressOptions,
   IngressAudioEncodingPreset,
-  IngressClient,
   IngressInput,
   IngressVideoEncodingPreset,
-  RoomServiceClient,
 } from "livekit-server-sdk";
 import { getSelf } from "@/services/auth.service";
 import { TrackSource } from "livekit-server-sdk/dist/proto/livekit_models";
 import { updateStreamByUserId } from "@/services/stream.service";
 import { revalidatePath } from "next/cache";
-
-if (
-  !process.env.LIVEKIT_API_URL ||
-  !process.env.LIVEKIT_API_KEY ||
-  !process.env.LIVEKIT_API_SECRET
-) {
-  throw new Error(
-    "Please add LIVEKIT_API_URL, LIVEKIT_API_KEY and LIVEKIT_API_SECRET from LiveKit Dashboard to .env"
-  );
-}
+import { liveKitIngressClient } from "@/lib/liveKitIngressClient";
+import { liveKitRoomService } from "@/lib/liveKitRoomService";
 
 //TODO: Refactor the heck out of it
 
-const roomService = new RoomServiceClient(
-  process.env.LIVEKIT_API_URL!,
-  process.env.LIVEKIT_API_KEY!,
-  process.env.LIVEKIT_API_SECRET!
-);
-
-const ingressClient = new IngressClient(process.env.LIVEKIT_API_URL!);
-
 export const resetIngresses = async (userId: string) => {
   const [ingresses, rooms] = await Promise.all([
-    ingressClient.listIngress({
+    liveKitIngressClient.listIngress({
       roomName: userId,
     }),
-    roomService.listRooms([userId]),
+    liveKitRoomService.listRooms([userId]),
   ]);
 
   for (const room of rooms) {
-    await roomService.deleteRoom(room.name);
+    await liveKitRoomService.deleteRoom(room.name);
   }
 
   for (const ingress of ingresses) {
     if (!ingress.ingressId) continue;
-    await ingressClient.deleteIngress(ingress.ingressId);
+    await liveKitIngressClient.deleteIngress(ingress.ingressId);
   }
 };
 
@@ -77,7 +59,7 @@ export const createIngress = async (ingressType: IngressInput) => {
     };
   }
 
-  const ingress = await ingressClient.createIngress(
+  const ingress = await liveKitIngressClient.createIngress(
     ingressType,
     ingressOptions
   );
