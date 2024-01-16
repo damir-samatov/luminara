@@ -7,7 +7,7 @@ import {
   useTracks,
 } from "@livekit/components-react";
 import { VideoPlayer } from "@/components/VideoPlayer";
-import { VideoPlaceholder } from "@/components/VideoLoading";
+import { VideoPlaceholder } from "@/components/VideoPlaceholder";
 
 type LiveVideoProps = {
   hostUserId: string;
@@ -18,6 +18,11 @@ export const LiveVideo: FC<LiveVideoProps> = ({ hostUserId }) => {
   const participant = useRemoteParticipant(hostUserId);
   const connectionState = useConnectionState();
   const tracks = useTracks([Track.Source.Camera, Track.Source.Microphone]);
+
+  const isOffline =
+    !participant && connectionState === ConnectionState.Connected;
+
+  const isLoading = !participant || tracks.length < 1;
 
   useEffect(() => {
     if (!participant) return;
@@ -31,13 +36,11 @@ export const LiveVideo: FC<LiveVideoProps> = ({ hostUserId }) => {
     });
   }, [tracks, participant]);
 
-  if (!participant && connectionState === ConnectionState.Connected) {
-    return <VideoPlaceholder text="HOST USER IS OFFLINE" state="offline" />;
-  }
+  if (isOffline)
+    return <VideoPlaceholder text="User is offline" state="offline" />;
 
-  if (!participant || tracks.length < 1) {
-    return <VideoPlaceholder text="HOST USER IS LOADING..." state="loading" />;
-  }
+  if (isLoading)
+    return <VideoPlaceholder text="Connecting..." state="loading" />;
 
   return <VideoPlayer videoRef={videoRef} />;
 };

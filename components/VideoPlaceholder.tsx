@@ -3,14 +3,17 @@ import { FC } from "react";
 import { WifiIcon } from "@heroicons/react/24/outline";
 import { classNames } from "@/utils/tailwind.utils";
 
-type VideoLoadingProps = {
+type VideoPlaceholderProps = {
   state: "loading" | "offline";
   text: string;
 };
 
-export const VideoPlaceholder: FC<VideoLoadingProps> = ({ state, text }) => {
+export const VideoPlaceholder: FC<VideoPlaceholderProps> = ({
+  state,
+  text,
+}) => {
   return (
-    <div className="flex aspect-video flex-col items-center justify-center gap-4  bg-gray-950 text-gray-300">
+    <div className="flex aspect-video flex-col items-center justify-center gap-4 bg-gray-950 text-gray-300">
       <WifiIcon
         className={classNames(
           state === "loading" && "animate-pulse",

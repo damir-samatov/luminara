@@ -3,8 +3,7 @@ import { getUserByUsername } from "@/services/user.service";
 import { getSelf } from "@/services/auth.service";
 import { getSubscription } from "@/services/subscription.service";
 import { getBan } from "@/services/ban.service";
-import { Stream, User } from ".prisma/client";
-import { getStreamByUserId } from "@/services/stream.service";
+import { User } from ".prisma/client";
 
 const RESPONSES: {
   UNAUTHORIZED: {
@@ -30,7 +29,6 @@ type GetProfileDataResponse =
   | {
       success: true;
       data: {
-        stream: Stream;
         user: User;
         isSubscribed: boolean;
         isBanned: boolean;
@@ -50,10 +48,6 @@ export const getProfileData = async (
 
   if (!user) return RESPONSES.USER_NOT_FOUND;
 
-  const stream = await getStreamByUserId(user.id);
-
-  if (!stream) return RESPONSES.USER_NOT_FOUND;
-
   const [subscription, ban] = await Promise.all([
     getSubscription(self.id, user.id),
     getBan(self.id, user.id),
@@ -62,7 +56,6 @@ export const getProfileData = async (
   return {
     success: true,
     data: {
-      stream,
       user,
       isSubscribed: !!subscription,
       isBanned: !!ban,
