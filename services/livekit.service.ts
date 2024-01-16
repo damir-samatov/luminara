@@ -7,7 +7,7 @@ if (!process.env.LIVEKIT_API_KEY || !process.env.LIVEKIT_API_SECRET) {
   );
 }
 
-export const generateLiveKitAccessToken = (
+export const generateViewerToken = (
   userId: string,
   username: string,
   hostUserId: string,

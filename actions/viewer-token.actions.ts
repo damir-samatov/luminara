@@ -1,9 +1,9 @@
 "use server";
 import { getSelf } from "@/services/auth.service";
 import { getUserById } from "@/services/user.service";
-import { generateLiveKitAccessToken } from "@/services/livekit.service";
+import { generateViewerToken } from "@/services/livekit.service";
 
-export const createViewerToken = async (hostUserId: string) => {
+export const onGetViewerToken = async (hostUserId: string) => {
   const self = await getSelf();
 
   if (!self) throw new Error("Unauthorized");
@@ -12,7 +12,7 @@ export const createViewerToken = async (hostUserId: string) => {
 
   if (!hostUser) throw new Error("Host user not found");
 
-  const token = generateLiveKitAccessToken(self.id, self.username, hostUser.id);
+  const token = generateViewerToken(self.id, self.username, hostUser.id);
 
   if (!token) throw new Error("Failed to generate token");
 

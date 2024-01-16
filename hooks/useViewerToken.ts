@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createViewerToken } from "@/actions/token.actions";
+import { onGetViewerToken } from "@/actions/viewer-token.actions";
 // import { jwtDecode, JwtPayload } from "jwt-decode";
 
 // TODO REFACTOR this crap
@@ -13,7 +13,7 @@ export const useViewerToken = (hostUserId: string) => {
   useEffect(() => {
     (async () => {
       try {
-        const viewerJwt = await createViewerToken(hostUserId);
+        const viewerJwt = await onGetViewerToken(hostUserId);
         setToken(viewerJwt);
 
         // const decodedToken = jwtDecode(viewerJwt) as JwtPayload & {
