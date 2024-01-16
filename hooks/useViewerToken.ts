@@ -6,7 +6,6 @@ export const useViewerToken = (hostId: string) => {
   const [token, setToken] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [identity, setIdentity] = useState<string>("");
-
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

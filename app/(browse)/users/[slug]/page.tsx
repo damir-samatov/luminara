@@ -19,12 +19,12 @@ const ProfilePage: FC<CreatorPageProps> = async ({ params }) => {
 
   return (
     <div>
+      <StreamPlayer user={user} stream={stream} />
       <ProfileActions
         isSubscribed={isSubscribed}
         isBanned={isBanned}
         userId={user.id}
       />
-      <StreamPlayer user={user} stream={stream} />
     </div>
   );
 };

@@ -7,7 +7,7 @@ type VideoPlayerProps = {
 
 export const VideoPlayer: FC<VideoPlayerProps> = ({ videoRef }) => {
   return (
-    <div className="aspect-video w-full">
+    <div className="aspect-video w-full bg-gray-950">
       <video
         ref={videoRef}
         controls

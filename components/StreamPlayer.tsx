@@ -3,7 +3,8 @@ import { FC } from "react";
 import { Stream, User } from ".prisma/client";
 import { useViewerToken } from "@/hooks/useViewerToken";
 import { LiveKitRoom } from "@livekit/components-react";
-import Video from "@/components/Video";
+import { LiveVideo } from "@/components/LiveVideo";
+import { VideoPlaceholder } from "@/components/VideoLoading";
 
 type StreamPlayerProps = {
   user: User;
@@ -18,7 +19,11 @@ export const StreamPlayer: FC<StreamPlayerProps> = ({ user, stream }) => {
       serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_WEBSOCKET_URL!}
       token={token}
     >
-      <Video hostUserId={user.id} />
+      {isLoading ? (
+        <VideoPlaceholder text="HOST USER IS LOADING..." state="loading" />
+      ) : (
+        <LiveVideo hostUserId={user.id} />
+      )}
     </LiveKitRoom>
   );
 };
