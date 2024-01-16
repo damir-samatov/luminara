@@ -42,38 +42,53 @@ export const getUserByUsername = async (username: string) => {
 };
 
 export const createUser = async (userCreateDto: UserCreateDto) => {
-  const { externalUserId, username, imageUrl } = userCreateDto;
-  return db.user.create({
-    data: {
-      externalUserId,
-      username,
-      imageUrl,
-      stream: {
-        create: {
-          title: `${username}'s stream`,
+  try {
+    const { externalUserId, username, imageUrl } = userCreateDto;
+    return await db.user.create({
+      data: {
+        externalUserId,
+        username,
+        imageUrl,
+        stream: {
+          create: {
+            title: `${username}'s stream`,
+          },
         },
       },
-    },
-  });
+    });
+  } catch (error) {
+    console.error("createUser", error);
+    return null;
+  }
 };
 
 export const updateUser = (userUpdateDto: UserUpdateDto) => {
-  const { externalUserId, username, imageUrl } = userUpdateDto;
-  return db.user.update({
-    where: {
-      externalUserId,
-    },
-    data: {
-      username,
-      imageUrl,
-    },
-  });
+  try {
+    const { externalUserId, username, imageUrl } = userUpdateDto;
+    return db.user.update({
+      where: {
+        externalUserId,
+      },
+      data: {
+        username,
+        imageUrl,
+      },
+    });
+  } catch (error) {
+    console.error("updateUser", error);
+    return null;
+  }
 };
 
 export const deleteUserByExternalUserId = (externalUserId: string) => {
-  return db.user.delete({
-    where: {
-      externalUserId,
-    },
-  });
+  try {
+    return db.user.delete({
+      where: {
+        externalUserId,
+      },
+    });
+  } catch (error) {
+    console.error("deleteUserByExternalUserId", error);
+    return null;
+  }
 };

@@ -8,11 +8,10 @@ import { ConnectionState, Track } from "livekit-client";
 import { LiveVideo } from "@/components/LiveVideo";
 
 type VideoProps = {
-  hostUsername: string;
   hostUserId: string;
 };
 
-const Video: FC<VideoProps> = ({ hostUsername, hostUserId }) => {
+const Video: FC<VideoProps> = ({ hostUserId }) => {
   const connectionState = useConnectionState();
   const participant = useRemoteParticipant(hostUserId);
 
@@ -22,11 +21,11 @@ const Video: FC<VideoProps> = ({ hostUsername, hostUserId }) => {
   ]).filter((track) => track.participant.identity === hostUserId);
 
   if (!participant && connectionState === ConnectionState.Connected) {
-    return <div>{hostUsername} is offline</div>;
+    return <div>HOST IS OFFLINE</div>;
   }
 
   if (!participant || tracks.length === 0) {
-    return <div>{hostUsername} is loading...</div>;
+    return <div>HOST IS LOADING...</div>;
   }
 
   return (

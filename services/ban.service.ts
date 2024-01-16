@@ -18,21 +18,31 @@ export const getBan = async (userId: string, bannedUserId: string) => {
 };
 
 export const createBan = async (userId: string, bannedUserId: string) => {
-  return db.ban.create({
-    data: {
-      userId,
-      bannedUserId,
-    },
-  });
-};
-
-export const deleteBan = async (userId: string, bannedUserId: string) => {
-  return db.ban.delete({
-    where: {
-      userId_bannedUserId: {
+  try {
+    return await db.ban.create({
+      data: {
         userId,
         bannedUserId,
       },
-    },
-  });
+    });
+  } catch (error) {
+    console.error("createBan", error);
+    return null;
+  }
+};
+
+export const deleteBan = async (userId: string, bannedUserId: string) => {
+  try {
+    return await db.ban.delete({
+      where: {
+        userId_bannedUserId: {
+          userId,
+          bannedUserId,
+        },
+      },
+    });
+  } catch (error) {
+    console.error("deleteBan", error);
+    return null;
+  }
 };

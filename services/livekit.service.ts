@@ -15,21 +15,26 @@ export const generateLiveKitAccessToken = (
   canPublish: boolean = false,
   canPublishData: boolean = true
 ) => {
-  const token = new AccessToken(
-    process.env.LIVEKIT_API_KEY,
-    process.env.LIVEKIT_API_SECRET,
-    {
-      identity: userId === hostUserId ? "host_" + userId : userId,
-      name: username,
-    }
-  );
+  try {
+    const token = new AccessToken(
+      process.env.LIVEKIT_API_KEY,
+      process.env.LIVEKIT_API_SECRET,
+      {
+        identity: userId === hostUserId ? "host_" + userId : userId,
+        name: username,
+      }
+    );
 
-  token.addGrant({
-    room: hostUserId,
-    roomJoin,
-    canPublish,
-    canPublishData,
-  });
+    token.addGrant({
+      room: hostUserId,
+      roomJoin,
+      canPublish,
+      canPublishData,
+    });
 
-  return token.toJwt();
+    return token.toJwt();
+  } catch (error) {
+    console.error("generateLiveKitAccessToken", error);
+    return null;
+  }
 };

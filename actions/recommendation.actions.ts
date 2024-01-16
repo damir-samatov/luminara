@@ -5,7 +5,11 @@ import { getRecommendationsByUserId } from "@/services/recommendation.service";
 export const getRecommendations = async () => {
   const self = await getSelf();
 
-  if (!self) return [];
+  if (!self) throw new Error("Unauthorized");
 
-  return await getRecommendationsByUserId(self.id);
+  const recommendations = await getRecommendationsByUserId(self.id);
+
+  if (!recommendations) throw new Error("Failed to get recommendations");
+
+  return recommendations;
 };

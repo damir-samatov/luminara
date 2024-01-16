@@ -21,12 +21,17 @@ export const createSubscription = async (
   subscriberId: string,
   userId: string
 ) => {
-  return db.subscription.create({
-    data: {
-      userId,
-      subscriberId,
-    },
-  });
+  try {
+    return await db.subscription.create({
+      data: {
+        userId,
+        subscriberId,
+      },
+    });
+  } catch (error) {
+    console.error("createSubscription", error);
+    return null;
+  }
 };
 
 export const deleteSubscription = async (

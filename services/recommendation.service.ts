@@ -27,6 +27,6 @@ export const getRecommendationsByUserId = async (userId: string) => {
     });
   } catch (error) {
     console.error("getRecommendationsByUserId", error);
-    return [];
+    return null;
   }
 };

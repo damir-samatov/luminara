@@ -12,5 +12,9 @@ export const createViewerToken = async (hostId: string) => {
 
   if (!hostUser) throw new Error("Host user not found");
 
-  return generateLiveKitAccessToken(self.id, self.username, hostUser.id);
+  const token = generateLiveKitAccessToken(self.id, self.username, hostUser.id);
+
+  if (!token) throw new Error("Failed to generate token");
+
+  return token;
 };

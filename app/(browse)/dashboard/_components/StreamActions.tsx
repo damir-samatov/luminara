@@ -5,16 +5,9 @@ import { IngressInput } from "livekit-server-sdk";
 const StreamActions = () => {
   const generateKeys = async () => {
     const res = await createIngress(IngressInput.RTMP_INPUT);
-    console.log(res);
   };
 
-  return (
-    <div>
-      <button onClick={generateKeys} className="btn btn-primary">
-        Generate Keys
-      </button>
-    </div>
-  );
+  return <button onClick={generateKeys}>Generate Keys</button>;
 };
 
 export default StreamActions;

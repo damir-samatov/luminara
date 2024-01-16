@@ -18,10 +18,15 @@ export const updateStreamByUserId = (
   userId: string,
   streamUpdateDto: StreamUpdateDto
 ) => {
-  return db.stream.update({
-    where: {
-      userId,
-    },
-    data: { ...streamUpdateDto },
-  });
+  try {
+    return db.stream.update({
+      where: {
+        userId,
+      },
+      data: { ...streamUpdateDto },
+    });
+  } catch (error) {
+    console.error("updateStreamByUserId", error);
+    return null;
+  }
 };
