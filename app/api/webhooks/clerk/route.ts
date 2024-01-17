@@ -4,6 +4,7 @@ import {
   deleteUserByExternalUserId,
   updateUser,
 } from "@/services/user.service";
+import { resetIngressesByUserId } from "@/services/ingress.service";
 
 export async function POST(req: Request) {
   try {
@@ -34,7 +35,10 @@ export async function POST(req: Request) {
     }
 
     if (webhookEvent.type === "user.deleted" && webhookEvent.data.id) {
-      await deleteUserByExternalUserId(webhookEvent.data.id);
+      const deletedUser = await deleteUserByExternalUserId(
+        webhookEvent.data.id
+      );
+      if (deletedUser) await resetIngressesByUserId(deletedUser.id);
     }
 
     return Response.json(

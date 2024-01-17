@@ -2,7 +2,7 @@
 import { onGenerateStreamCredentials } from "@/actions/ingress.actions";
 import { IngressInput } from "livekit-server-sdk";
 
-const StreamActions = () => {
+export const StreamActions = () => {
   const generateKeys = async () => {
     await onGenerateStreamCredentials(IngressInput.RTMP_INPUT);
   };

@@ -2,7 +2,7 @@ import { FC } from "react";
 import { ProfileActions } from "./_components/ProfileActions";
 import { getProfileData } from "@/actions/profile.actions";
 import { notFound } from "next/navigation";
-import { StreamWrapper } from "@/components/StreamWrapper";
+// import { StreamWrapper } from "@/components/StreamWrapper";
 
 type CreatorPageProps = {
   params: {
@@ -19,7 +19,10 @@ const ProfilePage: FC<CreatorPageProps> = async ({ params }) => {
 
   return (
     <div>
-      <StreamWrapper hostUserId={user.id} />
+      <pre>
+        <code>{JSON.stringify(res.data, null, 4)}</code>
+      </pre>
+      {/*<StreamWrapper hostUserId={user.id} />*/}
       <ProfileActions
         isSubscribed={isSubscribed}
         isBanned={isBanned}

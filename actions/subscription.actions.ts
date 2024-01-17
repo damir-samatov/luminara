@@ -5,7 +5,7 @@ import {
   deleteSubscription,
   getSubscriptionsByUserId,
 } from "@/services/subscription.service";
-import { revalidatePath } from "next/cache";
+import { SubscriptionWithUser } from "@/types/subscription.types";
 
 const RESPONSES = {
   UNAUTHORIZED: {
@@ -45,7 +45,6 @@ export const onSubscribe = async (userId: string) => {
 
   try {
     await createSubscription(self.id, userId);
-    revalidatePath("/");
     return RESPONSES.SUBSCRIBE_SUCCESS;
   } catch (error) {
     console.error("onSubscribe", error);
@@ -60,7 +59,6 @@ export const onUnsubscribe = async (userId: string) => {
 
   try {
     await deleteSubscription(self.id, userId);
-    revalidatePath("/");
     return RESPONSES.UNSUBSCRIBE_SUCCESS;
   } catch (error) {
     console.error("onUnsubscribe", error);
@@ -68,7 +66,7 @@ export const onUnsubscribe = async (userId: string) => {
   }
 };
 
-export const getSubscriptions = async () => {
+export const getSubscriptions = async (): Promise<SubscriptionWithUser[]> => {
   const self = await getSelf();
 
   if (!self) return [];

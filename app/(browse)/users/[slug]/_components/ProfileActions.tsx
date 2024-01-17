@@ -3,6 +3,7 @@ import { FC, useState } from "react";
 import { onSubscribe, onUnsubscribe } from "@/actions/subscription.actions";
 import { onBan, onUnban } from "@/actions/ban.actions";
 import { useServerAction } from "@/hooks/useServerAction";
+import { useSubscriptionsStore } from "@/stores/subscriptions.store";
 
 type ProfileProps = {
   isSubscribed: boolean;
@@ -15,6 +16,7 @@ export const ProfileActions: FC<ProfileProps> = ({
   isBanned,
   userId,
 }) => {
+  const refresh = useSubscriptionsStore((store) => store.refresh);
   const [hasSubscribed, setHasSubscribed] = useState<boolean>(isSubscribed);
   const [hasBanned, setHasBanned] = useState<boolean>(isBanned);
   const [error, setError] = useState<string | null>(null);
@@ -22,8 +24,10 @@ export const ProfileActions: FC<ProfileProps> = ({
   const [subscribe, isSubscribePending] = useServerAction(
     onSubscribe,
     (res) => {
-      if (res.success) setHasSubscribed(true);
-      else setError(res.message);
+      if (res.success) {
+        setHasSubscribed(true);
+        refresh();
+      } else setError(res.message);
     },
     () => setError("Failed to subscribe")
   );
@@ -31,8 +35,10 @@ export const ProfileActions: FC<ProfileProps> = ({
   const [unsubscribe, isUnsubscribePending] = useServerAction(
     onUnsubscribe,
     (res) => {
-      if (res.success) setHasSubscribed(false);
-      else setError(res.message);
+      if (res.success) {
+        setHasSubscribed(false);
+        refresh();
+      } else setError(res.message);
     },
     () => setError("Failed to unsubscribe")
   );

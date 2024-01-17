@@ -1,5 +1,6 @@
 "use server";
 import { db } from "@/lib/db";
+import { SubscriptionWithUser } from "@/types/subscription.types";
 
 export const getSubscription = async (subscriberId: string, userId: string) => {
   try {
@@ -48,7 +49,9 @@ export const deleteSubscription = async (
   });
 };
 
-export const getSubscriptionsByUserId = async (userId: string) => {
+export const getSubscriptionsByUserId = async (
+  userId: string
+): Promise<SubscriptionWithUser[]> => {
   try {
     return await db.subscription.findMany({
       take: 10,

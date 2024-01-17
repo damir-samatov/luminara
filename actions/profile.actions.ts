@@ -4,6 +4,7 @@ import { getSelf } from "@/services/auth.service";
 import { getSubscription } from "@/services/subscription.service";
 import { getBan } from "@/services/ban.service";
 import { User } from ".prisma/client";
+import { notFound } from "next/navigation";
 
 const RESPONSES: {
   UNAUTHORIZED: {
@@ -47,6 +48,8 @@ export const getProfileData = async (
   if (!self) return RESPONSES.UNAUTHORIZED;
 
   if (!user) return RESPONSES.USER_NOT_FOUND;
+
+  if (self.id === user.id) notFound();
 
   const [subscription, ban] = await Promise.all([
     getSubscription(self.id, user.id),

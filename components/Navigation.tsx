@@ -11,54 +11,72 @@ import {
 import { SignOutButton, UserButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { UserProfileLink } from "@/components/UserProfileLink";
+import { SubscriptionWithUser } from "@/types/subscription.types";
+import { useSubscriptionsStore } from "@/stores/subscriptions.store";
 
 type NavigationProps = {
   children: ReactNode;
+  initialSubscriptions: SubscriptionWithUser[];
 };
 
-export const Navigation: FC<NavigationProps> = ({ children }) => {
+export const Navigation: FC<NavigationProps> = ({
+  children,
+  initialSubscriptions,
+}) => {
+  const { subscriptions, setSubscriptions } = useSubscriptionsStore();
+
+  useEffect(() => {
+    setSubscriptions(initialSubscriptions);
+  }, [setSubscriptions, initialSubscriptions]);
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const pathname = usePathname();
 
   useEffect(() => {
     setSidebarOpen(false);
-  }, [setSidebarOpen, pathname]);
+  }, [pathname]);
 
   const sidebar = useMemo(
     () => (
-      <nav className="h-full px-4 py-8">
-        <ul role="list" className="flex h-full flex-1 flex-col gap-y-2">
-          <li>
-            <Link
-              href="/"
-              className="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
-            >
-              <HomeIcon className="h-6 w-6 shrink-0" />
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/dashboard"
-              className="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
-            >
-              <Cog6ToothIcon className="h-6 w-6 shrink-0" />
-              Dashboard
-            </Link>
-          </li>
-          <li className="mt-auto">
-            <SignOutButton>
-              <button className="group flex w-full gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white">
-                <ArrowLeftStartOnRectangleIcon className="h-6 w-6 shrink-0" />
-                Sing Out
-              </button>
-            </SignOutButton>
-          </li>
-        </ul>
+      <nav className="flex h-full flex-1 flex-col gap-3 px-4 py-8">
+        <Link
+          href="/"
+          className="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
+        >
+          <HomeIcon className="h-6 w-6 shrink-0" />
+          Home
+        </Link>
+        <Link
+          href="/dashboard"
+          className="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
+        >
+          <Cog6ToothIcon className="h-6 w-6 shrink-0" />
+          Dashboard
+        </Link>
+        {subscriptions.length > 0 && (
+          <p className=" p-2 text-sm font-semibold leading-6 text-gray-400">
+            Subscriptions:
+          </p>
+        )}
+        {subscriptions.map((subscription) => (
+          <UserProfileLink
+            key={subscription.user.id}
+            user={subscription.user}
+          />
+        ))}
+        <div className="mt-auto">
+          <SignOutButton>
+            <button className="group flex w-full gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white">
+              <ArrowLeftStartOnRectangleIcon className="h-6 w-6 shrink-0" />
+              Sing Out
+            </button>
+          </SignOutButton>
+        </div>
       </nav>
     ),
-    []
+    [subscriptions]
   );
 
   return (
