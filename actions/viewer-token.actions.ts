@@ -2,19 +2,37 @@
 import { getSelf } from "@/services/auth.service";
 import { getUserById } from "@/services/user.service";
 import { generateViewerToken } from "@/services/livekit.service";
+import { ActionDataResponse } from "@/types/action.types";
+import { ERROR_RESPONSES } from "@/configs/responses.config";
 
-export const onGetViewerToken = async (hostUserId: string) => {
-  const self = await getSelf();
+type GetViewerTokenResponse = ActionDataResponse<{
+  token: string;
+}>;
 
-  if (!self) throw new Error("Unauthorized");
+export const onGetViewerToken = async (
+  hostUserId: string
+): Promise<GetViewerTokenResponse> => {
+  try {
+    const self = await getSelf();
 
-  const hostUser = await getUserById(hostUserId);
+    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
 
-  if (!hostUser) throw new Error("Host user not found");
+    const hostUser = await getUserById(hostUserId);
 
-  const token = generateViewerToken(self.id, self.username, hostUser.id);
+    if (!hostUser) return ERROR_RESPONSES.NOT_FOUND;
 
-  if (!token) throw new Error("Failed to generate token");
+    const token = generateViewerToken(self.id, self.username, hostUser.id);
 
-  return token;
+    if (!token) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    return {
+      success: true,
+      data: {
+        token,
+      },
+    };
+  } catch (error) {
+    console.error("onGetViewerToken", error);
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+  }
 };

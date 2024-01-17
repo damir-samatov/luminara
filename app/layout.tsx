@@ -3,8 +3,8 @@ import { Inter } from "next/font/google";
 import { FC, ReactNode } from "react";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
-import "@/public/global.css";
 import { classNames } from "@/utils/tailwind.utils";
+import "@/public/global.css";
 
 const inter = Inter({ subsets: ["latin"] });
 

@@ -1,17 +1,21 @@
 import Link from "next/link";
 import { getSubscriptions } from "@/actions/subscription.actions";
 import { getRecommendations } from "@/actions/recommendation.actions";
+import { notFound } from "next/navigation";
 
 const IndexPage = async () => {
-  const [subscriptions, recommendations] = await Promise.all([
+  const [subscriptionsRes, recommendationsRes] = await Promise.all([
     getSubscriptions(),
     getRecommendations(),
   ]);
 
+  if (!subscriptionsRes.success || !recommendationsRes.success)
+    return notFound();
+
   return (
     <div>
       <p>Subscribed to:</p>
-      {subscriptions.map((subscription) => (
+      {subscriptionsRes.data.subscriptions.map((subscription) => (
         <Link
           key={subscription.id}
           href={`/users/${subscription.user.username}`}
@@ -21,7 +25,7 @@ const IndexPage = async () => {
       ))}
 
       <p>Recommended for you:</p>
-      {recommendations.map((recommendation) => (
+      {recommendationsRes.data.recommendations.map((recommendation) => (
         <Link
           key={recommendation.id}
           href={`/users/${recommendation.username}`}

@@ -1,62 +1,35 @@
 "use server";
 import { getSelf } from "@/services/auth.service";
 import { createBan, deleteBan } from "@/services/ban.service";
+import { ERROR_RESPONSES, SUCCESS_RESPONSES } from "@/configs/responses.config";
+import { ActionCombinedResponse } from "@/types/action.types";
 
-const RESPONSES = {
-  UNAUTHORIZED: {
-    success: false,
-    message: "Unauthorized",
-  },
-  BAN_SELF: {
-    success: false,
-    message: "You can't ban yourself.",
-  },
-  BAN_SUCCESS: {
-    success: true,
-    message: "You banned this user.",
-  },
-  BAN_FAILED: {
-    success: false,
-    message: "Failed to ban. Please try again later.",
-  },
-  UNBAN_SELF: {
-    success: false,
-    message: "You can't unban yourself.",
-  },
-  UNBAN_SUCCESS: {
-    success: true,
-    message: "You unbanned this user.",
-  },
-  UNBAN_FAILED: {
-    success: false,
-    message: "Failed to unban. Please try again later.",
-  },
-};
-
-export const onBan = async (userId: string) => {
-  const self = await getSelf();
-  if (!self) return RESPONSES.UNAUTHORIZED;
-  if (self.id === userId) return RESPONSES.BAN_SELF;
-
+export const onBan = async (
+  userId: string
+): Promise<ActionCombinedResponse> => {
   try {
+    const self = await getSelf();
+    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+    if (self.id === userId) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
     await createBan(self.id, userId);
-    return RESPONSES.BAN_SUCCESS;
+    return SUCCESS_RESPONSES.SUCCESS;
   } catch (error) {
     console.error("onBan", error);
-    return RESPONSES.BAN_FAILED;
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };
 
-export const onUnban = async (userId: string) => {
-  const self = await getSelf();
-  if (!self) return RESPONSES.UNAUTHORIZED;
-  if (self.id === userId) return RESPONSES.UNBAN_SELF;
-
+export const onUnban = async (
+  userId: string
+): Promise<ActionCombinedResponse> => {
   try {
+    const self = await getSelf();
+    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+    if (self.id === userId) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
     await deleteBan(self.id, userId);
-    return RESPONSES.UNBAN_SUCCESS;
+    return SUCCESS_RESPONSES.SUCCESS;
   } catch (error) {
     console.error("onUnban", error);
-    return RESPONSES.UNBAN_FAILED;
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };

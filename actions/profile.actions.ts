@@ -4,68 +4,42 @@ import { getSelf } from "@/services/auth.service";
 import { getSubscription } from "@/services/subscription.service";
 import { getBan } from "@/services/ban.service";
 import { User } from ".prisma/client";
-import { notFound } from "next/navigation";
+import { ActionDataResponse } from "@/types/action.types";
+import { ERROR_RESPONSES } from "@/configs/responses.config";
 
-const RESPONSES: {
-  UNAUTHORIZED: {
-    success: false;
-    message: string;
-  };
-  USER_NOT_FOUND: {
-    success: false;
-    message: string;
-  };
-} = {
-  UNAUTHORIZED: {
-    success: false,
-    message: "Unauthorized",
-  },
-  USER_NOT_FOUND: {
-    success: false,
-    message: "User not found.",
-  },
-};
-
-type GetProfileDataResponse =
-  | {
-      success: true;
-      data: {
-        user: User;
-        isSubscribed: boolean;
-        isBanned: boolean;
-      };
-    }
-  | (typeof RESPONSES)[keyof typeof RESPONSES];
+type GetProfileDataResponse = ActionDataResponse<{
+  user: User;
+  isSubscribed: boolean;
+  isBanned: boolean;
+}>;
 
 export const getProfileData = async (
   username: string
 ): Promise<GetProfileDataResponse> => {
-  const [self, user] = await Promise.all([
-    getSelf(),
-    getUserByUsername(username),
-  ]);
-
-  if (!self) return notFound();
-
-  if (!user) return notFound();
-
-  if (self.id === user.id) notFound();
-
-  const selfBan = await getBan(user.id, self.id);
-
-  if (selfBan) return notFound();
-
-  const [subscription, ban] = await Promise.all([
-    getSubscription(self.id, user.id),
-    getBan(self.id, user.id),
-  ]);
-
-  return {
-    success: true,
-    data: {
-      user,
-      isSubscribed: !!subscription,
-      isBanned: !!ban,
-    },
-  };
+  try {
+    const [self, user] = await Promise.all([
+      getSelf(),
+      getUserByUsername(username),
+    ]);
+    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+    if (!user) return ERROR_RESPONSES.NOT_FOUND;
+    if (self.id === user.id) return ERROR_RESPONSES.NOT_FOUND;
+    const selfBan = await getBan(user.id, self.id);
+    if (selfBan) return ERROR_RESPONSES.NOT_FOUND;
+    const [subscription, ban] = await Promise.all([
+      getSubscription(self.id, user.id),
+      getBan(self.id, user.id),
+    ]);
+    return {
+      success: true,
+      data: {
+        user,
+        isSubscribed: !!subscription,
+        isBanned: !!ban,
+      },
+    };
+  } catch (error) {
+    console.log("getProfileData", error);
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+  }
 };

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { onGetViewerToken } from "@/actions/viewer-token.actions";
+import { redirect } from "next/navigation";
 // import { jwtDecode, JwtPayload } from "jwt-decode";
 
 // TODO REFACTOR this crap
@@ -13,8 +14,11 @@ export const useViewerToken = (hostUserId: string) => {
   useEffect(() => {
     (async () => {
       try {
-        const viewerJwt = await onGetViewerToken(hostUserId);
-        setToken(viewerJwt);
+        const res = await onGetViewerToken(hostUserId);
+
+        if (!res.success) return redirect("/");
+
+        setToken(res.data.token);
 
         // const decodedToken = jwtDecode(viewerJwt) as JwtPayload & {
         //   name?: string;
