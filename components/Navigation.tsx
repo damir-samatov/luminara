@@ -40,7 +40,7 @@ export const Navigation: FC<NavigationProps> = ({
 
   const sidebar = useMemo(
     () => (
-      <nav className="flex h-full flex-1 flex-col gap-3 px-4 py-8">
+      <nav className="flex h-full flex-1 flex-col gap-3 overflow-y-auto px-4 py-8">
         <Link
           href="/"
           className="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
@@ -121,7 +121,7 @@ export const Navigation: FC<NavigationProps> = ({
                     </button>
                   </div>
                 </Transition.Child>
-                <div className="grow overflow-y-auto bg-gray-900 ring-1 ring-gray-800/10">
+                <div className="h-screen grow bg-gray-900 ring-1 ring-gray-800/10">
                   {sidebar}
                 </div>
               </Dialog.Panel>
@@ -131,7 +131,7 @@ export const Navigation: FC<NavigationProps> = ({
       </Transition.Root>
 
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-80 lg:flex-col">
-        <div className="grow overflow-y-auto bg-gray-900">{sidebar}</div>
+        <div className="h-screen grow bg-gray-900">{sidebar}</div>
       </div>
 
       <div className="lg:pl-80">

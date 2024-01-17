@@ -1,7 +1,6 @@
 "use server";
 import { getSelf } from "@/services/auth.service";
 import { createBan, deleteBan } from "@/services/ban.service";
-import { revalidatePath } from "next/cache";
 
 const RESPONSES = {
   UNAUTHORIZED: {
@@ -41,7 +40,6 @@ export const onBan = async (userId: string) => {
 
   try {
     await createBan(self.id, userId);
-    revalidatePath("/");
     return RESPONSES.BAN_SUCCESS;
   } catch (error) {
     console.error("onBan", error);
@@ -56,7 +54,6 @@ export const onUnban = async (userId: string) => {
 
   try {
     await deleteBan(self.id, userId);
-    revalidatePath("/");
     return RESPONSES.UNBAN_SUCCESS;
   } catch (error) {
     console.error("onUnban", error);

@@ -2,7 +2,6 @@
 import { IngressInput } from "livekit-server-sdk";
 import { getSelf } from "@/services/auth.service";
 import { updateStreamByUserId } from "@/services/stream.service";
-import { revalidatePath } from "next/cache";
 import {
   createIngress,
   resetIngressesByUserId,
@@ -27,6 +26,4 @@ export const onGenerateStreamCredentials = async (
     serverUrl,
     streamKey,
   });
-
-  revalidatePath(`/`);
 };
