@@ -1,4 +1,6 @@
-const Loading = () => {
-  return <div>LOADING</div>;
+import { Loader } from "@/components/Loader";
+
+const LoaderPage = () => {
+  return <Loader />;
 };
-export default Loading;
+export default LoaderPage;

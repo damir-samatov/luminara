@@ -4,6 +4,7 @@ import { FC, ReactNode } from "react";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import "@/public/global.css";
+import { classNames } from "@/utils/tailwind.utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -36,7 +37,16 @@ const RootLayout: FC<BrowseLayoutProps> = ({ children }) => {
       }}
     >
       <html lang="en">
-        <body className={inter.className}>{children}</body>
+        <body
+          className={classNames(
+            inter.className,
+            "min-h-screen",
+            "flex",
+            "flex-col"
+          )}
+        >
+          {children}
+        </body>
       </html>
     </ClerkProvider>
   );

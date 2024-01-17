@@ -159,7 +159,7 @@ export const Navigation: FC<NavigationProps> = ({
           </div>
         </div>
 
-        <div className="overflow-x-clip">{children}</div>
+        <div className="flex grow flex-col overflow-x-clip">{children}</div>
       </div>
     </>
   );
