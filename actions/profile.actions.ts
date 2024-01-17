@@ -45,11 +45,15 @@ export const getProfileData = async (
     getUserByUsername(username),
   ]);
 
-  if (!self) return RESPONSES.UNAUTHORIZED;
+  if (!self) return notFound();
 
-  if (!user) return RESPONSES.USER_NOT_FOUND;
+  if (!user) return notFound();
 
   if (self.id === user.id) notFound();
+
+  const selfBan = await getBan(user.id, self.id);
+
+  if (selfBan) return notFound();
 
   const [subscription, ban] = await Promise.all([
     getSubscription(self.id, user.id),
