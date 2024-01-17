@@ -10,7 +10,6 @@ import {
 } from "@heroicons/react/24/outline";
 import { SignOutButton, UserButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
-import Link from "next/link";
 import { UserProfileLink } from "@/components/UserProfileLink";
 import { SubscriptionWithUser } from "@/types/subscription.types";
 import { useSubscriptionsStore } from "@/stores/subscriptions.store";
@@ -140,12 +139,12 @@ export const Navigation: FC<NavigationProps> = ({
         </Dialog>
       </Transition.Root>
 
-      <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-80 lg:flex-col">
-        <div className="h-screen grow bg-gray-900">{sidebar}</div>
+      <div className="fixed inset-y-0 z-50 hidden w-80 lg:block">
+        <div className="h-screen bg-gray-900">{sidebar}</div>
       </div>
 
-      <div className="lg:pl-80">
-        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 bg-gray-800 px-4 sm:gap-x-6 sm:px-6 lg:px-8">
+      <div className="flex min-h-screen flex-col lg:pl-80">
+        <div className="sticky top-0 z-40 flex h-16 items-center gap-x-4 bg-gray-800 px-8">
           <button
             type="button"
             className="-m-2.5 p-2.5 lg:hidden"

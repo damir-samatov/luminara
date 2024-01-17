@@ -1,7 +1,6 @@
 import { User } from ".prisma/client";
 import { FC } from "react";
 import Image from "next/image";
-import Link from "next/link";
 
 type UserProfileLogoProps = {
   user: User;
@@ -9,7 +8,7 @@ type UserProfileLogoProps = {
 
 export const UserProfileLogo: FC<UserProfileLogoProps> = ({ user }) => {
   return (
-    <div className="h-8 w-8 overflow-hidden rounded-[100%]">
+    <div className="h-8 w-8 overflow-hidden rounded-full">
       <Image
         src={user.imageUrl}
         alt={user.username}

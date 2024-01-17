@@ -26,6 +26,7 @@ const RootLayout: FC<BrowseLayoutProps> = ({ children }) => {
         },
         elements: {
           formButtonPrimary: "text-white bg-gray-700 hover:bg-gray-600",
+          card: "bg-gray-900 rounded-md",
         },
         layout: {
           socialButtonsVariant: "blockButton",
