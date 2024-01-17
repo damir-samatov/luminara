@@ -39,7 +39,7 @@ export const getProfileData = async (
       },
     };
   } catch (error) {
-    console.log("getProfileData", error);
+    console.error("getProfileData", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };
