@@ -1,21 +1,23 @@
-import { User } from ".prisma/client";
-import { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import Link from "next/link";
-import { UserProfileLogo } from "@/components/UserProfileLogo";
 import { classNames } from "@/utils/tailwind.utils";
 
-type UserProfileLinkProps = {
-  user: User;
+type SidebarLinkProps = {
+  href: string;
+  label: string;
+  icon: ReactNode;
   isActive?: boolean;
 };
 
-export const UserProfileLink: FC<UserProfileLinkProps> = ({
-  user,
-  isActive,
+export const SidebarLink: FC<SidebarLinkProps> = ({
+  href,
+  icon,
+  label,
+  isActive = false,
 }) => {
   return (
     <Link
-      href={`/users/${user.username}`}
+      href={href}
       className={classNames(
         "flex",
         "items-center",
@@ -31,8 +33,8 @@ export const UserProfileLink: FC<UserProfileLinkProps> = ({
         isActive && "bg-gray-800 text-white"
       )}
     >
-      <UserProfileLogo user={user} />
-      {user.username}
+      {icon}
+      <span>{label}</span>
     </Link>
   );
 };

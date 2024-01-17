@@ -14,11 +14,25 @@ import Link from "next/link";
 import { UserProfileLink } from "@/components/UserProfileLink";
 import { SubscriptionWithUser } from "@/types/subscription.types";
 import { useSubscriptionsStore } from "@/stores/subscriptions.store";
+import { SidebarLink } from "@/components/SidebarLink";
 
 type NavigationProps = {
   children: ReactNode;
   initialSubscriptions: SubscriptionWithUser[];
 };
+
+const SIDEBAR_LINKS = [
+  {
+    href: "/",
+    label: "Home",
+    icon: <HomeIcon className="h-6 w-6 shrink-0" />,
+  },
+  {
+    href: "/dashboard",
+    label: "Dashboard",
+    icon: <Cog6ToothIcon className="h-6 w-6 shrink-0" />,
+  },
+];
 
 export const Navigation: FC<NavigationProps> = ({
   children,
@@ -41,20 +55,15 @@ export const Navigation: FC<NavigationProps> = ({
   const sidebar = useMemo(
     () => (
       <nav className="flex h-full flex-1 flex-col gap-3 overflow-y-auto px-4 py-8">
-        <Link
-          href="/"
-          className="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
-        >
-          <HomeIcon className="h-6 w-6 shrink-0" />
-          Home
-        </Link>
-        <Link
-          href="/dashboard"
-          className="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
-        >
-          <Cog6ToothIcon className="h-6 w-6 shrink-0" />
-          Dashboard
-        </Link>
+        {SIDEBAR_LINKS.map(({ href, label, icon }) => (
+          <SidebarLink
+            key={href}
+            href={href}
+            label={label}
+            icon={icon}
+            isActive={href === pathname}
+          />
+        ))}
         {subscriptions.length > 0 && (
           <p className=" p-2 text-sm font-semibold leading-6 text-gray-400">
             Subscriptions:
@@ -62,6 +71,7 @@ export const Navigation: FC<NavigationProps> = ({
         )}
         {subscriptions.map((subscription) => (
           <UserProfileLink
+            isActive={pathname === `/users/${subscription.user.username}`}
             key={subscription.user.id}
             user={subscription.user}
           />
@@ -76,7 +86,7 @@ export const Navigation: FC<NavigationProps> = ({
         </div>
       </nav>
     ),
-    [subscriptions]
+    [subscriptions, pathname]
   );
 
   return (
