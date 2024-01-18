@@ -1,48 +1,19 @@
 "use client";
-import { FC, Fragment, ReactNode, useEffect, useMemo, useState } from "react";
+import { FC, Fragment, ReactNode, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import {
-  ArrowLeftStartOnRectangleIcon,
-  Bars3Icon,
-  Cog6ToothIcon,
-  HomeIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
-import { SignOutButton, UserButton } from "@clerk/nextjs";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { UserButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
-import { UserProfileLink } from "@/components/UserProfileLink";
-import { SubscriptionWithUser } from "@/types/subscription.types";
-import { useSubscriptionsStore } from "@/stores/subscriptions.store";
-import { SidebarLink } from "@/components/SidebarLink";
 
 type NavigationProps = {
   children: ReactNode;
-  initialSubscriptions: SubscriptionWithUser[];
+  sidebarChildren: ReactNode;
 };
-
-const SIDEBAR_LINKS = [
-  {
-    href: "/",
-    label: "Home",
-    icon: <HomeIcon className="h-6 w-6 shrink-0" />,
-  },
-  {
-    href: "/dashboard",
-    label: "Dashboard",
-    icon: <Cog6ToothIcon className="h-6 w-6 shrink-0" />,
-  },
-];
 
 export const Navigation: FC<NavigationProps> = ({
   children,
-  initialSubscriptions,
+  sidebarChildren,
 }) => {
-  const { subscriptions, setSubscriptions } = useSubscriptionsStore();
-
-  useEffect(() => {
-    setSubscriptions(initialSubscriptions);
-  }, [setSubscriptions, initialSubscriptions]);
-
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const pathname = usePathname();
@@ -50,43 +21,6 @@ export const Navigation: FC<NavigationProps> = ({
   useEffect(() => {
     setSidebarOpen(false);
   }, [pathname]);
-
-  const sidebar = useMemo(
-    () => (
-      <nav className="flex h-full flex-1 flex-col gap-3 overflow-y-auto px-4 py-8">
-        {SIDEBAR_LINKS.map(({ href, label, icon }) => (
-          <SidebarLink
-            key={href}
-            href={href}
-            label={label}
-            icon={icon}
-            isActive={href === pathname}
-          />
-        ))}
-        {subscriptions.length > 0 && (
-          <p className=" p-2 text-sm font-semibold leading-6 text-gray-400">
-            Subscriptions:
-          </p>
-        )}
-        {subscriptions.map((subscription) => (
-          <UserProfileLink
-            isActive={pathname === `/users/${subscription.user.username}`}
-            key={subscription.user.id}
-            user={subscription.user}
-          />
-        ))}
-        <div className="mt-auto">
-          <SignOutButton>
-            <button className="group flex w-full gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white">
-              <ArrowLeftStartOnRectangleIcon className="h-6 w-6 shrink-0" />
-              Sing Out
-            </button>
-          </SignOutButton>
-        </div>
-      </nav>
-    ),
-    [subscriptions, pathname]
-  );
 
   return (
     <>
@@ -131,7 +65,7 @@ export const Navigation: FC<NavigationProps> = ({
                   </div>
                 </Transition.Child>
                 <div className="h-screen grow bg-gray-900 ring-1 ring-gray-800/10">
-                  {sidebar}
+                  {sidebarChildren}
                 </div>
               </Dialog.Panel>
             </Transition.Child>
@@ -140,7 +74,7 @@ export const Navigation: FC<NavigationProps> = ({
       </Transition.Root>
 
       <div className="fixed inset-y-0 z-50 hidden w-80 lg:block">
-        <div className="h-screen bg-gray-900">{sidebar}</div>
+        <div className="h-screen bg-gray-900">{sidebarChildren}</div>
       </div>
 
       <div className="flex min-h-screen flex-col lg:pl-80">

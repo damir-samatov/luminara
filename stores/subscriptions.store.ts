@@ -12,9 +12,9 @@ type SubscriptionsStore = {
 export const useSubscriptionsStore = create<SubscriptionsStore>((set) => ({
   subscriptions: [],
   setSubscriptions: (subscriptions) => set({ subscriptions }),
-  refresh: () => {
-    getSubscriptions().then((subscriptions) => {
-      set({ subscriptions });
-    });
+  refresh: async () => {
+    const res = await getSubscriptions();
+    if (!res.success) return;
+    set({ subscriptions: res.data.subscriptions });
   },
 }));

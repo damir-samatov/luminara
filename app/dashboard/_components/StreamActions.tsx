@@ -1,5 +1,5 @@
 "use client";
-import { onGenerateStreamCredentials } from "@/actions/ingress.actions";
+import { onGenerateStreamCredentials } from "@/actions/stream.actions";
 import { IngressInput } from "livekit-server-sdk";
 
 export const StreamActions = () => {
