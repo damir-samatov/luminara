@@ -49,6 +49,28 @@ export const StreamSettings: FC<StreamConfiguratorProps> = ({
 
   return (
     <div className="flex flex-col items-start gap-4">
+      <div className="flex w-full justify-between">
+        <p className="py-2 text-lg font-semibold">STREAM SETTINGS</p>
+        {changeDetected && (
+          <div className="flex w-full max-w-[400px] gap-4">
+            <Button
+              isDisabled={isUpdatingStreamSettings}
+              isLoading={isUpdatingStreamSettings}
+              loadingText="SAVING..."
+              onClick={onSave}
+            >
+              SAVE
+            </Button>
+            <Button
+              type="secondary"
+              isDisabled={isUpdatingStreamSettings}
+              onClick={onDiscard}
+            >
+              DISCARD
+            </Button>
+          </div>
+        )}
+      </div>
       <div className="flex w-full justify-center gap-4">
         <TextInput
           value={streamSettings.title}
@@ -79,26 +101,6 @@ export const StreamSettings: FC<StreamConfiguratorProps> = ({
           onChange={(value) => onChange("isChatForSubscribersOnly", value)}
         />
       </div>
-
-      {changeDetected && (
-        <div className="flex w-full max-w-[400px] gap-4">
-          <Button
-            isDisabled={isUpdatingStreamSettings}
-            isLoading={isUpdatingStreamSettings}
-            loadingText="SAVING..."
-            onClick={onSave}
-          >
-            SAVE
-          </Button>
-          <Button
-            type="secondary"
-            isDisabled={isUpdatingStreamSettings}
-            onClick={onDiscard}
-          >
-            DISCARD
-          </Button>
-        </div>
-      )}
     </div>
   );
 };

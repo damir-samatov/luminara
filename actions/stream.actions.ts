@@ -13,7 +13,7 @@ import { ERROR_RESPONSES } from "@/configs/responses.config";
 import { ActionDataResponse } from "@/types/action.types";
 import { Stream } from ".prisma/client";
 import {
-  StreamKeysUpdateDto,
+  StreamCredentialsUpdateDto,
   StreamSettingsUpdateDto,
   StreamUpdateDto,
 } from "@/types/stream.types";
@@ -71,7 +71,7 @@ export const onUpdateSelfStreamSettings = async (
 };
 
 type OnUpdateSelfStreamCredentials = ActionDataResponse<{
-  newStreamCredentials: StreamKeysUpdateDto;
+  newStreamCredentials: StreamCredentialsUpdateDto;
 }>;
 
 export const onUpdateSelfStreamCredentials = async (

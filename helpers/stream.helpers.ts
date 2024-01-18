@@ -1,6 +1,6 @@
 import { Stream } from ".prisma/client";
 import {
-  StreamKeysUpdateDto,
+  StreamCredentialsUpdateDto,
   StreamSettingsUpdateDto,
 } from "@/types/stream.types";
 
@@ -19,7 +19,7 @@ export const mapStreamToUpdateStreamSettingsDto = (
 
 export const mapStreamToUpdateStreamCredentialsDto = (
   stream: Stream
-): StreamKeysUpdateDto => {
+): StreamCredentialsUpdateDto => {
   return {
     serverUrl: stream.serverUrl,
     streamKey: stream.streamKey,

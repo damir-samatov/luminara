@@ -25,7 +25,7 @@ export type StreamSettingsUpdateDto = Pick<
   | "isChatForSubscribersOnly"
 >;
 
-export type StreamKeysUpdateDto = Pick<
+export type StreamCredentialsUpdateDto = Pick<
   Stream,
   "serverUrl" | "streamKey" | "ingressId"
 >;
