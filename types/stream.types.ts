@@ -14,3 +14,18 @@ export type StreamUpdateDto = Partial<
     | "isChatForSubscribersOnly"
   >
 >;
+
+export type StreamSettingsUpdateDto = Pick<
+  Stream,
+  | "title"
+  | "imageUrl"
+  | "isLive"
+  | "chatDelay"
+  | "isChatEnabled"
+  | "isChatForSubscribersOnly"
+>;
+
+export type StreamKeysUpdateDto = Pick<
+  Stream,
+  "serverUrl" | "streamKey" | "ingressId"
+>;

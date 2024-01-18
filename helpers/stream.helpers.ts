@@ -1,7 +1,12 @@
 import { Stream } from ".prisma/client";
-import { StreamUpdateDto } from "@/types/stream.types";
+import {
+  StreamKeysUpdateDto,
+  StreamSettingsUpdateDto,
+} from "@/types/stream.types";
 
-export const mapStreamToUpdateDto = (stream: Stream): StreamUpdateDto => {
+export const mapStreamToUpdateStreamSettingsDto = (
+  stream: Stream
+): StreamSettingsUpdateDto => {
   return {
     title: stream.title,
     isChatEnabled: stream.isChatEnabled,
@@ -9,8 +14,15 @@ export const mapStreamToUpdateDto = (stream: Stream): StreamUpdateDto => {
     chatDelay: stream.chatDelay,
     imageUrl: stream.imageUrl,
     isLive: stream.isLive,
-    ingressId: stream.ingressId,
-    streamKey: stream.streamKey,
+  };
+};
+
+export const mapStreamToUpdateStreamCredentialsDto = (
+  stream: Stream
+): StreamKeysUpdateDto => {
+  return {
     serverUrl: stream.serverUrl,
+    streamKey: stream.streamKey,
+    ingressId: stream.ingressId,
   };
 };

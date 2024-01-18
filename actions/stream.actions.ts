@@ -9,13 +9,18 @@ import {
   createIngress,
   resetIngressesByUserId,
 } from "@/services/ingress.service";
-import { ERROR_RESPONSES, SUCCESS_RESPONSES } from "@/configs/responses.config";
-import {
-  ActionCombinedResponse,
-  ActionDataResponse,
-} from "@/types/action.types";
+import { ERROR_RESPONSES } from "@/configs/responses.config";
+import { ActionDataResponse } from "@/types/action.types";
 import { Stream } from ".prisma/client";
-import { StreamUpdateDto } from "@/types/stream.types";
+import {
+  StreamKeysUpdateDto,
+  StreamSettingsUpdateDto,
+  StreamUpdateDto,
+} from "@/types/stream.types";
+import {
+  mapStreamToUpdateStreamCredentialsDto,
+  mapStreamToUpdateStreamSettingsDto,
+} from "@/helpers/stream.helpers";
 
 type onGetSelfStreamResponse = ActionDataResponse<{ stream: Stream }>;
 
@@ -35,21 +40,26 @@ export const onGetSelfStream = async (): Promise<onGetSelfStreamResponse> => {
   }
 };
 
-type onUpdateSelfStreamResponse = ActionDataResponse<{
-  newStream: Stream;
+type OnUpdateSelfStreamSettingsResponse = ActionDataResponse<{
+  newStreamSettings: StreamSettingsUpdateDto;
 }>;
 
-export const onUpdateSelfStream = async (
-  updatedStream: StreamUpdateDto
-): Promise<onUpdateSelfStreamResponse> => {
+export const onUpdateSelfStreamSettings = async (
+  updatedStreamSettings: StreamUpdateDto
+): Promise<OnUpdateSelfStreamSettingsResponse> => {
   try {
     const self = await getSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
-    const newStream = await updateStreamByUserId(self.id, updatedStream);
+    const newStream = await updateStreamByUserId(
+      self.id,
+      updatedStreamSettings
+    );
     if (!newStream) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
     return {
       success: true,
-      data: { newStream },
+      data: {
+        newStreamSettings: mapStreamToUpdateStreamSettingsDto(newStream),
+      },
     };
   } catch (error) {
     console.error("onUpdateSelfStream", error);
@@ -57,23 +67,38 @@ export const onUpdateSelfStream = async (
   }
 };
 
-export const onGenerateStreamCredentials = async (
+type OnUpdateSelfStreamCredentials = ActionDataResponse<{
+  newStreamCredentials: StreamKeysUpdateDto;
+}>;
+
+export const onUpdateSelfStreamCredentials = async (
   ingressType: IngressInput
-): Promise<ActionCombinedResponse> => {
+): Promise<OnUpdateSelfStreamCredentials> => {
   try {
     const self = await getSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+
     await resetIngressesByUserId(self.id);
+
     const { ingressId, serverUrl, streamKey } = await createIngress(
       self,
       ingressType
     );
-    await updateStreamByUserId(self.id, {
+
+    const newStream = await updateStreamByUserId(self.id, {
       ingressId,
       serverUrl,
       streamKey,
     });
-    return SUCCESS_RESPONSES.SUCCESS;
+
+    if (!newStream) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    return {
+      success: true,
+      data: {
+        newStreamCredentials: mapStreamToUpdateStreamCredentialsDto(newStream),
+      },
+    };
   } catch (error) {
     console.error("onGenerateStreamCredentials", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;

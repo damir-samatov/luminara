@@ -3,56 +3,60 @@ import React, { FC, useState } from "react";
 import { Stream } from ".prisma/client";
 import { useObjectShadow } from "@/hooks/useObjectShadow";
 import { useServerAction } from "@/hooks/useServerAction";
-import { onUpdateSelfStream } from "@/actions/stream.actions";
-import { mapStreamToUpdateDto } from "@/helpers/stream.helpers";
+import { onUpdateSelfStreamSettings } from "@/actions/stream.actions";
+import { TextInput } from "@/components/TextInput";
+import { StreamSettingsUpdateDto } from "@/types/stream.types";
 
 type StreamConfiguratorProps = {
-  initialStream: Stream;
+  initialStreamSettings: StreamSettingsUpdateDto;
 };
 
-export const StreamConfigurator: FC<StreamConfiguratorProps> = ({
-  initialStream,
+export const StreamSettings: FC<StreamConfiguratorProps> = ({
+  initialStreamSettings,
 }) => {
-  const [stream, setStream] = useState(mapStreamToUpdateDto(initialStream));
+  const [streamSettings, setStreamSettings] = useState<StreamSettingsUpdateDto>(
+    initialStreamSettings
+  );
 
-  const { setPrevState, changeDetected, prevState } = useObjectShadow(stream);
+  const { setPrevState, changeDetected, prevState } =
+    useObjectShadow(streamSettings);
 
-  const [updateStream, isUpdatingStream] = useServerAction(
-    onUpdateSelfStream,
+  const [updateStreamSettings, isUpdatingStreamSettings] = useServerAction(
+    onUpdateSelfStreamSettings,
     (res) => {
-      if (res.success) {
-        const newStreamDto = mapStreamToUpdateDto(res.data.newStream);
-        setPrevState(newStreamDto);
-        setStream(newStreamDto);
-      }
+      if (!res.success) return;
+      setPrevState(res.data.newStreamSettings);
+      setStreamSettings(res.data.newStreamSettings);
     },
     console.log
   );
 
   const onSave = () => {
-    updateStream(stream);
+    updateStreamSettings(streamSettings);
+  };
+
+  const onDiscard = () => {
+    setStreamSettings(prevState);
   };
 
   const onChange = <T extends keyof Stream>(key: T, value: Stream[T]) => {
-    setStream((prev) => ({ ...prev, [key]: value }));
+    setStreamSettings((prev) => ({ ...prev, [key]: value }));
   };
 
   return (
     <div className="flex flex-col items-start gap-4">
-      <div>
-        Title:
-        <input
-          className="text-black"
-          value={stream.title}
-          onChange={(e) => onChange("title", e.target.value)}
-        />
-      </div>
+      <TextInput
+        value={streamSettings.title}
+        onChange={(value) => onChange("title", value)}
+        label="Title"
+        placeholder="Title..."
+      />
       <div>
         Chat:
         <input
           className="text-black"
           type="checkbox"
-          checked={stream.isChatEnabled}
+          checked={streamSettings.isChatEnabled}
           onChange={(e) => onChange("isChatEnabled", e.target.checked)}
         />
       </div>
@@ -60,7 +64,7 @@ export const StreamConfigurator: FC<StreamConfiguratorProps> = ({
         Subscriber Only Chat:
         <input
           type="checkbox"
-          checked={stream.isChatForSubscribersOnly}
+          checked={streamSettings.isChatForSubscribersOnly}
           onChange={(e) =>
             onChange("isChatForSubscribersOnly", e.target.checked)
           }
@@ -71,14 +75,19 @@ export const StreamConfigurator: FC<StreamConfiguratorProps> = ({
         <input
           className="text-black"
           type="number"
-          value={stream.chatDelay}
+          value={streamSettings.chatDelay}
           onChange={(e) => onChange("chatDelay", +e.target.value)}
         />
       </div>
       {changeDetected && (
-        <button disabled={isUpdatingStream} onClick={onSave}>
-          Save
-        </button>
+        <div>
+          <button disabled={isUpdatingStreamSettings} onClick={onSave}>
+            Save
+          </button>
+          <button disabled={isUpdatingStreamSettings} onClick={onDiscard}>
+            Discard
+          </button>
+        </div>
       )}
     </div>
   );

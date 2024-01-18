@@ -12,7 +12,7 @@ export const useObjectShadow = <T extends Record<string, unknown>>(
   const debounced = useRef(
     debounce((prev: T, cur: T) => {
       setChangeDetected(!deepEqual(prev, cur));
-    }, 500)
+    }, 200)
   );
 
   useEffect(() => {
