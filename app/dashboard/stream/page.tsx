@@ -6,6 +6,7 @@ import {
   mapStreamToUpdateStreamCredentialsDto,
 } from "@/helpers/stream.helpers";
 import { StreamCredentials } from "@/app/dashboard/_components/StreamCredentials";
+import { StreamWrapper } from "@/components/StreamWrapper";
 
 const StreamPage = async () => {
   const res = await onGetSelfStream();
@@ -24,6 +25,7 @@ const StreamPage = async () => {
           res.data.stream
         )}
       />
+      <StreamWrapper hostUserId={res.data.stream.userId} />
     </div>
   );
 };

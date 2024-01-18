@@ -70,13 +70,13 @@ export const onUpdateSelfStreamSettings = async (
   }
 };
 
-type OnUpdateSelfStreamCredentials = ActionDataResponse<{
+type OnUpdateSelfStreamCredentialsResponse = ActionDataResponse<{
   newStreamCredentials: StreamCredentialsUpdateDto;
 }>;
 
 export const onUpdateSelfStreamCredentials = async (
   ingressType: IngressInput
-): Promise<OnUpdateSelfStreamCredentials> => {
+): Promise<OnUpdateSelfStreamCredentialsResponse> => {
   try {
     const self = await getSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
@@ -97,6 +97,7 @@ export const onUpdateSelfStreamCredentials = async (
     if (!newStream) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
     revalidatePath("/dashboard/stream", "page");
+
     return {
       success: true,
       data: {
@@ -104,7 +105,7 @@ export const onUpdateSelfStreamCredentials = async (
       },
     };
   } catch (error) {
-    console.error("onGenerateStreamCredentials", error);
+    console.error("onUpdateSelfStreamCredentials", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };
