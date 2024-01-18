@@ -3,7 +3,7 @@ import { FC, useState } from "react";
 import { onSubscribe, onUnsubscribe } from "@/actions/subscription.actions";
 import { onBan, onUnban } from "@/actions/ban.actions";
 import { useServerAction } from "@/hooks/useServerAction";
-import { useSubscriptionsStore } from "@/stores/subscriptions.store";
+import { useBrowseNavigationContext } from "@/contexts/BorsweNavigationContext";
 
 type ProfileProps = {
   isSubscribed: boolean;
@@ -16,7 +16,7 @@ export const ProfileActions: FC<ProfileProps> = ({
   isBanned,
   userId,
 }) => {
-  const refresh = useSubscriptionsStore((store) => store.refresh);
+  const { refresh } = useBrowseNavigationContext();
   const [hasSubscribed, setHasSubscribed] = useState<boolean>(isSubscribed);
   const [hasBanned, setHasBanned] = useState<boolean>(isBanned);
   const [error, setError] = useState<string | null>(null);

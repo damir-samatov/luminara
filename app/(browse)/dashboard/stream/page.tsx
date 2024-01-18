@@ -1,12 +1,12 @@
 import { onGetSelfStream } from "@/actions/stream.actions";
 import { notFound } from "next/navigation";
-import { StreamSettings } from "@/app/dashboard/_components/StreamConfigurator";
 import {
   mapStreamToUpdateStreamSettingsDto,
   mapStreamToUpdateStreamCredentialsDto,
 } from "@/helpers/stream.helpers";
-import { StreamCredentials } from "@/app/dashboard/_components/StreamCredentials";
 import { StreamWrapper } from "@/components/StreamWrapper";
+import { StreamSettings } from "@/app/(browse)/dashboard/stream/_components/StreamConfigurator";
+import { StreamCredentials } from "@/app/(browse)/dashboard/stream/_components/StreamCredentials";
 
 const StreamPage = async () => {
   const res = await onGetSelfStream();

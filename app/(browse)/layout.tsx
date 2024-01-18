@@ -1,7 +1,8 @@
 import { FC, ReactNode } from "react";
 import { getSubscriptions } from "@/actions/subscription.actions";
 import { notFound } from "next/navigation";
-import { BrowseNavigationWrapper } from "@/app/(browse)/_components/BrowseNavigationWrapper";
+import { BrowseNavigationContextProvider } from "@/contexts/BorsweNavigationContext";
+import { Navigation } from "@/components/Navigation";
 
 type BrowseLayoutProps = {
   children: ReactNode;
@@ -13,9 +14,11 @@ const BrowseLayout: FC<BrowseLayoutProps> = async ({ children }) => {
   if (!res.success) return notFound();
 
   return (
-    <BrowseNavigationWrapper initialSubscriptions={res.data.subscriptions}>
-      {children}
-    </BrowseNavigationWrapper>
+    <BrowseNavigationContextProvider
+      initialSubscriptions={res.data.subscriptions}
+    >
+      <Navigation>{children}</Navigation>
+    </BrowseNavigationContextProvider>
   );
 };
 
