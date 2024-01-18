@@ -9,11 +9,13 @@ const StreamPage = async () => {
   if (!res.success) return notFound();
 
   return (
-    <StreamSettings
-      initialStreamSettings={mapStreamToUpdateStreamSettingsDto(
-        res.data.stream
-      )}
-    />
+    <div className="p-4">
+      <StreamSettings
+        initialStreamSettings={mapStreamToUpdateStreamSettingsDto(
+          res.data.stream
+        )}
+      />
+    </div>
   );
 };
 

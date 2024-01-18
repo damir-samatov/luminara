@@ -3,8 +3,9 @@ import { FC } from "react";
 type TextInputProps = {
   value: string;
   onChange: (value: string) => void;
-  label?: string;
+  label: string;
   placeholder?: string;
+  maxLength?: number;
 };
 
 export const TextInput: FC<TextInputProps> = ({
@@ -12,17 +13,18 @@ export const TextInput: FC<TextInputProps> = ({
   value,
   onChange,
   placeholder,
+  maxLength = 255,
 }) => {
   return (
-    <div className="flex flex-col gap-2">
-      {label && <p>{label}</p>}
+    <div className="flex w-full flex-col gap-3 rounded-md bg-gray-900 p-4 text-sm text-gray-100">
+      <p className="font-semibold">{label}</p>
       <input
         autoComplete="off"
         type="text"
-        className="block w-full rounded-md bg-gray-800 p-4 text-gray-100 placeholder-gray-500 outline-0"
+        className="block h-10 w-full rounded-md bg-gray-700 px-4 text-gray-100 placeholder-gray-400 outline-0"
         value={value}
         placeholder={placeholder}
-        maxLength={255}
+        maxLength={maxLength}
         onChange={(e) => onChange(e.target.value)}
         required
       />

@@ -21,6 +21,7 @@ import {
   mapStreamToUpdateStreamCredentialsDto,
   mapStreamToUpdateStreamSettingsDto,
 } from "@/helpers/stream.helpers";
+import { revalidatePath } from "next/cache";
 
 type onGetSelfStreamResponse = ActionDataResponse<{ stream: Stream }>;
 
@@ -55,6 +56,8 @@ export const onUpdateSelfStreamSettings = async (
       updatedStreamSettings
     );
     if (!newStream) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    revalidatePath("/dashboard/stream", "page");
     return {
       success: true,
       data: {
@@ -93,6 +96,7 @@ export const onUpdateSelfStreamCredentials = async (
 
     if (!newStream) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
+    revalidatePath("/dashboard/stream", "page");
     return {
       success: true,
       data: {

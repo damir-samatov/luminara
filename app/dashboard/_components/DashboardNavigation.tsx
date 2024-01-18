@@ -7,6 +7,9 @@ import { SignOutButton } from "@clerk/nextjs";
 import {
   ArrowLeftStartOnRectangleIcon,
   HomeIcon,
+  Squares2X2Icon,
+  UserGroupIcon,
+  UserIcon,
   VideoCameraIcon,
 } from "@heroicons/react/24/outline";
 
@@ -22,8 +25,26 @@ const SIDEBAR_LINKS = [
   },
   {
     href: "/dashboard/stream",
-    label: "Stream",
+    label: "Stream Configuration",
     icon: <VideoCameraIcon className="h-6 w-6 shrink-0" />,
+  },
+];
+
+const COMING_SOON_LINKS = [
+  {
+    href: "/dashboard/profile",
+    label: "My Profile",
+    icon: <UserIcon className="h-6 w-6 shrink-0" />,
+  },
+  {
+    href: "/dashboard/posts",
+    label: "My Posts",
+    icon: <Squares2X2Icon className="h-6 w-6 shrink-0" />,
+  },
+  {
+    href: "/dashboard/community",
+    label: "Community",
+    icon: <UserGroupIcon className="h-6 w-6 shrink-0" />,
   },
 ];
 
@@ -44,6 +65,21 @@ export const DashboardNavigationWrapper: FC<
             isActive={href === pathname}
           />
         ))}
+
+        <p className=" p-2 text-sm font-semibold leading-6 text-gray-400">
+          Coming soon:
+        </p>
+
+        {COMING_SOON_LINKS.map(({ href, label, icon }) => (
+          <SidebarLink
+            key={href}
+            href={href}
+            label={label}
+            icon={icon}
+            isActive={href === pathname}
+          />
+        ))}
+
         <div className="mt-auto">
           <SignOutButton>
             <button className="group flex w-full gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white">
