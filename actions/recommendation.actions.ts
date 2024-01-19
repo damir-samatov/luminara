@@ -5,12 +5,12 @@ import { ERROR_RESPONSES } from "@/configs/responses.config";
 import { ActionDataResponse } from "@/types/action.types";
 import { User } from ".prisma/client";
 
-type GetRecommendationsDataResponse = ActionDataResponse<{
+type OnGetRecommendationsDataResponse = ActionDataResponse<{
   recommendations: User[];
 }>;
 
-export const getRecommendations =
-  async (): Promise<GetRecommendationsDataResponse> => {
+export const onGetRecommendations =
+  async (): Promise<OnGetRecommendationsDataResponse> => {
     try {
       const self = await getSelf();
 

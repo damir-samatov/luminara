@@ -1,6 +1,7 @@
 import {
+  ArrowTrendingUpIcon,
   HomeIcon,
-  Squares2X2Icon,
+  MegaphoneIcon,
   UserGroupIcon,
   UserIcon,
   VideoCameraIcon,
@@ -28,11 +29,16 @@ export const COMING_SOON_LINKS = [
   {
     href: "/dashboard/posts",
     label: "My Posts",
-    icon: <Squares2X2Icon className="h-6 w-6 shrink-0" />,
+    icon: <MegaphoneIcon className="h-6 w-6 shrink-0" />,
   },
   {
     href: "/dashboard/community",
     label: "Community",
     icon: <UserGroupIcon className="h-6 w-6 shrink-0" />,
+  },
+  {
+    href: "/dashboard/analytics",
+    label: "Analytics",
+    icon: <ArrowTrendingUpIcon className="h-6 w-6 shrink-0" />,
   },
 ];

@@ -4,11 +4,18 @@
 
 body {
   @apply bg-gray-950;
-  @apply text-white;
+  @apply text-gray-100;
+}
+
+img {
+  @apply w-full;
+  @apply h-full;
+  @apply object-cover;
+  @apply object-center;
 }
 
 ::-webkit-scrollbar {
-  @apply w-4;
+  @apply w-2;
 }
 
 ::-webkit-scrollbar-track {
@@ -16,9 +23,5 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-gray-700;
-  @apply rounded-full;
-  @apply border-4;
-  @apply border-gray-900;
-  @apply border-solid;
+  @apply bg-gray-600;
 }

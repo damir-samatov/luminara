@@ -1,5 +1,5 @@
 import { FC, ReactNode } from "react";
-import { classNames } from "@/utils/tailwind.utils";
+import { classNames } from "@/utils/style.utils";
 
 type ButtonProps = {
   onClick: () => void;

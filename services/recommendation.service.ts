@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 export const getRecommendationsByUserId = async (userId: string) => {
   try {
     return await db.user.findMany({
-      take: 10,
+      take: 20,
       where: {
         subscribedBy: {
           none: {

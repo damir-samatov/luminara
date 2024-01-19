@@ -1,6 +1,6 @@
 import React, { FC, ReactNode } from "react";
 import Link from "next/link";
-import { classNames } from "@/utils/tailwind.utils";
+import { classNames } from "@/utils/style.utils";
 
 type SidebarLinkProps = {
   href: string;
@@ -27,10 +27,9 @@ export const SidebarLink: FC<SidebarLinkProps> = ({
         "text-sm",
         "font-semibold",
         "leading-6",
-        "text-gray-400",
         "hover:bg-gray-800",
-        "hover:text-white",
-        isActive && "bg-gray-800 text-white"
+        "hover:text-gray-100",
+        isActive ? "bg-gray-800 text-gray-100" : "text-gray-400"
       )}
     >
       {icon}

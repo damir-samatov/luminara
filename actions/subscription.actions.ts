@@ -11,6 +11,7 @@ import {
   ActionCombinedResponse,
   ActionDataResponse,
 } from "@/types/action.types";
+import { revalidatePath } from "next/cache";
 
 export const onSubscribe = async (
   userId: string
@@ -20,6 +21,7 @@ export const onSubscribe = async (
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
     if (self.id === userId) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
     await createSubscription(self.id, userId);
+    revalidatePath("/", "page");
     return SUCCESS_RESPONSES.SUCCESS;
   } catch (error) {
     console.error("onSubscribe", error);
@@ -35,6 +37,7 @@ export const onUnsubscribe = async (
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
     if (self.id === userId) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
     await deleteSubscription(self.id, userId);
+    revalidatePath("/", "page");
     return SUCCESS_RESPONSES.SUCCESS;
   } catch (error) {
     console.error("onUnsubscribe", error);

@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Switch } from "@headlessui/react";
-import { classNames } from "@/utils/tailwind.utils";
+import { classNames } from "@/utils/style.utils";
 
 type ToggleInputProps = {
   value: boolean;

@@ -2,7 +2,7 @@ import { User } from ".prisma/client";
 import { FC } from "react";
 import Link from "next/link";
 import { UserProfileLogo } from "@/components/UserProfileLogo";
-import { classNames } from "@/utils/tailwind.utils";
+import { classNames } from "@/utils/style.utils";
 
 type UserProfileLinkProps = {
   user: User;
@@ -31,8 +31,7 @@ export const UserProfileLink: FC<UserProfileLinkProps> = ({
         isActive && "bg-gray-800 text-white"
       )}
     >
-      <UserProfileLogo user={user} />
-      {user.username}
+      <UserProfileLogo user={user} />@{user.username}
     </Link>
   );
 };

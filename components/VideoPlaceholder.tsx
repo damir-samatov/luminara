@@ -1,7 +1,7 @@
 "use client";
 import { FC } from "react";
 import { WifiIcon } from "@heroicons/react/24/outline";
-import { classNames } from "@/utils/tailwind.utils";
+import { classNames } from "@/utils/style.utils";
 
 type VideoPlaceholderProps = {
   state: "loading" | "offline";
