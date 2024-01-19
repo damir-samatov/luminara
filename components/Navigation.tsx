@@ -4,11 +4,6 @@ import { Dialog, Transition } from "@headlessui/react";
 import {
   ArrowLeftStartOnRectangleIcon,
   Bars3Icon,
-  HomeIcon,
-  Squares2X2Icon,
-  UserGroupIcon,
-  UserIcon,
-  VideoCameraIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { SignOutButton, UserButton } from "@clerk/nextjs";
@@ -16,37 +11,7 @@ import { usePathname } from "next/navigation";
 import { SidebarLink } from "@/components/SidebarLink";
 import { UserProfileLink } from "@/components/UserProfileLink";
 import { useBrowseNavigationContext } from "@/contexts/BorsweNavigationContext";
-
-const SIDEBAR_LINKS = [
-  {
-    href: "/",
-    label: "Home",
-    icon: <HomeIcon className="h-6 w-6 shrink-0" />,
-  },
-  {
-    href: "/dashboard",
-    label: "My Profile",
-    icon: <UserIcon className="h-6 w-6 shrink-0" />,
-  },
-  {
-    href: "/dashboard/stream",
-    label: "Stream",
-    icon: <VideoCameraIcon className="h-6 w-6 shrink-0" />,
-  },
-];
-
-const COMING_SOON_LINKS = [
-  {
-    href: "/dashboard/posts",
-    label: "My Posts",
-    icon: <Squares2X2Icon className="h-6 w-6 shrink-0" />,
-  },
-  {
-    href: "/dashboard/community",
-    label: "Community",
-    icon: <UserGroupIcon className="h-6 w-6 shrink-0" />,
-  },
-];
+import { COMING_SOON_LINKS, SIDEBAR_LINKS } from "@/configs/navigation.config";
 
 type NavigationProps = {
   children: ReactNode;
@@ -89,13 +54,14 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
           Coming Soon:
         </p>
         {COMING_SOON_LINKS.map(({ href, label, icon }) => (
-          <SidebarLink
-            key={href}
-            href={href}
-            label={label}
-            icon={icon}
-            isActive={href === pathname}
-          />
+          <div key={href} className="pointer-events-none cursor-not-allowed">
+            <SidebarLink
+              href={href}
+              label={label}
+              icon={icon}
+              isActive={href === pathname}
+            />
+          </div>
         ))}
       </nav>
     ),
