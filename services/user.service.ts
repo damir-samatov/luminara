@@ -92,3 +92,31 @@ export const deleteUserByExternalUserId = (externalUserId: string) => {
     return null;
   }
 };
+
+export const searchUserByUsername = async (
+  userId: string,
+  usernameSearch: string
+) => {
+  try {
+    return await db.user.findMany({
+      take: 20,
+      where: {
+        username: {
+          contains: usernameSearch,
+          mode: "insensitive",
+        },
+        bannedUsers: {
+          none: {
+            bannedUserId: userId,
+          },
+        },
+        NOT: {
+          id: userId,
+        },
+      },
+    });
+  } catch (error) {
+    console.error("searchUserByUsername", error);
+    return null;
+  }
+};

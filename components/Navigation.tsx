@@ -13,6 +13,7 @@ import { UserProfileLink } from "@/components/UserProfileLink";
 import { useBrowseNavigationContext } from "@/contexts/BorsweNavigationContext";
 import { COMING_SOON_LINKS, SIDEBAR_LINKS } from "@/configs/navigation.config";
 import Link from "next/link";
+import { Search } from "@/components/Search";
 
 type NavigationProps = {
   children: ReactNode;
@@ -175,18 +176,21 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
       </div>
 
       <div className="flex min-h-screen flex-col lg:pl-80">
-        <div className="sticky top-0 z-40 flex h-16 items-center gap-x-4 bg-gray-800 px-8">
+        <div className="sticky top-0 z-40 flex h-16 items-center gap-x-4 bg-gray-800 px-4">
           <button
             type="button"
-            className="p-2.5 lg:hidden"
+            className="lg:hidden"
             onClick={() => setSidebarOpen(true)}
           >
             <span className="sr-only">Open sidebar</span>
             <Bars3Icon className="h-6 w-6 text-white" aria-hidden="true" />
           </button>
 
-          <div className="ml-auto flex items-center gap-x-4 lg:gap-x-6">
-            <UserButton afterSignOutUrl="/sign-in" />
+          <div className="flex w-full items-center gap-x-4 lg:gap-x-6">
+            <Search />
+            <div className="ml-auto">
+              <UserButton afterSignOutUrl="/sign-in" />
+            </div>
           </div>
         </div>
 
