@@ -6,12 +6,14 @@ import { useServerAction } from "@/hooks/useServerAction";
 import { debounce } from "ts-debounce";
 import { UserProfileLink } from "@/components/UserProfileLink";
 import { useOnClickOutside } from "usehooks-ts";
+import { usePathname } from "next/navigation";
 
 export const Search = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const pathname = usePathname();
   const [searchUsers, isSearchingUsers] = useServerAction(
     OnSearchUsers,
     (res) => {
@@ -30,6 +32,10 @@ export const Search = () => {
   };
 
   useOnClickOutside(containerRef, handleClickOutside);
+
+  useEffect(() => {
+    setIsFocused(false);
+  }, [pathname]);
 
   useEffect(() => {
     if (searchTerm.length < 1) return;

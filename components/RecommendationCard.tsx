@@ -25,7 +25,7 @@ const RecommendationCard: FC<RecommendationCardProps> = ({
         className="flex w-full flex-col items-center gap-6 rounded-md bg-gray-800 px-4 py-8 transition-transform hover:translate-x-2 hover:translate-y-2"
         href={`/users/${username}`}
       >
-        <div className="w-25 overflow-clip rounded-full">
+        <div className="h-24 w-24 overflow-clip rounded-full bg-gray-700">
           <Image
             src={imageUrl}
             alt={username}
