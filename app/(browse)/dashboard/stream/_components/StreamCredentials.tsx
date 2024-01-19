@@ -43,7 +43,7 @@ export const StreamCredentials: FC<StreamCredentialsProps> = ({
       <Button
         size="max-content"
         isLoading={isLoading}
-        isDisabled={true}
+        isDisabled={isLoading}
         onClick={() => updateStreamCredentials(IngressInput.RTMP_INPUT)}
         loadingText="GENRATING STREAM CREDENTIALS..."
       >

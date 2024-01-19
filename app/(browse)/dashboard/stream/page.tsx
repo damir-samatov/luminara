@@ -4,7 +4,6 @@ import {
   mapStreamToUpdateStreamSettingsDto,
   mapStreamToUpdateStreamCredentialsDto,
 } from "@/helpers/stream.helpers";
-import { StreamWrapper } from "@/components/StreamWrapper";
 import { StreamSettings } from "@/app/(browse)/dashboard/stream/_components/StreamConfigurator";
 import { StreamCredentials } from "@/app/(browse)/dashboard/stream/_components/StreamCredentials";
 
@@ -25,7 +24,6 @@ const StreamPage = async () => {
           res.data.stream
         )}
       />
-      <StreamWrapper hostUserId={res.data.stream.userId} />
     </div>
   );
 };

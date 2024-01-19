@@ -35,7 +35,7 @@ const RecommendationCard: FC<RecommendationCardProps> = ({
           />
         </div>
         <p className="white text-lg font-bold">
-          <span style={{ color: userColor }}>@ </span>
+          <span style={{ color: userColor }}>@</span>
           {username}
         </p>
       </Link>

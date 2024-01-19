@@ -14,6 +14,21 @@ export const getStreamByUserId = async (userId: string) => {
   }
 };
 
+export const getStreamByUsername = async (username: string) => {
+  try {
+    return await db.stream.findFirst({
+      where: {
+        user: {
+          username,
+        },
+      },
+    });
+  } catch (error) {
+    console.error("getStreamByUserId:", error);
+    return null;
+  }
+};
+
 export const updateStreamByUserId = (
   userId: string,
   streamUpdateDto: StreamUpdateDto

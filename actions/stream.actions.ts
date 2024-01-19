@@ -3,6 +3,7 @@ import { IngressInput } from "livekit-server-sdk";
 import { getSelf } from "@/services/auth.service";
 import {
   getStreamByUserId,
+  getStreamByUsername,
   updateStreamByUserId,
 } from "@/services/stream.service";
 import {
@@ -30,6 +31,26 @@ export const onGetSelfStream = async (): Promise<onGetSelfStreamResponse> => {
     const self = await getSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
     const stream = await getStreamByUserId(self.id);
+    if (!stream) return ERROR_RESPONSES.NOT_FOUND;
+    return {
+      success: true,
+      data: { stream },
+    };
+  } catch (error) {
+    console.error("onGetSelfStream", error);
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+  }
+};
+
+type OnGetStreamByUsernameResponse = ActionDataResponse<{ stream: Stream }>;
+
+export const onGetStreamByUsername = async (
+  username: string
+): Promise<OnGetStreamByUsernameResponse> => {
+  try {
+    const self = await getSelf();
+    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+    const stream = await getStreamByUsername(username);
     if (!stream) return ERROR_RESPONSES.NOT_FOUND;
     return {
       success: true,
