@@ -10,6 +10,7 @@ import { ERROR_RESPONSES } from "@/configs/responses.config";
 type GetProfileDataResponse = ActionDataResponse<{
   user: User;
   isSubscribed: boolean;
+  isBanned: boolean;
 }>;
 
 export const getProfileData = async (
@@ -31,6 +32,7 @@ export const getProfileData = async (
       data: {
         user,
         isSubscribed: !!subscription,
+        isBanned: !!selfBan,
       },
     };
   } catch (error) {

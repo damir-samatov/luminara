@@ -16,7 +16,14 @@ const LiveStreamPage: FC<LiveStreamPageProps> = async ({ params }) => {
 
   const { stream } = res.data;
 
-  return <StreamWrapper hostUserId={stream.userId} />;
+  return (
+    <div className="flex w-full flex-col gap-4 p-4">
+      <h1 className="text-3xl">{stream.title}</h1>
+      <div className="max-w-[800px]">
+        <StreamWrapper hostUserId={stream.userId} />
+      </div>
+    </div>
+  );
 };
 
 export default LiveStreamPage;

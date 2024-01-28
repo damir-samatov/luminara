@@ -26,6 +26,7 @@ const RootLayout: FC<BrowseLayoutProps> = ({ children }) => {
           colorPrimary: "white",
         },
         elements: {
+          logoBox: "hidden",
           formButtonPrimary: "text-white bg-gray-700 hover:bg-gray-600",
           card: "bg-gray-900 rounded-md",
         },
