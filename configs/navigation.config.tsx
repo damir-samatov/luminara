@@ -14,6 +14,11 @@ export const SIDEBAR_LINKS = [
     icon: <HomeIcon className="h-6 w-6 shrink-0" />,
   },
   {
+    href: "/dashboard",
+    label: "My Profile",
+    icon: <UserIcon className="h-6 w-6 shrink-0" />,
+  },
+  {
     href: "/dashboard/stream",
     label: "Stream",
     icon: <VideoCameraIcon className="h-6 w-6 shrink-0" />,
@@ -21,11 +26,6 @@ export const SIDEBAR_LINKS = [
 ];
 
 export const COMING_SOON_LINKS = [
-  {
-    href: "/dashboard",
-    label: "My Profile",
-    icon: <UserIcon className="h-6 w-6 shrink-0" />,
-  },
   {
     href: "/dashboard/posts",
     label: "My Posts",
