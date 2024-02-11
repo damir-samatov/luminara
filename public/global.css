@@ -25,3 +25,15 @@ img {
 ::-webkit-scrollbar-thumb {
   @apply bg-gray-600;
 }
+
+.aws-ivs-player-wrapper {
+  video {
+    @apply absolute;
+    @apply w-full;
+    @apply h-full;
+    @apply top-0.5;
+    @apply left-0.5;
+    @apply -translate-x-0.5;
+    @apply -translate-y-0.5;
+  }
+}

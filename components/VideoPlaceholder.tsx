@@ -13,7 +13,7 @@ export const VideoPlaceholder: FC<VideoPlaceholderProps> = ({
   text,
 }) => {
   return (
-    <div className="flex aspect-video flex-col items-center justify-center gap-4 bg-gray-950 text-gray-300">
+    <div className="flex aspect-video w-full flex-col items-center justify-center gap-4 text-gray-300">
       <WifiIcon
         className={classNames(
           state === "loading" && "animate-pulse",
