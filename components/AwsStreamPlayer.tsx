@@ -1,22 +1,19 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getIvsViewerToken } from "@/services/ivs.service";
 import {
   Player,
   PlayerEventType,
   PlayerState,
-  Quality,
   registerIVSTech,
   VideoJSIVSTech,
   VideoJSQualityPlugin,
 } from "amazon-ivs-player";
 import { registerIVSQualityPlugin } from "amazon-ivs-player";
 import videojs from "video.js";
-import { SliderInput } from "@/components/SliderInput";
-import { Button } from "@/components/Button";
-import "video.js/dist/video-js.css";
 import { classNames } from "@/utils/style.utils";
 import { VideoPlaceholder } from "@/components/VideoPlaceholder";
+import "video.js/dist/video-js.css";
 
 const WASM_WORKER_URL =
   "https://player.live-video.net/1.24.0/amazon-ivs-wasmworker.min.js";
@@ -31,12 +28,6 @@ export const AwsStreamPlayer = () => {
   const playerWrapperElRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<videojs.Player>();
   const ivsPlayerRef = useRef<Player>();
-  const [volume, setVolume] = useState(50);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [isMuted, setIsMuted] = useState(true);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [qualities, setQualities] = useState<Quality[]>([]);
-  const [activeQuality, setActiveQuality] = useState("");
   const [isReady, setIsReady] = useState(false);
   const [isOffline, setIsOffline] = useState(false);
 
@@ -65,11 +56,11 @@ export const AwsStreamPlayer = () => {
           techOrder: ["AmazonIVS"],
         },
         () => {
-          player.src(playbackUrl);
-          player.autoplay(true);
-          player.volume(0.5);
-          player.muted(true);
           player.enableIVSQualityPlugin();
+          player.autoplay(false);
+          player.muted(true);
+          player.volume(0.3);
+          player.src(TEST_STREAM);
           const ivsPlayer = player.getIVSPlayer();
           playerRef.current = player;
           ivsPlayerRef.current = ivsPlayer;
@@ -80,67 +71,15 @@ export const AwsStreamPlayer = () => {
             setIsOffline(true);
           });
           ivsPlayer.addEventListener(PlayerState.READY, () => {
-            setQualities(ivsPlayer.getQualities());
-            setActiveQuality(ivsPlayer.getQuality().name);
             setIsReady(true);
           });
         }
       ) as videojs.Player & VideoJSIVSTech & VideoJSQualityPlugin;
-
-      document.onfullscreenchange = () => {
-        setIsFullscreen(!!document.fullscreenElement);
-      };
     })();
   }, [videoElRef, playerWrapperElRef, isReady]);
 
-  const onPlayToggle = useCallback(
-    (value: boolean) => {
-      if (!playerRef?.current) return;
-      value ? playerRef.current.play() : playerRef.current.pause();
-      setIsPlaying(value);
-    },
-    [playerRef]
-  );
-
-  const onMuteToggle = useCallback(
-    (value: boolean) => {
-      if (!playerRef?.current) return;
-      playerRef.current.muted(value);
-      setIsMuted(value);
-    },
-    [playerRef]
-  );
-
-  const onFullScreenToggle = useCallback(
-    (value: boolean) => {
-      if (!playerWrapperElRef?.current) return;
-      value
-        ? playerWrapperElRef.current.requestFullscreen()
-        : document.exitFullscreen();
-    },
-    [playerWrapperElRef]
-  );
-
-  const onVolumeChange = useCallback(
-    (volume: number) => {
-      if (!playerRef?.current) return;
-      playerRef.current.volume(volume / 100);
-      setVolume(volume);
-    },
-    [playerRef]
-  );
-
-  const onQualityChange = useCallback(
-    (quality: Quality) => {
-      if (!ivsPlayerRef?.current) return;
-      ivsPlayerRef.current.setQuality(quality);
-      setActiveQuality(quality.name);
-    },
-    [ivsPlayerRef]
-  );
-
   return (
-    <div className="overflow-hidden rounded-md bg-black p-4">
+    <div className="bg-black">
       {isOffline ? (
         <VideoPlaceholder text="User is offline" state="offline" />
       ) : (
@@ -151,42 +90,11 @@ export const AwsStreamPlayer = () => {
           <div
             ref={playerWrapperElRef}
             className={classNames(
-              "aws-ivs-player-wrapper group relative aspect-video w-full",
+              "aws-ivs-player-wrapper relative aspect-video w-full",
               isReady ? "block" : "hidden"
             )}
           >
-            <div onClick={() => onPlayToggle(!isPlaying)}>
-              <video playsInline ref={videoElRef} />
-            </div>
-
-            <div className="absolute bottom-0 left-0 block">
-              <SliderInput
-                value={volume}
-                onChange={onVolumeChange}
-                label="Volume"
-                max={100}
-                min={0}
-                step={1}
-              />
-              <Button onClick={() => onPlayToggle(!isPlaying)}>
-                {isPlaying ? "Pause" : "Play"}
-              </Button>
-              <Button onClick={() => onMuteToggle(!isMuted)}>
-                {isMuted ? "Unmute" : "Mute"}
-              </Button>
-              <Button onClick={() => onFullScreenToggle(!isFullscreen)}>
-                {isFullscreen ? "Exit Fullscreen" : "Go Fullscreen"}
-              </Button>
-              {qualities.map((quality) => (
-                <Button
-                  key={quality.name}
-                  onClick={() => onQualityChange(quality)}
-                >
-                  {quality.name}{" "}
-                  {activeQuality === quality.name ? "active" : ""}
-                </Button>
-              ))}
-            </div>
+            <video playsInline ref={videoElRef} className="video-js" controls />
           </div>
         </>
       )}

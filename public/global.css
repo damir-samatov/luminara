@@ -27,10 +27,10 @@ img {
 }
 
 .aws-ivs-player-wrapper {
-  video {
-    @apply absolute;
+  & > * {
     @apply w-full;
     @apply h-full;
+    @apply absolute;
     @apply top-0.5;
     @apply left-0.5;
     @apply -translate-x-0.5;
