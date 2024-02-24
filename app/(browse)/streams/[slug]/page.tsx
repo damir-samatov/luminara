@@ -1,4 +1,3 @@
-import { StreamWrapper } from "@/components/StreamWrapper";
 import { notFound } from "next/navigation";
 import { FC } from "react";
 import { onGetStreamByUsername } from "@/actions/stream.actions";
@@ -19,9 +18,7 @@ const LiveStreamPage: FC<LiveStreamPageProps> = async ({ params }) => {
   return (
     <div className="flex w-full flex-col gap-4 p-4">
       <h1 className="text-3xl">{stream.title}</h1>
-      <div className="max-w-[800px]">
-        <StreamWrapper hostUserId={stream.userId} />
-      </div>
+      <div className="max-w-[800px]"></div>
     </div>
   );
 };

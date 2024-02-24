@@ -10,7 +10,7 @@ import { SignOutButton, UserButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import { SidebarLink } from "@/components/SidebarLink";
 import { UserProfileLink } from "@/components/UserProfileLink";
-import { useBrowseNavigationContext } from "@/contexts/BorsweNavigationContext";
+import { useBrowseNavigationContext } from "@/contexts/BrowseNavigationContext";
 import { COMING_SOON_LINKS, SIDEBAR_LINKS } from "@/configs/navigation.config";
 import Link from "next/link";
 import { Search } from "@/components/Search";

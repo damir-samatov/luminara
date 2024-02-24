@@ -2,10 +2,6 @@
 import { SensitiveText } from "@/components/SensitiveText";
 import { StreamCredentialsUpdateDto } from "@/types/stream.types";
 import { FC, useState } from "react";
-import { useServerAction } from "@/hooks/useServerAction";
-import { onUpdateSelfStreamCredentials } from "@/actions/stream.actions";
-import { Button } from "@/components/Button";
-import { IngressInput } from "livekit-server-sdk";
 
 type StreamCredentialsProps = {
   initialStreamCredentials: StreamCredentialsUpdateDto;
@@ -16,16 +12,6 @@ export const StreamCredentials: FC<StreamCredentialsProps> = ({
 }) => {
   const [streamCredentials, setStreamCredentials] =
     useState<StreamCredentialsUpdateDto>(initialStreamCredentials);
-
-  const [updateStreamCredentials, isLoading] = useServerAction(
-    onUpdateSelfStreamCredentials,
-    (res) => {
-      console.log(res);
-      if (!res.success) return;
-      setStreamCredentials(res.data.newStreamCredentials);
-    },
-    console.log
-  );
 
   return (
     <div className="flex flex-col items-start gap-4">
@@ -40,15 +26,6 @@ export const StreamCredentials: FC<StreamCredentialsProps> = ({
           label="STREAM KEY"
         />
       </div>
-      <Button
-        size="max-content"
-        isLoading={isLoading}
-        isDisabled={isLoading}
-        onClick={() => updateStreamCredentials(IngressInput.RTMP_INPUT)}
-        loadingText="GENRATING STREAM CREDENTIALS..."
-      >
-        GENERATE STREAM CREDENTIALS
-      </Button>
     </div>
   );
 };

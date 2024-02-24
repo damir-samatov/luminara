@@ -1,27 +1,15 @@
 "use server";
-import { IngressInput } from "livekit-server-sdk";
 import { getSelf } from "@/services/auth.service";
 import {
   getStreamByUserId,
   getStreamByUsername,
   updateStreamByUserId,
 } from "@/services/stream.service";
-import {
-  createIngress,
-  resetIngressesByUserId,
-} from "@/services/ingress.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import { ActionDataResponse } from "@/types/action.types";
 import { Stream } from ".prisma/client";
-import {
-  StreamCredentialsUpdateDto,
-  StreamSettingsUpdateDto,
-  StreamUpdateDto,
-} from "@/types/stream.types";
-import {
-  mapStreamToUpdateStreamCredentialsDto,
-  mapStreamToUpdateStreamSettingsDto,
-} from "@/helpers/stream.helpers";
+import { StreamSettingsUpdateDto, StreamUpdateDto } from "@/types/stream.types";
+import { mapStreamToUpdateStreamSettingsDto } from "@/helpers/stream.helpers";
 import { revalidatePath } from "next/cache";
 
 type onGetSelfStreamResponse = ActionDataResponse<{ stream: Stream }>;
@@ -87,46 +75,6 @@ export const onUpdateSelfStreamSettings = async (
     };
   } catch (error) {
     console.error("onUpdateSelfStream", error);
-    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-  }
-};
-
-type OnUpdateSelfStreamCredentialsResponse = ActionDataResponse<{
-  newStreamCredentials: StreamCredentialsUpdateDto;
-}>;
-
-export const onUpdateSelfStreamCredentials = async (
-  ingressType: IngressInput
-): Promise<OnUpdateSelfStreamCredentialsResponse> => {
-  try {
-    const self = await getSelf();
-    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
-
-    await resetIngressesByUserId(self.id);
-
-    const { ingressId, serverUrl, streamKey } = await createIngress(
-      self,
-      ingressType
-    );
-
-    const newStream = await updateStreamByUserId(self.id, {
-      ingressId,
-      serverUrl,
-      streamKey,
-    });
-
-    if (!newStream) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-
-    revalidatePath("/dashboard/stream", "page");
-
-    return {
-      success: true,
-      data: {
-        newStreamCredentials: mapStreamToUpdateStreamCredentialsDto(newStream),
-      },
-    };
-  } catch (error) {
-    console.error("onUpdateSelfStreamCredentials", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };
