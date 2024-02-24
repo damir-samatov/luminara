@@ -4,7 +4,6 @@ import { onSubscribe, onUnsubscribe } from "@/actions/subscription.actions";
 import { useServerAction } from "@/hooks/useServerAction";
 import { useBrowseNavigationContext } from "@/contexts/BrowseNavigationContext";
 import { Button } from "@/components/Button";
-import Link from "next/link";
 
 type ProfileProps = {
   isSubscribed: boolean;

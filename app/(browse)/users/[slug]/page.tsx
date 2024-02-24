@@ -17,7 +17,7 @@ const ProfilePage: FC<ProfilePageProps> = async ({ params }) => {
 
   if (!res.success) return notFound();
 
-  const { user, isSubscribed, isBanned } = res.data;
+  const { user, isSubscribed } = res.data;
 
   const userColor = stringToColor(user.username);
 

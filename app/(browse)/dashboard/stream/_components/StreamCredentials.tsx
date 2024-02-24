@@ -10,8 +10,9 @@ type StreamCredentialsProps = {
 export const StreamCredentials: FC<StreamCredentialsProps> = ({
   initialStreamCredentials,
 }) => {
-  const [streamCredentials, setStreamCredentials] =
-    useState<StreamCredentialsUpdateDto>(initialStreamCredentials);
+  const [streamCredentials] = useState<StreamCredentialsUpdateDto>(
+    initialStreamCredentials
+  );
 
   return (
     <div className="flex flex-col items-start gap-4">

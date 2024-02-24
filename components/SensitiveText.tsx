@@ -1,6 +1,5 @@
 import { FC, useCallback, useState } from "react";
 import { useCopyToClipboard } from "usehooks-ts";
-import { Button } from "@/components/Button";
 import {
   ClipboardDocumentCheckIcon,
   ClipboardIcon,
@@ -14,7 +13,7 @@ type SensitiveTextProps = {
 };
 
 export const SensitiveText: FC<SensitiveTextProps> = ({ label, value }) => {
-  const [_, copyToClipboard] = useCopyToClipboard();
+  const [, copyToClipboard] = useCopyToClipboard();
   const [isShown, setIsShown] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
 
