@@ -21,7 +21,7 @@ export const TextInput: FC<TextInputProps> = ({
     <input
       autoComplete="off"
       type="text"
-      className="block h-10 w-full rounded-md bg-gray-700 px-4 text-gray-100 placeholder-gray-400 outline-0"
+      className="block h-8 w-full rounded-md bg-gray-700 px-4 text-gray-100 placeholder-gray-400 outline-0"
       value={value}
       placeholder={placeholder}
       maxLength={maxLength}

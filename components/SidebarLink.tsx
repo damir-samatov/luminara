@@ -21,9 +21,10 @@ export const SidebarLink: FC<SidebarLinkProps> = ({
       className={classNames(
         "flex",
         "items-center",
-        "gap-x-3",
+        "gap-2",
         "rounded-md",
-        "p-2",
+        "px-2",
+        "py-1",
         "text-sm",
         "font-semibold",
         "leading-6",

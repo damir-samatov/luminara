@@ -30,7 +30,7 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
 
   const sidebarChildren = useMemo(
     () => (
-      <nav className="flex flex-1 grow flex-col gap-3 overflow-y-auto p-4">
+      <nav className="flex flex-1 grow flex-col gap-2 overflow-y-auto p-4">
         {SIDEBAR_LINKS.map(({ href, label, icon }) => (
           <SidebarLink
             key={href}
@@ -75,10 +75,10 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
       <div className="sticky top-0 mt-auto bg-gray-900">
         <Link
           href="/"
-          className="font-bolder flex items-end gap-2 fill-gray-400 p-8 text-3xl leading-none text-gray-400 hover:fill-gray-200 hover:text-gray-200"
+          className="font-bolder flex items-end gap-2 fill-gray-400 p-6 pb-2 pt-4 text-2xl leading-none text-gray-400 hover:fill-gray-200 hover:text-gray-200"
         >
           <svg
-            className="h-8 w-8"
+            className="h-6 w-6"
             version="1.1"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 200 200"
@@ -101,7 +101,7 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
     () => (
       <div className="sticky bottom-0 bg-gray-900 px-4 py-6">
         <SignOutButton>
-          <button className="group flex w-full gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white">
+          <button className="group flex w-full gap-2 rounded-md px-2 py-1 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white">
             <ArrowLeftStartOnRectangleIcon className="h-6 w-6 shrink-0" />
             Sing Out
           </button>
@@ -140,7 +140,7 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
               leaveFrom="translate-x-0"
               leaveTo="-translate-x-full"
             >
-              <Dialog.Panel className="relative mr-16 flex w-full max-w-xs flex-1">
+              <Dialog.Panel className="relative mr-16 flex w-full max-w-72 flex-1">
                 <Transition.Child
                   as={Fragment}
                   enter="ease-in-out duration-300"
@@ -150,10 +150,10 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                 >
-                  <div className="absolute left-full top-0 flex w-16 justify-center pt-5">
+                  <div className="absolute left-full top-0 flex justify-center">
                     <button
                       type="button"
-                      className="-m-2.5 p-2.5"
+                      className="p-4"
                       onClick={() => setSidebarOpen(false)}
                     >
                       <span className="sr-only">Close sidebar</span>
@@ -171,12 +171,12 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
         </Dialog>
       </Transition.Root>
 
-      <div className="fixed inset-y-0 z-50 hidden w-80 lg:block">
+      <div className="fixed inset-y-0 z-50 hidden w-72 lg:block">
         {sidebarContainer}
       </div>
 
-      <div className="flex min-h-screen flex-col lg:pl-80">
-        <div className="sticky top-0 z-40 flex h-16 items-center gap-x-4 bg-gray-800 px-4">
+      <div className="flex min-h-screen flex-col lg:pl-72">
+        <div className="sticky top-0 z-40 flex h-14 items-center gap-x-4 bg-gray-800 px-4">
           <button
             type="button"
             className="lg:hidden"

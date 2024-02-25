@@ -15,17 +15,25 @@ img {
   @apply object-center;
 }
 
-::-webkit-scrollbar {
-  @apply w-2;
+* {
+  ::-webkit-scrollbar {
+    @apply w-1.5;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-transparent;
+  }
+
+  &:hover::-webkit-scrollbar-thumb {
+    @apply bg-gray-600;
+  }
 }
 
-::-webkit-scrollbar-track {
-  background-color: transparent;
-}
 
-::-webkit-scrollbar-thumb {
-  @apply bg-gray-600;
-}
 
 .aws-ivs-player-wrapper {
   & > * {
