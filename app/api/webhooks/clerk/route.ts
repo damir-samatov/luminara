@@ -18,6 +18,8 @@ export async function POST(req: Request) {
         externalUserId: webhookEvent.data.id,
         username: webhookEvent.data.username,
         imageUrl: webhookEvent.data.image_url,
+        firstName: webhookEvent.data.first_name,
+        lastName: webhookEvent.data.last_name,
       });
     }
 
@@ -30,6 +32,8 @@ export async function POST(req: Request) {
         externalUserId: webhookEvent.data.id,
         username: webhookEvent.data.username,
         imageUrl: webhookEvent.data.image_url,
+        firstName: webhookEvent.data.first_name,
+        lastName: webhookEvent.data.last_name,
       });
     }
 

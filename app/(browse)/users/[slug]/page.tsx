@@ -20,6 +20,8 @@ const ProfilePage: FC<ProfilePageProps> = async ({ params }) => {
     <ProfileHead
       user={{
         id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
         username: user.username,
         imageUrl: user.imageUrl,
         isSelfSubscribed: isSelfSubscribed,

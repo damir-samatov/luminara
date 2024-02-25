@@ -43,11 +43,14 @@ export const getUserByUsername = async (username: string) => {
 
 export const createUser = async (userCreateDto: UserCreateDto) => {
   try {
-    const { externalUserId, username, imageUrl } = userCreateDto;
+    const { externalUserId, username, imageUrl, firstName, lastName } =
+      userCreateDto;
     return await db.user.create({
       data: {
         externalUserId,
         username,
+        firstName,
+        lastName,
         imageUrl,
         stream: {
           create: {
@@ -64,13 +67,16 @@ export const createUser = async (userCreateDto: UserCreateDto) => {
 
 export const updateUser = (userUpdateDto: UserUpdateDto) => {
   try {
-    const { externalUserId, username, imageUrl } = userUpdateDto;
+    const { externalUserId, username, imageUrl, firstName, lastName } =
+      userUpdateDto;
     return db.user.update({
       where: {
         externalUserId,
       },
       data: {
         username,
+        firstName,
+        lastName,
         imageUrl,
       },
     });
@@ -101,10 +107,26 @@ export const searchUserByUsername = async (
     return await db.user.findMany({
       take: 20,
       where: {
-        username: {
-          contains: usernameSearch,
-          mode: "insensitive",
-        },
+        OR: [
+          {
+            username: {
+              contains: usernameSearch,
+              mode: "insensitive",
+            },
+          },
+          {
+            firstName: {
+              contains: usernameSearch,
+              mode: "insensitive",
+            },
+          },
+          {
+            lastName: {
+              contains: usernameSearch,
+              mode: "insensitive",
+            },
+          },
+        ],
         bannedUsers: {
           none: {
             bannedUserId: userId,

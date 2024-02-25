@@ -12,6 +12,8 @@ model User {
   id             String @id @default(auto()) @map("_id") @db.ObjectId
   externalUserId String @unique
   username       String @unique
+  firstName      String @default("")
+  lastName       String @default("")
   imageUrl       String
 
   stream Stream?
