@@ -23,7 +23,6 @@ export const getProfileData = async (
     ]);
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
     if (!user) return ERROR_RESPONSES.NOT_FOUND;
-    if (self.id === user.id) return ERROR_RESPONSES.NOT_FOUND;
     const selfBan = await getBan(user.id, self.id);
     if (selfBan) return ERROR_RESPONSES.NOT_FOUND;
     const subscription = await getSubscription(self.id, user.id);

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 export const useServerAction = <
   T extends (...ars: Parameters<T>) => Promise<Awaited<ReturnType<T>>>,
@@ -9,19 +9,21 @@ export const useServerAction = <
 ): [(...ars: Parameters<T>) => void, boolean] => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const action = async (...args: Parameters<T>) => {
-    if (isLoading) return;
-    setIsLoading(true);
-    try {
-      const res = await serverAction(...args);
-      onSuccess(res);
-    } catch (error) {
-      console.error("useServerAction", error);
-      onError();
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const action = useCallback(
+    async (...args: Parameters<T>) => {
+      setIsLoading(true);
+      try {
+        const res = await serverAction(...args);
+        onSuccess(res);
+      } catch (error) {
+        console.error("useServerAction", error);
+        onError();
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [serverAction, onSuccess, onError]
+  );
 
   return [action, isLoading];
 };

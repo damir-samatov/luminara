@@ -1,3 +1,4 @@
+"use server";
 import { getSelf } from "@/services/auth.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import { ActionDataResponse } from "@/types/action.types";
@@ -8,7 +9,7 @@ type OnSearchUsersResponseResponse = ActionDataResponse<{
   users: User[];
 }>;
 
-export const OnSearchUsers = async (
+export const onSearchUsers = async (
   usernameSearch: string
 ): Promise<OnSearchUsersResponseResponse> => {
   try {

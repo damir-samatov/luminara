@@ -110,9 +110,6 @@ export const searchUserByUsername = async (
             bannedUserId: userId,
           },
         },
-        NOT: {
-          id: userId,
-        },
       },
     });
   } catch (error) {

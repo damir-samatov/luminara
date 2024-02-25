@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { TextInput } from "@/components/TextInput";
 import { User } from ".prisma/client";
-import { OnSearchUsers } from "@/actions/user.actions";
+import { onSearchUsers } from "@/actions/user.actions";
 import { useServerAction } from "@/hooks/useServerAction";
 import { debounce } from "ts-debounce";
 import { UserProfileLink } from "@/components/UserProfileLink";
@@ -15,7 +15,7 @@ export const Search = () => {
   const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
   const [searchUsers, isSearchingUsers] = useServerAction(
-    OnSearchUsers,
+    onSearchUsers,
     (res) => {
       setIsLoading(false);
       if (!res.success) return setUsers([]);
