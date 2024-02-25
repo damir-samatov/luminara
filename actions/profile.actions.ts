@@ -9,8 +9,8 @@ import { ERROR_RESPONSES } from "@/configs/responses.config";
 
 type GetProfileDataResponse = ActionDataResponse<{
   user: User;
-  isSubscribed: boolean;
-  isBanned: boolean;
+  isSelfSubscribed: boolean;
+  isSelfBanned: boolean;
 }>;
 
 export const getProfileData = async (
@@ -25,13 +25,13 @@ export const getProfileData = async (
     if (!user) return ERROR_RESPONSES.NOT_FOUND;
     const selfBan = await getBan(user.id, self.id);
     if (selfBan) return ERROR_RESPONSES.NOT_FOUND;
-    const subscription = await getSubscription(self.id, user.id);
+    const selfSubscription = await getSubscription(self.id, user.id);
     return {
       success: true,
       data: {
         user,
-        isSubscribed: !!subscription,
-        isBanned: !!selfBan,
+        isSelfSubscribed: !!selfSubscription,
+        isSelfBanned: !!selfBan,
       },
     };
   } catch (error) {

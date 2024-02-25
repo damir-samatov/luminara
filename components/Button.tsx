@@ -17,7 +17,7 @@ export const Button: FC<ButtonProps> = ({
   size = "full",
   isDisabled = false,
   type = "primary",
-  loadingText = "LOADING...",
+  loadingText = "Loading...",
   isLoading,
 }) => {
   return (

@@ -27,6 +27,7 @@ export const SidebarLink: FC<SidebarLinkProps> = ({
         "text-sm",
         "font-semibold",
         "leading-6",
+        "transition-all",
         "hover:bg-gray-800",
         "hover:text-gray-100",
         isActive ? "bg-gray-800 text-gray-100" : "text-gray-400"

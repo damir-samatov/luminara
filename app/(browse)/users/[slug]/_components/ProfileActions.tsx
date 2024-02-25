@@ -43,6 +43,8 @@ export const ProfileActions: FC<ProfileProps> = ({ isSubscribed, userId }) => {
         {!hasSubscribed ? (
           <Button
             isDisabled={isSubscribePending}
+            isLoading={isSubscribePending}
+            loadingText="Subscribing..."
             onClick={() => subscribe(userId)}
           >
             Subscribe
@@ -50,6 +52,8 @@ export const ProfileActions: FC<ProfileProps> = ({ isSubscribed, userId }) => {
         ) : (
           <Button
             isDisabled={isUnsubscribePending}
+            isLoading={isUnsubscribePending}
+            loadingText="Unsubscribing..."
             onClick={() => unsubscribe(userId)}
           >
             Unsubscribe

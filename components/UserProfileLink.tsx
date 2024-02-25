@@ -24,6 +24,7 @@ export const UserProfileLink: FC<UserProfileLinkProps> = ({
         "p-2",
         "text-sm",
         "font-semibold",
+        "transition-all",
         "leading-6",
         "text-gray-400",
         "hover:bg-gray-800",

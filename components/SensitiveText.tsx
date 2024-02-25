@@ -33,8 +33,9 @@ export const SensitiveText: FC<SensitiveTextProps> = ({ label, value }) => {
         <input
           type={isShown ? "text" : "password"}
           readOnly
+          onClick={onCopy}
           autoComplete="off"
-          className="block h-10 w-full rounded-md bg-gray-700 px-4 text-gray-100 placeholder-gray-400 outline-0"
+          className="block h-10 w-full cursor-pointer rounded-md bg-gray-700 px-4 text-gray-100 placeholder-gray-400 outline-0"
           value={value}
         />
         <button
