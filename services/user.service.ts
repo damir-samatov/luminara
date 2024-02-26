@@ -1,4 +1,5 @@
 "use server";
+import { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
 import { UserCreateDto, UserUpdateDto } from "@/types/user.types";
 
@@ -28,12 +29,16 @@ export const getUserByExternalUserId = async (externalUserId: string) => {
   }
 };
 
-export const getUserByUsername = async (username: string) => {
+export const getUserByUsername = async (
+  username: string,
+  include?: Prisma.UserInclude
+) => {
   try {
     return await db.user.findUnique({
       where: {
         username,
       },
+      include,
     });
   } catch (error) {
     console.error("getUserByUsername", error);

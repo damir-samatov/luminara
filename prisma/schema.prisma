@@ -9,14 +9,14 @@ datasource db {
 }
 
 model User {
-  id             String @id @default(auto()) @map("_id") @db.ObjectId
-  externalUserId String @unique
-  username       String @unique
-  firstName      String @default("")
-  lastName       String @default("")
+  id             String  @id @default(auto()) @map("_id") @db.ObjectId
+  externalUserId String  @unique
+  username       String  @unique
+  firstName      String  @default("")
+  lastName       String  @default("")
   imageUrl       String
-
-  stream Stream?
+  posts          Post[]
+  stream         Stream?
 
   subscribedTo Subscription[] @relation("SubscribedBy")
   subscribedBy Subscription[] @relation("SubscribedTo")
@@ -70,6 +70,43 @@ model Stream {
   isChatForSubscribersOnly Boolean @default(true)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@fulltext([title])
+}
+
+model Post {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  title  String
+  body   String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  medias    Media[]
+
+  @@fulltext([title, body])
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  AUDIO
+  FILE
+}
+
+model Media {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  postId    String    @db.ObjectId
+  mediaType MediaType
+  title     String
+  url       String
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

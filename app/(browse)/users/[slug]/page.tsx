@@ -14,19 +14,22 @@ const ProfilePage: FC<ProfilePageProps> = async ({ params }) => {
 
   if (!res.success) return notFound();
 
-  const { user, isSelfSubscribed } = res.data;
+  const { user, isSelfSubscribed, posts } = res.data;
 
   return (
-    <ProfileHead
-      user={{
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        username: user.username,
-        imageUrl: user.imageUrl,
-        isSelfSubscribed: isSelfSubscribed,
-      }}
-    />
+    <div>
+      <ProfileHead
+        user={{
+          id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          username: user.username,
+          imageUrl: user.imageUrl,
+          isSelfSubscribed: isSelfSubscribed,
+        }}
+      />
+      <pre>{JSON.stringify(posts, null, 2)}</pre>
+    </div>
   );
 };
 
