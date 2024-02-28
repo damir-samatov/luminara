@@ -1,9 +1,13 @@
 "use server";
 import { db } from "@/lib/db";
 import { PostCreateDto } from "@/types/post.types";
+import { Post, Image } from ".prisma/client";
 
 export const createPost = async (postCreateDto: PostCreateDto) => {
-  const { userId, title, body, medias } = postCreateDto;
+  const { userId, title, body, images } = postCreateDto;
+
+  const imagesCreate =
+    images.length < 1 ? undefined : { createMany: { data: images } };
 
   try {
     return await db.post.create({
@@ -11,11 +15,7 @@ export const createPost = async (postCreateDto: PostCreateDto) => {
         title,
         body,
         userId,
-        medias: {
-          createMany: {
-            data: medias,
-          },
-        },
+        images: imagesCreate,
       },
     });
   } catch (error) {
@@ -24,14 +24,20 @@ export const createPost = async (postCreateDto: PostCreateDto) => {
   }
 };
 
-export const getPostsByUserId = async (userId: string) => {
+export const getPostsByUserId = async (
+  userId: string
+): Promise<
+  (Post & {
+    images: Image[];
+  })[]
+> => {
   try {
     return await db.post.findMany({
       where: {
         userId,
       },
       include: {
-        medias: true,
+        images: true,
       },
     });
   } catch (error) {

@@ -78,35 +78,39 @@ model Stream {
 }
 
 model Post {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
-  userId String @db.ObjectId
+  id     String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId String  @db.ObjectId
   title  String
   body   String
+  images Image[]
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  medias    Media[]
 
   @@fulltext([title, body])
 }
 
-enum MediaType {
-  IMAGE
-  VIDEO
-  AUDIO
-  FILE
+model Image {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+  key   String
+
+  postId String @db.ObjectId
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@fulltext([title])
 }
 
-model Media {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  postId    String    @db.ObjectId
-  mediaType MediaType
-  title     String
-  url       String
-
-  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+model Video {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  key          String
+  thumbnailKey String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

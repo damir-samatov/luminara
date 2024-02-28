@@ -2,22 +2,26 @@
 import { ActionDataResponse } from "@/types/action.types";
 import { getSelf } from "@/services/auth.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
-import { getSignedFileUploadUrl } from "@/services/s3.service";
+import {
+  getSignedFileReadUrl,
+  getSignedFileUploadUrl,
+} from "@/services/s3.service";
+import { ELIGIBLE_FILE_TYPES, MAX_FILE_SIZE } from "@/configs/file.config";
 
 type GetSignedFileUploadUrlParams = {
-  name: string;
+  title: string;
   size: number;
   type: string;
 };
 
 type OnGetSignedFileUploadUrl = ActionDataResponse<{
   signedUrl: string;
+  fileKey: string;
+  title: string;
 }>;
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024;
-
 export const onGetSignedFileUploadUrl = async ({
-  name,
+  title,
   size,
   type,
 }: GetSignedFileUploadUrlParams): Promise<OnGetSignedFileUploadUrl> => {
@@ -26,12 +30,52 @@ export const onGetSignedFileUploadUrl = async ({
 
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
 
-    if (size > MAX_FILE_SIZE) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+    if (size > MAX_FILE_SIZE || !ELIGIBLE_FILE_TYPES.includes(type))
+      return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    const fileKey = `${new Date().toISOString()}`;
 
     const signedUrl = await getSignedFileUploadUrl({
-      key: `${self.username}_${name}`,
+      key: fileKey,
       size: size,
       type: type,
+      userId: self.id,
+    });
+
+    if (!signedUrl) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    return {
+      success: true,
+      data: {
+        signedUrl,
+        fileKey,
+        title,
+      },
+    };
+  } catch (error) {
+    console.error("onGetSignedFileUploadUrl", error);
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+  }
+};
+
+type GetSignedFileReadUrlParams = {
+  key: string;
+};
+
+type OnGetSignedFileReadUrl = ActionDataResponse<{
+  signedUrl: string;
+}>;
+
+export const onGetSignedFileReadUrl = async ({
+  key,
+}: GetSignedFileReadUrlParams): Promise<OnGetSignedFileReadUrl> => {
+  try {
+    const self = await getSelf();
+
+    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+
+    const signedUrl = await getSignedFileReadUrl({
+      key,
     });
 
     if (!signedUrl) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
@@ -43,7 +87,7 @@ export const onGetSignedFileUploadUrl = async ({
       },
     };
   } catch (error) {
-    console.error("onGetSignedFileUploadUrl", error);
+    console.error("onGetSignedFileReadUrl", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };

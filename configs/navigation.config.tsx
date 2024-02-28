@@ -15,8 +15,13 @@ export const SIDEBAR_LINKS = [
   },
   {
     href: "/dashboard",
-    label: "My Profile",
+    label: "Profile",
     icon: <UserIcon className="h-6 w-6 shrink-0" />,
+  },
+  {
+    href: "/dashboard/posts",
+    label: "Posts",
+    icon: <MegaphoneIcon className="h-6 w-6 shrink-0" />,
   },
   {
     href: "/dashboard/stream",
@@ -26,11 +31,6 @@ export const SIDEBAR_LINKS = [
 ];
 
 export const COMING_SOON_LINKS = [
-  {
-    href: "/dashboard/posts",
-    label: "My Posts",
-    icon: <MegaphoneIcon className="h-6 w-6 shrink-0" />,
-  },
   {
     href: "/dashboard/community",
     label: "Community",

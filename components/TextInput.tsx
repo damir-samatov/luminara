@@ -15,7 +15,7 @@ export const TextInput: FC<TextInputProps> = ({
   onChange,
   placeholder,
   maxLength = 255,
-  disableWrapper = false,
+  disableWrapper = true,
 }) => {
   const input = (
     <input

@@ -1,12 +1,19 @@
-"use client";
 import { ChangeEvent, FC, DragEvent, useCallback, useRef } from "react";
+import { MAX_FILE_SIZE } from "@/configs/file.config";
 
-interface FileDropProps {
-  files: File[];
+type FileDropProps = {
   onChange: (files: File[]) => void;
-}
+  eligibleFileTypes: string[];
+  maxFileSize?: number;
+  label?: string;
+};
 
-export const FileDrop: FC<FileDropProps> = ({ files, onChange }) => {
+export const FileDrop: FC<FileDropProps> = ({
+  onChange,
+  eligibleFileTypes,
+  label = "Drop files here",
+  maxFileSize = MAX_FILE_SIZE,
+}) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const onClick = useCallback(() => {
@@ -16,8 +23,11 @@ export const FileDrop: FC<FileDropProps> = ({ files, onChange }) => {
   const onFilesSelected = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       const selectedFiles = Array.from(event.target.files || []);
-      onChange(selectedFiles);
-      console.log(selectedFiles);
+      const filteredFiles = selectedFiles.filter(
+        (file) => file.size < MAX_FILE_SIZE
+      );
+      onChange(filteredFiles);
+      console.log({ filteredFiles });
     },
     [onChange]
   );
@@ -26,30 +36,37 @@ export const FileDrop: FC<FileDropProps> = ({ files, onChange }) => {
     (event: DragEvent<HTMLDivElement>) => {
       event.preventDefault();
       const selectedFiles = Array.from(event.dataTransfer.files || []);
-      onChange(selectedFiles);
-      console.log(selectedFiles);
+      const filteredFiles = selectedFiles.filter(
+        (file) => file.size < maxFileSize
+      );
+      onChange(filteredFiles);
+      console.log({ filteredFiles });
     },
     [onChange]
   );
 
   return (
-    <div>
-      <div
-        className="h-24 w-full bg-blue-300"
-        onClick={onClick}
-        onDrop={onDrop}
-      >
-        <input
-          hidden
-          multiple
-          onChange={onFilesSelected}
-          ref={fileInputRef}
-          type="file"
-        />
-      </div>
-      {files.map((file) => (
-        <div key={file.name}>{file.name}</div>
-      ))}
+    <div
+      className="flex h-full cursor-pointer flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed border-gray-500 p-6 font-bold text-gray-500"
+      onClick={onClick}
+      onDrop={onDrop}
+    >
+      <p>{label}</p>
+      <p className="text-xs">
+        {"Accepts: " +
+          eligibleFileTypes
+            .join(", ")
+            .replaceAll("image/", ".")
+            .replaceAll("video/", ".")}
+      </p>
+      <input
+        hidden
+        multiple
+        onChange={onFilesSelected}
+        ref={fileInputRef}
+        type="file"
+        accept={eligibleFileTypes.join(",")}
+      />
     </div>
   );
 };
