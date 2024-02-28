@@ -5,6 +5,8 @@ import { Button } from "@/components/Button";
 import { TextInput } from "@/components/TextInput";
 import { onCreatePost } from "@/actions/post.actions";
 import { ImagePicker } from "@/components/ImagePicker";
+import { ERROR_RESPONSES } from "@/configs/responses.config";
+import { useRouter } from "next/navigation";
 
 type PostContent = {
   title: string;
@@ -45,16 +47,18 @@ const createPost = async (postContent: PostContent, imageFiles: File[]) => {
     });
   } catch (error) {
     console.error(error);
-    return null;
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };
 
 export const CreatePostForm = () => {
+  const router = useRouter();
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [postContent, setPostContent] = useState<PostContent>({
     title: "",
     body: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const onPostContentChange = <T extends keyof PostContent>(
     key: T,
@@ -64,7 +68,11 @@ export const CreatePostForm = () => {
   };
 
   const onCreatePostClick = async () => {
-    await createPost(postContent, imageFiles);
+    if (!postContent.title || !postContent.body) return;
+    setIsLoading(true);
+    const res = await createPost(postContent, imageFiles);
+    if (res.success) router.push("/dashboard/posts");
+    setIsLoading(false);
   };
 
   return (
@@ -87,6 +95,7 @@ export const CreatePostForm = () => {
           size="max-content"
           onClick={onCreatePostClick}
           loadingText="Creating Post..."
+          isLoading={isLoading}
         >
           Create Post
         </Button>

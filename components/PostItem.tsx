@@ -26,14 +26,18 @@ export const PostItem: FC<PostItemProps> = async ({ post }) => {
                   height="1080"
                   src={res.data.signedUrl}
                   alt={post.title}
+                  loading="lazy"
                 />
               </div>
             )
         )}
       </div>
-      <div className="flex flex-col gap-4 p-4">
+      <div className="flex flex-col gap-2 p-4">
+        <p className="text-end text-xs text-gray-600">
+          {post.createdAt.toDateString()}
+        </p>
         <h2 className="text-3xl">{post.title}</h2>
-        <p>{post.body}</p>
+        <p className="mt-4">{post.body}</p>
       </div>
     </div>
   );
