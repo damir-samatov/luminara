@@ -11,10 +11,11 @@ const PostsPage = async () => {
   return (
     <div className="p-4">
       <CreatePostForm />
-      <pre>{JSON.stringify(res, null, 2)}</pre>
-      {res.data.posts.map((post) => (
-        <PostItem key={post.id} post={post} />
-      ))}
+      <div className="flex flex-col gap-4">
+        {res.data.posts.map((post) => (
+          <PostItem key={post.id} post={post} />
+        ))}
+      </div>
     </div>
   );
 };

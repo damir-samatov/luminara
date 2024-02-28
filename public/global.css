@@ -13,7 +13,6 @@ img {
   @apply h-full;
   @apply object-cover;
   @apply object-center;
-  @apply bg-gray-600
 }
 
 * {
