@@ -1,6 +1,6 @@
 import { onGetRecommendations } from "@/actions/recommendation.actions";
 import { notFound } from "next/navigation";
-import RecommendationCard from "@/components/RecommendationCard";
+import UserCard from "@/components/UserCard";
 
 const IndexPage = async () => {
   const res = await onGetRecommendations();
@@ -13,7 +13,10 @@ const IndexPage = async () => {
       <div className="flex flex-wrap gap-4">
         {res.data.recommendations.map((recommendation) => (
           <div key={recommendation.username} className="w-60">
-            <RecommendationCard recommendation={recommendation} />
+            <UserCard
+              username={recommendation.username}
+              imageUrl={recommendation.imageUrl}
+            />
           </div>
         ))}
       </div>

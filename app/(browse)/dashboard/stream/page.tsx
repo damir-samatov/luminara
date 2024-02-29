@@ -6,6 +6,7 @@ import {
 } from "@/helpers/stream.helpers";
 import { StreamSettings } from "@/app/(browse)/dashboard/stream/_components/StreamConfigurator";
 import { StreamCredentials } from "@/app/(browse)/dashboard/stream/_components/StreamCredentials";
+import { AwsStreamPlayer } from "@/components/AwsStreamPlayer";
 
 const StreamPage = async () => {
   const res = await onGetSelfStream();
@@ -24,6 +25,7 @@ const StreamPage = async () => {
           res.data.stream
         )}
       />
+      <AwsStreamPlayer />
     </div>
   );
 };

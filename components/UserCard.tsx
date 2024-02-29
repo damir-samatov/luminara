@@ -1,17 +1,14 @@
 import { FC } from "react";
-import { User } from ".prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { stringToColor } from "@/utils/style.utils";
 
-type RecommendationCardProps = {
-  recommendation: User;
+type UserCardProps = {
+  imageUrl: string;
+  username: string;
 };
 
-const RecommendationCard: FC<RecommendationCardProps> = ({
-  recommendation,
-}) => {
-  const { username, imageUrl } = recommendation;
+const UserCard: FC<UserCardProps> = ({ username, imageUrl }) => {
   const userColor = stringToColor(username);
 
   return (
@@ -43,4 +40,4 @@ const RecommendationCard: FC<RecommendationCardProps> = ({
   );
 };
 
-export default RecommendationCard;
+export default UserCard;

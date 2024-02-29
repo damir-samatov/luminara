@@ -1,9 +1,10 @@
 import {
   ArrowTrendingUpIcon,
+  Cog6ToothIcon,
   HomeIcon,
   MegaphoneIcon,
+  NewspaperIcon,
   UserGroupIcon,
-  UserIcon,
   VideoCameraIcon,
 } from "@heroicons/react/24/outline";
 
@@ -14,9 +15,14 @@ export const SIDEBAR_LINKS = [
     icon: <HomeIcon className="h-6 w-6 shrink-0" />,
   },
   {
+    href: "/subscriptions",
+    label: "Subscriptions",
+    icon: <NewspaperIcon className="h-6 w-6 shrink-0" />,
+  },
+  {
     href: "/dashboard",
-    label: "Profile",
-    icon: <UserIcon className="h-6 w-6 shrink-0" />,
+    label: "Dashboard",
+    icon: <Cog6ToothIcon className="h-6 w-6 shrink-0" />,
   },
   {
     href: "/dashboard/posts",
