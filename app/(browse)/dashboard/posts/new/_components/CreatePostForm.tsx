@@ -7,6 +7,7 @@ import { onCreatePost } from "@/actions/post.actions";
 import { ImagePicker } from "@/components/ImagePicker";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import { useRouter } from "next/navigation";
+import { TextEditor } from "@/components/TextEditor";
 
 type PostContent = {
   title: string;
@@ -76,30 +77,27 @@ export const CreatePostForm = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-4">
-        <TextInput
-          placeholder="Title"
-          value={postContent.title}
-          onChange={(value) => onPostContentChange("title", value)}
-        />
-        <TextInput
-          placeholder="Body"
-          value={postContent.body}
-          onChange={(value) => onPostContentChange("body", value)}
-        />
-      </div>
-      <div className="flex flex-col gap-4">
-        <ImagePicker files={imageFiles} onChange={setImageFiles} />
-        <Button
-          size="max-content"
-          onClick={onCreatePostClick}
-          loadingText="Creating Post..."
-          isLoading={isLoading}
-        >
-          Create Post
-        </Button>
-      </div>
+    <div className="flex flex-col gap-6">
+      <ImagePicker files={imageFiles} onChange={setImageFiles} />
+      <TextInput
+        placeholder="Enter your post title"
+        className="h-auto rounded-md border-2 border-gray-500 bg-transparent p-2"
+        value={postContent.title}
+        onChange={(value) => onPostContentChange("title", value)}
+      />
+      <TextEditor
+        placeholder="Start writing your post"
+        initialValue={postContent.body}
+        onChange={(value) => onPostContentChange("body", value)}
+      />
+      <Button
+        size="max-content"
+        onClick={onCreatePostClick}
+        loadingText="Creating Post..."
+        isLoading={isLoading}
+      >
+        Create Post
+      </Button>
     </div>
   );
 };

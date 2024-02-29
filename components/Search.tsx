@@ -53,7 +53,6 @@ export const Search = () => {
         placeholder="Search..."
         onChange={setSearchTerm}
         value={searchTerm}
-        disableWrapper
       />
       {isFocused && searchTerm && (
         <div className="absolute top-[120%] flex max-h-[400px] w-full flex-col gap-4 overflow-y-auto rounded-md bg-gray-900 p-4">

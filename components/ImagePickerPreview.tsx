@@ -26,12 +26,12 @@ export const ImagePickerPreview: FC<ImagePickerPreviewProps> = ({
           height={360}
         />
       </div>
-      <div className="flex flex-col gap-2 truncate">
+      <div className="flex flex-col gap-2 truncate text-gray-400">
         <p className="text-xs">{file.name}</p>
         <p className="text-xs">{size}</p>
       </div>
       <button className="ml-auto" onClick={onClickRemove}>
-        <TrashIcon className="h-6 w-6" />
+        <TrashIcon className="h-6 w-6 text-gray-400 hover:text-gray-300" />
       </button>
     </div>
   );

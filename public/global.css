@@ -44,3 +44,12 @@ img {
     @apply -translate-y-0.5;
   }
 }
+
+.text-editor {
+  [contenteditable=true] {
+    @apply outline-0;
+    @apply min-h-32;
+    @apply py-4;
+    @apply px-2;
+  }
+}

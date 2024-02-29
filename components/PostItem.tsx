@@ -37,7 +37,7 @@ export const PostItem: FC<PostItemProps> = async ({ post }) => {
           {post.createdAt.toDateString()}
         </p>
         <h2 className="text-3xl">{post.title}</h2>
-        <p className="mt-4">{post.body}</p>
+        <div className="mt-4" dangerouslySetInnerHTML={{ __html: post.body }} />
       </div>
     </div>
   );

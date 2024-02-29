@@ -75,7 +75,6 @@ export const StreamSettings: FC<StreamConfiguratorProps> = ({
         <TextInput
           value={streamSettings.title}
           onChange={(value) => onChange("title", value)}
-          label="STREAM TITLE"
           placeholder="STREAM TITLE..."
         />
         <SliderInput
