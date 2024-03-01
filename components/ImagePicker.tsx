@@ -5,17 +5,24 @@ import { ImagePickerPreview } from "@/components/ImagePickerPreview";
 import { classNames } from "@/utils/style.utils";
 
 type ImagePickerProps = {
+  label?: string;
   files: File[];
   onChange: (files: File[]) => void;
+  vertical?: boolean;
 };
 
-export const ImagePicker: FC<ImagePickerProps> = ({ files, onChange }) => {
+export const ImagePicker: FC<ImagePickerProps> = ({
+  files,
+  onChange,
+  label = "Drop the images here",
+  vertical = false,
+}) => {
   const hasFiles = files.length > 0;
   return (
     <div
       className={classNames(
         "grid items-stretch gap-4",
-        hasFiles && "grid-cols-2"
+        !vertical && hasFiles ? "grid-cols-2" : "grid-cols-1"
       )}
     >
       {hasFiles && (
@@ -33,7 +40,7 @@ export const ImagePicker: FC<ImagePickerProps> = ({ files, onChange }) => {
       )}
       <div>
         <FileDrop
-          label="Drop images here"
+          label={label}
           onChange={onChange}
           eligibleFileTypes={ELIGIBLE_IMAGE_TYPES}
         />

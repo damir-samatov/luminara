@@ -42,6 +42,17 @@ img {
     @apply left-0.5;
     @apply -translate-x-0.5;
     @apply -translate-y-0.5;
+
+  }
+
+  .vjs-big-play-button {
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+  }
+
+  .vjs-poster{
+    background-size: cover !important;
   }
 }
 

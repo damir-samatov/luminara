@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import {
   Player,
   PlayerEventType,
@@ -13,6 +13,7 @@ import videojs from "video.js";
 import { classNames } from "@/utils/style.utils";
 import { VideoPlaceholder } from "@/components/VideoPlaceholder";
 import "video.js/dist/video-js.css";
+import { onGetStreamViewerData } from "@/actions/stream.actions";
 
 const WASM_WORKER_URL =
   "https://player.live-video.net/1.24.0/amazon-ivs-wasmworker.min.js";
@@ -22,7 +23,13 @@ const WASM_BINARY_URL =
 const TEST_STREAM =
   "https://fcc3ddae59ed.us-west-2.playback.live-video.net/api/video/v1/us-west-2.893648527354.channel.DmumNckWFTqz.m3u8";
 
-export const AwsStreamPlayer = () => {
+type AwsStreamPlayerProps = {
+  streamerUserId?: string;
+};
+
+export const AwsStreamPlayer: FC<AwsStreamPlayerProps> = ({
+  streamerUserId,
+}) => {
   const videoElRef = useRef<HTMLVideoElement>(null);
   const playerWrapperElRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<videojs.Player>();
@@ -33,14 +40,18 @@ export const AwsStreamPlayer = () => {
   useEffect(() => {
     (async () => {
       if (!videoElRef.current || !playerWrapperElRef.current || isReady) return;
-      // const viewerJwt = await getIvsViewerToken(
-      //   "arn:aws:ivs:eu-central-1:036346596583:channel/itr6DdzIlVAn"
-      // );
-      //
-      // const videoUrl =
-      //   "https://75a562d70e98.eu-central-1.playback.live-video.net/api/video/v1/eu-central-1.036346596583.channel.itr6DdzIlVAn.m3u8";
-      //
-      // const playbackUrl = `${videoUrl}?token=${viewerJwt}`;
+
+      let playbackUrl = TEST_STREAM;
+      let thumbnailUrl = "";
+
+      if (streamerUserId) {
+        const res = await onGetStreamViewerData(streamerUserId);
+
+        if (res.success) {
+          playbackUrl = `${res.data.viewerStreamData.streamUrl}?token=${res.data.viewerStreamData.viewerToken}`;
+          thumbnailUrl = res.data.viewerStreamData.thumbnailUrl;
+        }
+      }
 
       registerIVSTech(videojs, {
         wasmWorker: WASM_WORKER_URL,
@@ -57,9 +68,11 @@ export const AwsStreamPlayer = () => {
         () => {
           player.enableIVSQualityPlugin();
           player.autoplay(false);
+          player.fill();
           player.muted(true);
           player.volume(0.3);
-          player.src(TEST_STREAM);
+          player.src(playbackUrl);
+          thumbnailUrl && player.poster(thumbnailUrl);
           const ivsPlayer = player.getIVSPlayer();
           playerRef.current = player;
           ivsPlayerRef.current = ivsPlayer;
@@ -86,17 +99,17 @@ export const AwsStreamPlayer = () => {
           {!isReady && (
             <VideoPlaceholder text="Connecting..." state="loading" />
           )}
-          <div
-            ref={playerWrapperElRef}
-            className={classNames(
-              "aws-ivs-player-wrapper relative aspect-video w-full",
-              isReady ? "block" : "hidden"
-            )}
-          >
-            <video playsInline ref={videoElRef} className="video-js" controls />
-          </div>
         </>
       )}
+      <div
+        ref={playerWrapperElRef}
+        className={classNames(
+          "aws-ivs-player-wrapper relative aspect-video w-full",
+          isReady ? "block" : "hidden"
+        )}
+      >
+        <video playsInline ref={videoElRef} className="video-js" controls />
+      </div>
     </div>
   );
 };

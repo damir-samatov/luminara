@@ -1,31 +1,24 @@
-import { Stream } from ".prisma/client";
+export type StreamCreateDto = {
+  title: string;
+  isLive: boolean;
+  isChatEnabled: boolean;
 
-export type StreamUpdateDto = Partial<
-  Pick<
-    Stream,
-    | "title"
-    | "serverUrl"
-    | "streamKey"
-    | "ingressId"
-    | "imageUrl"
-    | "isLive"
-    | "chatDelay"
-    | "isChatEnabled"
-    | "isChatForSubscribersOnly"
-  >
->;
+  serverUrl: string;
+  streamKey: string;
+  streamKeyArn: string;
+  channelArn: string;
+  playbackUrl: string;
 
-export type StreamSettingsUpdateDto = Pick<
-  Stream,
-  | "title"
-  | "imageUrl"
-  | "isLive"
-  | "chatDelay"
-  | "isChatEnabled"
-  | "isChatForSubscribersOnly"
->;
+  thumbnailKey: string;
+};
 
-export type StreamCredentialsUpdateDto = Pick<
-  Stream,
-  "serverUrl" | "streamKey" | "ingressId"
->;
+export type StreamSettingsUpdateDto = {
+  title: string;
+  isLive: boolean;
+  isChatEnabled: boolean;
+};
+
+export type StreamCredentialsUpdateDto = {
+  serverUrl: string;
+  streamKey: string;
+};

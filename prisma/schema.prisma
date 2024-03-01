@@ -55,21 +55,20 @@ model Ban {
 }
 
 model Stream {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
-  userId String @unique @db.ObjectId
-  title  String
-
-  imageUrl  String?
-  ingressId String?
-  serverUrl String?
-  streamKey String?
-
-  isLive                   Boolean @default(false)
-  chatDelay                Int     @default(1)
-  isChatEnabled            Boolean @default(true)
-  isChatForSubscribersOnly Boolean @default(true)
+  id            String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String  @unique @db.ObjectId
+  title         String
+  thumbnailKey  String
+  isLive        Boolean @default(false)
+  isChatEnabled Boolean @default(true)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  serverUrl    String
+  playbackUrl  String
+  channelArn   String
+  streamKey    String
+  streamKeyArn String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

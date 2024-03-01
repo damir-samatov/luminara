@@ -1,6 +1,10 @@
 "use server";
 import { s3 } from "@/lib/s3";
-import { PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import {
+  PutObjectCommand,
+  GetObjectCommand,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {
   READ_FILE_EXPIRATION_TIME,
@@ -18,6 +22,19 @@ type GetSignedFileUploadUrlParams = {
 };
 
 //TODO add ChecksumSHA256 for object integrity
+
+export const deleteFile = async (key: string) => {
+  try {
+    const deleteObjectCommand = new DeleteObjectCommand({
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Key: key,
+    });
+
+    return await s3.send(deleteObjectCommand);
+  } catch (error) {
+    return null;
+  }
+};
 
 export const getSignedFileUploadUrl = async ({
   userId,
@@ -44,13 +61,7 @@ export const getSignedFileUploadUrl = async ({
   }
 };
 
-type GetSignedFileReadUrlParams = {
-  key: string;
-};
-
-export const getSignedFileReadUrl = async ({
-  key,
-}: GetSignedFileReadUrlParams) => {
+export const getSignedFileReadUrl = async (key: string) => {
   try {
     const getObjectCommand = new GetObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET_NAME,

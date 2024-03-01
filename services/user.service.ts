@@ -57,11 +57,6 @@ export const createUser = async (userCreateDto: UserCreateDto) => {
         firstName,
         lastName,
         imageUrl,
-        stream: {
-          create: {
-            title: `${username}'s stream`,
-          },
-        },
       },
     });
   } catch (error) {

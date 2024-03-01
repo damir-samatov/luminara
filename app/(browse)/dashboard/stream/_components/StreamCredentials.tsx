@@ -1,7 +1,9 @@
 "use client";
 import { SensitiveText } from "@/components/SensitiveText";
 import { StreamCredentialsUpdateDto } from "@/types/stream.types";
-import { FC, useState } from "react";
+import React, { FC, useState } from "react";
+import { Button } from "@/components/Button";
+import { onRefreshSelfStreamKey } from "@/actions/stream.actions";
 
 type StreamCredentialsProps = {
   initialStreamCredentials: StreamCredentialsUpdateDto;
@@ -14,18 +16,38 @@ export const StreamCredentials: FC<StreamCredentialsProps> = ({
     initialStreamCredentials
   );
 
+  const [isLoading, setIsLoading] = useState(false);
+  const onRefreshStreamKeyClick = async () => {
+    setIsLoading(true);
+    try {
+      await onRefreshSelfStreamKey();
+    } catch (error) {
+      console.error(error);
+    }
+    setIsLoading(false);
+  };
+
+  const { streamKey, serverUrl } = streamCredentials;
+
   return (
-    <div className="flex flex-col items-start gap-4">
-      <p className="py-2 text-lg font-semibold">STREAM CREDENTIALS</p>
+    <div className="flex flex-col items-start gap-6">
+      <p className="text-lg font-semibold">Config</p>
       <div className="flex w-full gap-4">
         <SensitiveText
-          value={streamCredentials.serverUrl || ""}
-          label="SERVER URL"
+          value={`rtmps://${serverUrl}:443/app/`}
+          label="Server URL"
         />
-        <SensitiveText
-          value={streamCredentials.streamKey || ""}
-          label="STREAM KEY"
-        />
+        <SensitiveText value={streamKey} label="Stream Key" />
+      </div>
+      <div className="mt-auto">
+        <Button
+          size="max-content"
+          isLoading={isLoading}
+          isDisabled={isLoading}
+          onClick={onRefreshStreamKeyClick}
+        >
+          Refresh Stream Key
+        </Button>
       </div>
     </div>
   );

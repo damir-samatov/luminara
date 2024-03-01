@@ -28,6 +28,7 @@ export const FileDrop: FC<FileDropProps> = ({
       );
       onChange(filteredFiles);
       console.log({ filteredFiles });
+      fileInputRef.current!.value = "";
     },
     [onChange]
   );

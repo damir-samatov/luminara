@@ -33,7 +33,7 @@ export const onGetSignedFileUploadUrl = async ({
     if (size > MAX_FILE_SIZE || !ELIGIBLE_FILE_TYPES.includes(type))
       return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
-    const fileKey = `${new Date().toISOString()}`;
+    const fileKey = `${new Date().toISOString()}_${self.id}`;
 
     const signedUrl = await getSignedFileUploadUrl({
       key: fileKey,
@@ -74,9 +74,7 @@ export const onGetSignedFileReadUrl = async ({
 
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
 
-    const signedUrl = await getSignedFileReadUrl({
-      key,
-    });
+    const signedUrl = await getSignedFileReadUrl(key);
 
     if (!signedUrl) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 

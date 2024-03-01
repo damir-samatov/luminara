@@ -1,33 +1,65 @@
 import { onGetSelfStream } from "@/actions/stream.actions";
 import { notFound } from "next/navigation";
-import {
-  mapStreamToUpdateStreamSettingsDto,
-  mapStreamToUpdateStreamCredentialsDto,
-} from "@/helpers/stream.helpers";
 import { StreamSettings } from "@/app/(browse)/dashboard/stream/_components/StreamConfigurator";
 import { StreamCredentials } from "@/app/(browse)/dashboard/stream/_components/StreamCredentials";
 import { AwsStreamPlayer } from "@/components/AwsStreamPlayer";
+import React from "react";
+import { StreamCreate } from "./_components/StreamCreate";
+import { StreamThumbnail } from "./_components/StreamThumbnail";
+import { ErrorResponseType } from "@/types/action.types";
+import { onGetSignedFileReadUrl } from "@/actions/file.actions";
 
 const StreamPage = async () => {
   const res = await onGetSelfStream();
 
-  if (!res.success) return notFound();
+  if (res.success) {
+    const {
+      title,
+      isLive,
+      isChatEnabled,
+      streamKey,
+      serverUrl,
+      userId,
+      thumbnailKey,
+    } = res.data.stream;
 
-  return (
-    <div className="flex flex-col gap-4 p-4">
-      <StreamSettings
-        initialStreamSettings={mapStreamToUpdateStreamSettingsDto(
-          res.data.stream
-        )}
-      />
-      <StreamCredentials
-        initialStreamCredentials={mapStreamToUpdateStreamCredentialsDto(
-          res.data.stream
-        )}
-      />
-      <AwsStreamPlayer />
-    </div>
-  );
+    let thumbnailUrl = "";
+
+    if (thumbnailKey) {
+      const res = await onGetSignedFileReadUrl({ key: thumbnailKey });
+
+      if (res.success) thumbnailUrl = res.data.signedUrl;
+    }
+
+    return (
+      <div className="flex flex-col gap-6 p-4">
+        <div className="grid grid-cols-2 gap-6">
+          <StreamSettings
+            initialStreamSettings={{ title, isLive, isChatEnabled }}
+          />
+          <StreamCredentials
+            initialStreamCredentials={{
+              streamKey,
+              serverUrl,
+            }}
+          />
+        </div>
+        <StreamThumbnail initialThumbnailUrl={thumbnailUrl} />
+        <p className="text-lg font-semibold">Preview</p>
+        <AwsStreamPlayer streamerUserId={userId} />
+      </div>
+    );
+  }
+
+  if (res.type === ErrorResponseType.NOT_FOUND) {
+    return (
+      <div className="flex flex-col gap-4 p-4">
+        <StreamCreate />
+      </div>
+    );
+  }
+
+  return notFound();
 };
 
 export default StreamPage;

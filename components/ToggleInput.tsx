@@ -14,7 +14,7 @@ export const ToggleInput: FC<ToggleInputProps> = ({
   onChange,
 }) => {
   return (
-    <div className="flex w-full items-center gap-4 rounded-md bg-gray-900 px-4 py-6 text-sm text-gray-100">
+    <div className="flex w-full items-center gap-4 rounded-md bg-gray-900 px-2 py-4 text-sm text-gray-100">
       <div className="w-max">
         <Switch
           checked={value}

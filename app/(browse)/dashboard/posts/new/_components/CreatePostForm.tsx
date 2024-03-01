@@ -1,5 +1,4 @@
 "use client";
-import { onGetSignedFileUploadUrl } from "@/actions/file.actions";
 import { useState } from "react";
 import { Button } from "@/components/Button";
 import { TextInput } from "@/components/TextInput";
@@ -8,30 +7,11 @@ import { ImagePicker } from "@/components/ImagePicker";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import { useRouter } from "next/navigation";
 import { TextEditor } from "@/components/TextEditor";
+import { uploadFile } from "@/helpers/file.helpers";
 
 type PostContent = {
   title: string;
   body: string;
-};
-
-const uploadFile = async (file: File) => {
-  const res = await onGetSignedFileUploadUrl({
-    title: file.name,
-    type: file.type,
-    size: file.size,
-  });
-
-  if (!res.success) return null;
-
-  await fetch(res.data.signedUrl, {
-    method: "PUT",
-    body: file,
-    headers: {
-      "Content-Type": file.type,
-    },
-  });
-
-  return res.data;
 };
 
 const createPost = async (postContent: PostContent, imageFiles: File[]) => {

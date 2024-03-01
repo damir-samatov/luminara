@@ -23,12 +23,15 @@ export const Button: FC<ButtonProps> = ({
   return (
     <button
       className={classNames(
-        "w-min-10 block rounded-md border-2 border-gray-800 px-8 py-2 text-center text-sm font-semibold hover:border-gray-700 hover:bg-gray-700",
+        "w-min-10 block rounded-md border-2 border-gray-800 px-8 py-2 text-center text-sm font-semibold text-gray-300",
         size === "max-content" ? "w-max" : "w-full",
-        type === "primary" ? "bg-gray-800" : "bg-transparent"
+        type === "primary" ? "bg-gray-800" : "bg-transparent",
+        isDisabled
+          ? "cursor-not-allowed text-gray-500"
+          : "cursor-pointer text-gray-300 hover:border-gray-700 hover:bg-gray-700"
       )}
       disabled={isDisabled}
-      onClick={onClick}
+      onClick={() => !isDisabled && onClick()}
     >
       {isLoading ? loadingText : children}
     </button>
