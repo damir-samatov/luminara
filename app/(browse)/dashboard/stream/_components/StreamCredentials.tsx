@@ -12,15 +12,19 @@ type StreamCredentialsProps = {
 export const StreamCredentials: FC<StreamCredentialsProps> = ({
   initialStreamCredentials,
 }) => {
-  const [streamCredentials] = useState<StreamCredentialsUpdateDto>(
-    initialStreamCredentials
-  );
+  const [streamCredentials, setStreamCredentials] =
+    useState<StreamCredentialsUpdateDto>(initialStreamCredentials);
 
   const [isLoading, setIsLoading] = useState(false);
   const onRefreshStreamKeyClick = async () => {
     setIsLoading(true);
     try {
-      await onRefreshSelfStreamKey();
+      const res = await onRefreshSelfStreamKey();
+      if (!res.success) return;
+      setStreamCredentials((prev) => ({
+        ...prev,
+        streamKey: res.data.streamKey,
+      }));
     } catch (error) {
       console.error(error);
     }
@@ -32,13 +36,11 @@ export const StreamCredentials: FC<StreamCredentialsProps> = ({
   return (
     <div className="flex flex-col items-start gap-6">
       <p className="text-lg font-semibold">Config</p>
-      <div className="flex w-full gap-4">
-        <SensitiveText
-          value={`rtmps://${serverUrl}:443/app/`}
-          label="Server URL"
-        />
-        <SensitiveText value={streamKey} label="Stream Key" />
-      </div>
+      <SensitiveText
+        value={`rtmps://${serverUrl}:443/app/`}
+        label="Server URL"
+      />
+      <SensitiveText value={streamKey} label="Stream Key" />
       <div className="mt-auto">
         <Button
           size="max-content"

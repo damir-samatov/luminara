@@ -64,18 +64,16 @@ export const StreamSettings: FC<StreamConfiguratorProps> = ({
         onChange={(value) => onChange("title", value)}
         placeholder="Title..."
       />
-      <div className="grid w-full grid-cols-2 gap-4">
-        <ToggleInput
-          label="Enable Chat"
-          value={streamSettings.isChatEnabled}
-          onChange={(value) => onChange("isChatEnabled", value)}
-        />
-        <ToggleInput
-          label="Go Live"
-          value={streamSettings.isLive}
-          onChange={(value) => onChange("isLive", value)}
-        />
-      </div>
+      <ToggleInput
+        label="Enable Chat"
+        value={streamSettings.isChatEnabled}
+        onChange={(value) => onChange("isChatEnabled", value)}
+      />
+      <ToggleInput
+        label="Go Live"
+        value={streamSettings.isLive}
+        onChange={(value) => onChange("isLive", value)}
+      />
       <div className="mt-auto flex w-full max-w-[400px] gap-4">
         <Button
           isDisabled={isLoading || !changeDetected}

@@ -112,7 +112,6 @@ export const onUpdateSelfStreamSettings = async (
     );
     if (!newStream) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
-    revalidatePath("/dashboard/stream", "page");
     return {
       success: true,
       data: {

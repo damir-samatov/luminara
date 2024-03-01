@@ -6,6 +6,7 @@ import { Button } from "@/components/Button";
 import { onUpdateSelfStreamThumbnailKey } from "@/actions/stream.actions";
 import { uploadFile } from "@/helpers/file.helpers";
 import { onGetSignedFileReadUrl } from "@/actions/file.actions";
+import { classNames } from "@/utils/style.utils";
 
 type StreamThumbnailProps = {
   initialThumbnailUrl: string;
@@ -57,11 +58,17 @@ export const StreamThumbnail: FC<StreamThumbnailProps> = ({
   return (
     <div className="flex flex-col gap-6">
       <p className="text-lg font-semibold">Thumbnail</p>
-      <div className="grid grid-cols-2 gap-6">
+      <div
+        className={classNames(
+          "grid gap-6",
+          thumbnailUrl ? "grid-cols-2" : "grid-cols-1"
+        )}
+      >
         {thumbnailUrl && (
           <div className="aspect-video w-full">
             <Image
               src={thumbnailUrl}
+              className="rounded-md"
               alt="Stream Thumbnail"
               width={1920}
               height={1080}
@@ -74,16 +81,16 @@ export const StreamThumbnail: FC<StreamThumbnailProps> = ({
           files={!!file ? [file] : []}
           onChange={onThumbnailChange}
         />
-        <Button
-          size="max-content"
-          isDisabled={isLoading || !file}
-          isLoading={isLoading}
-          loadingText="Saving thumbnail..."
-          onClick={onUpdateStreamThumbnailClick}
-        >
-          Save Thumbnail
-        </Button>
       </div>
+      <Button
+        size="max-content"
+        isDisabled={isLoading || !file}
+        isLoading={isLoading}
+        loadingText="Saving thumbnail..."
+        onClick={onUpdateStreamThumbnailClick}
+      >
+        Save Thumbnail
+      </Button>
     </div>
   );
 };

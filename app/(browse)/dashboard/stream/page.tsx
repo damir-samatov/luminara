@@ -2,7 +2,6 @@ import { onGetSelfStream } from "@/actions/stream.actions";
 import { notFound } from "next/navigation";
 import { StreamSettings } from "@/app/(browse)/dashboard/stream/_components/StreamConfigurator";
 import { StreamCredentials } from "@/app/(browse)/dashboard/stream/_components/StreamCredentials";
-import { AwsStreamPlayer } from "@/components/AwsStreamPlayer";
 import React from "react";
 import { StreamCreate } from "./_components/StreamCreate";
 import { StreamThumbnail } from "./_components/StreamThumbnail";
@@ -13,15 +12,8 @@ const StreamPage = async () => {
   const res = await onGetSelfStream();
 
   if (res.success) {
-    const {
-      title,
-      isLive,
-      isChatEnabled,
-      streamKey,
-      serverUrl,
-      userId,
-      thumbnailKey,
-    } = res.data.stream;
+    const { title, isLive, isChatEnabled, streamKey, serverUrl, thumbnailKey } =
+      res.data.stream;
 
     let thumbnailUrl = "";
 
@@ -45,8 +37,6 @@ const StreamPage = async () => {
           />
         </div>
         <StreamThumbnail initialThumbnailUrl={thumbnailUrl} />
-        <p className="text-lg font-semibold">Preview</p>
-        <AwsStreamPlayer streamerUserId={userId} />
       </div>
     );
   }
