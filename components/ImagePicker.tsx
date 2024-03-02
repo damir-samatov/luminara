@@ -21,7 +21,7 @@ export const ImagePicker: FC<ImagePickerProps> = ({
   return (
     <div
       className={classNames(
-        "grid items-stretch gap-4",
+        "grid h-full items-stretch gap-4",
         !vertical && hasFiles ? "grid-cols-2" : "grid-cols-1"
       )}
     >

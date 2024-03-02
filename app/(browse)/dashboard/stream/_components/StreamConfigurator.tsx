@@ -56,7 +56,7 @@ export const StreamSettings: FC<StreamConfiguratorProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-start gap-6">
+    <div className="flex flex-col items-start gap-4">
       <p className="text-lg font-semibold">Settings</p>
       <TextInput
         className="bg-gray-800 py-2"

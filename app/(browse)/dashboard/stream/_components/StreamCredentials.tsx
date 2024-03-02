@@ -34,7 +34,7 @@ export const StreamCredentials: FC<StreamCredentialsProps> = ({
   const { streamKey, serverUrl } = streamCredentials;
 
   return (
-    <div className="flex flex-col items-start gap-6">
+    <div className="flex flex-col items-start gap-4">
       <p className="text-lg font-semibold">Config</p>
       <SensitiveText
         value={`rtmps://${serverUrl}:443/app/`}

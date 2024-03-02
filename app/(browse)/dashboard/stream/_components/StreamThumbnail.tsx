@@ -56,41 +56,44 @@ export const StreamThumbnail: FC<StreamThumbnailProps> = ({
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4">
       <p className="text-lg font-semibold">Thumbnail</p>
       <div
         className={classNames(
-          "grid gap-6",
-          thumbnailUrl ? "grid-cols-2" : "grid-cols-1"
+          "grid gap-4",
+          thumbnailUrl ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"
         )}
       >
         {thumbnailUrl && (
-          <div className="aspect-video w-full">
+          <div className="aspect-video w-full overflow-hidden rounded-md bg-gray-800">
             <Image
               src={thumbnailUrl}
-              className="rounded-md"
               alt="Stream Thumbnail"
               width={1920}
               height={1080}
             />
           </div>
         )}
-        <ImagePicker
-          vertical
-          label="Drop the thumbnail here"
-          files={!!file ? [file] : []}
-          onChange={onThumbnailChange}
-        />
+        <div className="flex flex-col gap-4">
+          <div className="flex-grow">
+            <ImagePicker
+              vertical
+              label="Drop the thumbnail here"
+              files={!!file ? [file] : []}
+              onChange={onThumbnailChange}
+            />
+          </div>
+          <Button
+            size="max-content"
+            isDisabled={isLoading || !file}
+            isLoading={isLoading}
+            loadingText="Applying the thumbnail..."
+            onClick={onUpdateStreamThumbnailClick}
+          >
+            Apply the thumbnail
+          </Button>
+        </div>
       </div>
-      <Button
-        size="max-content"
-        isDisabled={isLoading || !file}
-        isLoading={isLoading}
-        loadingText="Saving thumbnail..."
-        onClick={onUpdateStreamThumbnailClick}
-      >
-        Save Thumbnail
-      </Button>
     </div>
   );
 };
