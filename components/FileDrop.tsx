@@ -41,16 +41,25 @@ export const FileDrop: FC<FileDropProps> = ({
         (file) => file.size < maxFileSize
       );
       onChange(filteredFiles);
-      console.log({ filteredFiles });
     },
-    [onChange]
+    [onChange, maxFileSize]
   );
+
+  const onDragOver = useCallback((event: DragEvent<HTMLInputElement>) => {
+    event.preventDefault();
+  }, []);
+
+  const onDragLeave = useCallback((event: DragEvent<HTMLInputElement>) => {
+    event.preventDefault();
+  }, []);
 
   return (
     <div
       className="flex h-full cursor-pointer flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed border-gray-500 p-6 font-bold text-gray-500"
       onClick={onClick}
       onDrop={onDrop}
+      onDragLeave={onDragLeave}
+      onDragOver={onDragOver}
     >
       <p>{label}</p>
       <p className="text-xs">

@@ -31,13 +31,13 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
   const sidebarChildren = useMemo(
     () => (
       <nav className="flex flex-1 grow flex-col gap-2 overflow-y-auto p-4">
-        {SIDEBAR_LINKS.map(({ href, label, icon }) => (
+        {SIDEBAR_LINKS.map(({ href, label, icon, activeOn }) => (
           <SidebarLink
             key={href}
             href={href}
             label={label}
             icon={icon}
-            isActive={href === pathname}
+            isActive={activeOn.indexOf(pathname) !== -1}
           />
         ))}
         {subscriptions.length > 0 && (

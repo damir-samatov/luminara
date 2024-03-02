@@ -1,9 +1,8 @@
 import { onGetSelfStream } from "@/actions/stream.actions";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { StreamSettings } from "@/app/(browse)/dashboard/stream/_components/StreamConfigurator";
 import { StreamCredentials } from "@/app/(browse)/dashboard/stream/_components/StreamCredentials";
 import React from "react";
-import { StreamCreate } from "./_components/StreamCreate";
 import { StreamThumbnail } from "./_components/StreamThumbnail";
 import { ErrorResponseType } from "@/types/action.types";
 import { onGetSignedFileReadUrl } from "@/actions/file.actions";
@@ -42,11 +41,7 @@ const StreamPage = async () => {
   }
 
   if (res.type === ErrorResponseType.NOT_FOUND) {
-    return (
-      <div className="flex flex-col gap-4 p-4">
-        <StreamCreate />
-      </div>
-    );
+    return redirect("/dashboard/stream/create");
   }
 
   return notFound();
