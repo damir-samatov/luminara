@@ -7,7 +7,7 @@ import {
   CreateStreamKeyCommand,
 } from "@aws-sdk/client-ivs";
 import { ivs } from "@/lib/ivs";
-import jwt from "jsonwebtoken";
+import { sign as jwtSign } from "jsonwebtoken";
 
 if (!process.env.AWS_IVS_NAME || !process.env.AWS_IVS_PLAYBACK_PRIVATE_KEY)
   throw new Error("AWS_IVS_NAME and AWS_IVS_PLAYBACK_SECRET are not defined");
@@ -141,12 +141,11 @@ export const getIvsViewerToken = async (channelArn: string) => {
       exp: Date.now() + 60_000,
     };
 
-    const token = jwt.sign(payload, process.env.AWS_IVS_PLAYBACK_PRIVATE_KEY!, {
+    return jwtSign(payload, process.env.AWS_IVS_PLAYBACK_PRIVATE_KEY!, {
       algorithm: "ES384",
     });
-    return token;
   } catch (error) {
-    console.error("getIvsViewerToken:", error);
+    console.error("getIvsViewerToken", error);
     return null;
   }
 };

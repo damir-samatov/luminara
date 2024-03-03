@@ -67,6 +67,7 @@ model Stream {
   serverUrl    String
   playbackUrl  String
   channelArn   String
+  chatRoomArn  String
   streamKey    String
   streamKeyArn String
 

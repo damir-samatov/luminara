@@ -26,7 +26,8 @@ const StreamPage = async () => {
       <div className="flex flex-col gap-6 p-6">
         <div className="grid grid-cols-2 gap-4">
           <StreamSettings
-            initialStreamSettings={{ title, isLive, isChatEnabled }}
+            initialIsLive={isLive}
+            initialStreamSettings={{ title, isChatEnabled }}
           />
           <StreamCredentials
             initialStreamCredentials={{

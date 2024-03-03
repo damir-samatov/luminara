@@ -6,6 +6,7 @@ import {
   getStreamByUsername,
   updateStreamKeyByUserId,
   updateStreamSettingsByUserId,
+  updateStreamStatusByUserId,
   updateStreamThumbnailByUserId,
 } from "@/services/stream.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
@@ -19,6 +20,11 @@ import {
   refreshIvsChannelStreamKey,
 } from "@/services/ivs.service";
 import { deleteFile, getSignedFileReadUrl } from "@/services/s3.service";
+import {
+  createIvsChatRoom,
+  getIvsChatToken,
+} from "@/services/ivs-chat.service";
+import { IvsChatRoomToken } from "@/types/ivs.types";
 
 type OnGetSelfStreamResponse = ActionDataResponse<{ stream: Stream }>;
 
@@ -135,15 +141,20 @@ export const onCreateSelfStream =
 
       if (existingStream) return ERROR_RESPONSES.STREAM_EXISTS;
 
-      const ivsChannel = await createIvsChannel({
-        userId: self.id,
-      });
+      const [ivsChannel, ivsChatRoom] = await Promise.all([
+        createIvsChannel({
+          userId: self.id,
+        }),
+        createIvsChatRoom(self.id),
+      ]);
 
-      if (!ivsChannel) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+      if (!ivsChannel || !ivsChatRoom)
+        return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
       const stream = await createStream(self.id, {
         title: `Welcome to ${self.username}'s Stream`,
         channelArn: ivsChannel.channelArn,
+        chatRoomArn: ivsChatRoom.chatRoomArn,
         serverUrl: ivsChannel.serverUrl,
         streamKey: ivsChannel.streamKey,
         streamKeyArn: ivsChannel.streamKeyArn,
@@ -206,42 +217,88 @@ export const onRefreshSelfStreamKey =
   };
 
 type OnGetStreamViewerTokenResponse = ActionDataResponse<{
-  viewerStreamData: {
-    viewerToken: string;
-    streamUrl: string;
+  streamData: {
+    title: string;
+    playbackUrl: string;
     thumbnailUrl: string;
+  };
+  chatRoomData: {
+    chatRoomToken: IvsChatRoomToken;
   };
 }>;
 
 export const onGetStreamViewerData = async (
-  streamerUserId: string
+  streamerUsername: string
 ): Promise<OnGetStreamViewerTokenResponse> => {
   try {
     const self = await getSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
 
-    const stream = await getStreamByUserId(streamerUserId);
-    if (!stream) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+    const stream = await getStreamByUsername(streamerUsername);
+    if (!stream || !stream.isLive) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
-    const [viewerToken, thumbnailUrl] = await Promise.all([
+    const [viewerToken, chatRoomToken, thumbnailUrl] = await Promise.all([
       getIvsViewerToken(stream.channelArn),
+      getIvsChatToken({
+        userId: self.id,
+        chatRoomArn: stream.chatRoomArn,
+        imageUrl: self.imageUrl,
+        username: self.username,
+        capabilities: ["SEND_MESSAGE"],
+      }),
       stream.thumbnailKey ? getSignedFileReadUrl(stream.thumbnailKey) : "",
     ]);
 
-    if (!viewerToken) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+    if (!viewerToken || !chatRoomToken)
+      return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
     return {
       success: true,
       data: {
-        viewerStreamData: {
-          viewerToken,
-          streamUrl: stream.playbackUrl,
+        streamData: {
+          title: stream.title,
+          playbackUrl: `${stream.playbackUrl}?token=${viewerToken}`,
           thumbnailUrl: thumbnailUrl || "",
+        },
+        chatRoomData: {
+          chatRoomToken,
         },
       },
     };
   } catch (error) {
-    console.error("onGetStreamViewerToken", error);
+    console.error("onGetStreamViewerData", error);
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+  }
+};
+
+export const onGoLive = async () => {
+  try {
+    const self = await getSelf();
+    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+    const stream = await updateStreamStatusByUserId(self.id, true);
+    if (!stream) return ERROR_RESPONSES.NOT_FOUND;
+    return {
+      success: true,
+      data: { stream },
+    };
+  } catch (error) {
+    console.error("onGetSelfStream", error);
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+  }
+};
+
+export const onGoOffline = async () => {
+  try {
+    const self = await getSelf();
+    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+    const stream = await updateStreamStatusByUserId(self.id, false);
+    if (!stream) return ERROR_RESPONSES.NOT_FOUND;
+    return {
+      success: true,
+      data: { stream },
+    };
+  } catch (error) {
+    console.error("onGoOffline", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };

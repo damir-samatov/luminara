@@ -7,6 +7,7 @@ export type StreamCreateDto = {
   streamKey: string;
   streamKeyArn: string;
   channelArn: string;
+  chatRoomArn: string;
   playbackUrl: string;
 
   thumbnailKey: string;
@@ -14,7 +15,6 @@ export type StreamCreateDto = {
 
 export type StreamSettingsUpdateDto = {
   title: string;
-  isLive: boolean;
   isChatEnabled: boolean;
 };
 

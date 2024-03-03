@@ -43,7 +43,7 @@ export const StreamCreate = () => {
             </h1>
             <div className="text-md text-gray-300">
               <p>
-                Create your own streamer dashboard and start streaming in few
+                Initiate your own streamer dashboard and start streaming in few
                 minutes.
               </p>
             </div>

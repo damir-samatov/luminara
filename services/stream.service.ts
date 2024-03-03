@@ -104,3 +104,17 @@ export const updateStreamThumbnailByUserId = ({
     return null;
   }
 };
+
+export const updateStreamStatusByUserId = (userId: string, isLive: boolean) => {
+  try {
+    return db.stream.update({
+      where: {
+        userId,
+      },
+      data: { isLive },
+    });
+  } catch (error) {
+    console.error("updateStreamStatusByUserId", error);
+    return null;
+  }
+};

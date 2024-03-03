@@ -23,7 +23,7 @@ export const Button: FC<ButtonProps> = ({
   return (
     <button
       className={classNames(
-        "w-min-10 block rounded-md border-2 border-gray-800 px-8 py-2 text-center text-sm font-semibold text-gray-300",
+        "w-min-10 block rounded-md border-2 border-gray-800 px-4 py-2 text-center text-sm font-semibold text-gray-300",
         size === "max-content" ? "w-max" : "w-full",
         type === "primary" ? "bg-gray-800" : "bg-transparent",
         isDisabled

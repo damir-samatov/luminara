@@ -2,7 +2,11 @@
 import React, { FC, useState } from "react";
 import { Stream } from ".prisma/client";
 import { useObjectShadow } from "@/hooks/useObjectShadow";
-import { onUpdateSelfStreamSettings } from "@/actions/stream.actions";
+import {
+  onUpdateSelfStreamSettings,
+  onGoLive,
+  onGoOffline,
+} from "@/actions/stream.actions";
 import { TextInput } from "@/components/TextInput";
 import { StreamSettingsUpdateDto } from "@/types/stream.types";
 import { ToggleInput } from "@/components/ToggleInput";
@@ -10,21 +14,48 @@ import { Button } from "@/components/Button";
 
 type StreamConfiguratorProps = {
   initialStreamSettings: StreamSettingsUpdateDto;
+  initialIsLive: boolean;
 };
 
 export const StreamSettings: FC<StreamConfiguratorProps> = ({
   initialStreamSettings,
+  initialIsLive,
 }) => {
   const [streamSettings, setStreamSettings] = useState<StreamSettingsUpdateDto>(
     initialStreamSettings
   );
   const [isLoading, setIsLoading] = useState(false);
+  const [isLive, setIsLive] = useState(initialIsLive);
 
   const { setPrevState, changeDetected, prevState } =
     useObjectShadow(streamSettings);
 
   const onDiscard = () => {
     setStreamSettings(prevState);
+  };
+
+  const onGoLiveClick = async () => {
+    setIsLoading(true);
+    try {
+      const res = await onGoLive();
+      if (!res.success) return;
+      setIsLive(true);
+    } catch (error) {
+      console.error(error);
+    }
+    setIsLoading(false);
+  };
+
+  const onGoOfflineClick = async () => {
+    setIsLoading(true);
+    try {
+      const res = await onGoOffline();
+      if (!res.success) return;
+      setIsLive(false);
+    } catch (error) {
+      console.error(error);
+    }
+    setIsLoading(false);
   };
 
   const onChange = <T extends keyof Stream>(key: T, value: Stream[T]) => {
@@ -37,16 +68,14 @@ export const StreamSettings: FC<StreamConfiguratorProps> = ({
     try {
       const res = await onUpdateSelfStreamSettings(streamSettings);
       if (!res.success) return;
-      const { title, isChatEnabled, isLive } = res.data.stream;
+      const { title, isChatEnabled } = res.data.stream;
       setPrevState({
         title,
         isChatEnabled,
-        isLive,
       });
       setStreamSettings({
         title,
         isChatEnabled,
-        isLive,
       });
     } catch (error) {
       console.error(error);
@@ -69,13 +98,9 @@ export const StreamSettings: FC<StreamConfiguratorProps> = ({
         value={streamSettings.isChatEnabled}
         onChange={(value) => onChange("isChatEnabled", value)}
       />
-      <ToggleInput
-        label="Go Live"
-        value={streamSettings.isLive}
-        onChange={(value) => onChange("isLive", value)}
-      />
-      <div className="mt-auto flex w-full max-w-[400px] gap-4">
+      <div className="mt-auto flex w-full gap-2">
         <Button
+          size="max-content"
           isDisabled={isLoading || !changeDetected}
           isLoading={isLoading}
           loadingText="Saving..."
@@ -84,11 +109,20 @@ export const StreamSettings: FC<StreamConfiguratorProps> = ({
           Save
         </Button>
         <Button
+          size="max-content"
           type="secondary"
           isDisabled={isLoading || !changeDetected}
           onClick={onDiscard}
         >
           Discard
+        </Button>
+        <Button
+          size="max-content"
+          isLoading={isLoading}
+          isDisabled={isLoading}
+          onClick={isLive ? onGoOfflineClick : onGoLiveClick}
+        >
+          {isLive ? "Go Offline" : "Go Live"}
         </Button>
       </div>
     </div>

@@ -13,45 +13,33 @@ import videojs from "video.js";
 import { classNames } from "@/utils/style.utils";
 import { VideoPlaceholder } from "@/components/VideoPlaceholder";
 import "video.js/dist/video-js.css";
-import { onGetStreamViewerData } from "@/actions/stream.actions";
 
 const WASM_WORKER_URL =
   "https://player.live-video.net/1.24.0/amazon-ivs-wasmworker.min.js";
 const WASM_BINARY_URL =
   "https://player.live-video.net/1.24.0/amazon-ivs-wasmworker.min.wasm";
 
-const TEST_STREAM =
-  "https://fcc3ddae59ed.us-west-2.playback.live-video.net/api/video/v1/us-west-2.893648527354.channel.DmumNckWFTqz.m3u8";
+// const TEST_STREAM =
+//   "https://fcc3ddae59ed.us-west-2.playback.live-video.net/api/video/v1/us-west-2.893648527354.channel.DmumNckWFTqz.m3u8";
 
 type AwsStreamPlayerProps = {
-  streamerUserId?: string;
+  playbackUrl: string;
+  thumbnailUrl: string;
 };
 
 export const AwsStreamPlayer: FC<AwsStreamPlayerProps> = ({
-  streamerUserId,
+  playbackUrl,
+  thumbnailUrl,
 }) => {
   const videoElRef = useRef<HTMLVideoElement>(null);
   const playerWrapperElRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<videojs.Player>();
   const ivsPlayerRef = useRef<Player>();
   const [isReady, setIsReady] = useState(false);
-  const [isOffline, setIsOffline] = useState(false);
 
   useEffect(() => {
     (async () => {
       if (!videoElRef.current || !playerWrapperElRef.current || isReady) return;
-
-      let playbackUrl = TEST_STREAM;
-      let thumbnailUrl = "";
-
-      if (streamerUserId) {
-        const res = await onGetStreamViewerData(streamerUserId);
-
-        if (res.success) {
-          playbackUrl = `${res.data.viewerStreamData.streamUrl}?token=${res.data.viewerStreamData.viewerToken}`;
-          thumbnailUrl = res.data.viewerStreamData.thumbnailUrl;
-        }
-      }
 
       registerIVSTech(videojs, {
         wasmWorker: WASM_WORKER_URL,
@@ -76,30 +64,29 @@ export const AwsStreamPlayer: FC<AwsStreamPlayerProps> = ({
           const ivsPlayer = player.getIVSPlayer();
           playerRef.current = player;
           ivsPlayerRef.current = ivsPlayer;
+
           ivsPlayer.addEventListener(PlayerEventType.ERROR, () => {
-            setIsOffline(true);
+            player.src(playbackUrl);
+            setIsReady(false);
           });
+
           ivsPlayer.addEventListener(PlayerState.ENDED, () => {
-            setIsOffline(true);
+            player.src(playbackUrl);
+            setIsReady(false);
           });
+
           ivsPlayer.addEventListener(PlayerState.READY, () => {
             setIsReady(true);
           });
         }
       ) as videojs.Player & VideoJSIVSTech & VideoJSQualityPlugin;
     })();
-  }, [videoElRef, playerWrapperElRef, isReady]);
+  }, [videoElRef, playerWrapperElRef, isReady, playbackUrl, thumbnailUrl]);
 
   return (
     <div className="bg-black">
-      {isOffline ? (
-        <VideoPlaceholder text="User is offline" state="offline" />
-      ) : (
-        <>
-          {!isReady && (
-            <VideoPlaceholder text="Connecting..." state="loading" />
-          )}
-        </>
+      {!isReady && (
+        <VideoPlaceholder text="Waiting for the streamer..." state="loading" />
       )}
       <div
         ref={playerWrapperElRef}
