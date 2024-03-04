@@ -45,20 +45,18 @@ export const AwsChatRoom: FC<AwsChatRoomProps> = ({ chatRoomToken }) => {
   }, [room]);
 
   const onMessageReceived = (newMessage: ChatMessage) => {
-    console.log(newMessage);
     setMessages((prev) => [...prev, newMessage]);
   };
 
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   const onSendMessage = async () => {
-    const res = await room.sendMessage({
+    await room.sendMessage({
       action: "SEND_MESSAGE",
       content: message,
       requestId: uuid(),
     });
     setMessage("");
-    console.log({ res });
   };
 
   return (

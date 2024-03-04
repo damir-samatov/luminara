@@ -27,7 +27,6 @@ export const FileDrop: FC<FileDropProps> = ({
         (file) => file.size < MAX_FILE_SIZE
       );
       onChange(filteredFiles);
-      console.log({ filteredFiles });
       fileInputRef.current!.value = "";
     },
     [onChange]

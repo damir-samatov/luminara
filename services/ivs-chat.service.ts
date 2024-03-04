@@ -20,13 +20,6 @@ export const createIvsChatRoom = async (userId: string) => {
 
     const ivsCreateChatRoomRes = await ivsChat.send(command);
 
-    console.dir(
-      {
-        ivsCreateChatRoomRes,
-      },
-      { depth: 20 }
-    );
-
     if (!ivsCreateChatRoomRes || !ivsCreateChatRoomRes.arn) return null;
 
     return {

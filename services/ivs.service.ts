@@ -30,13 +30,6 @@ export const createIvsChannel = async ({ userId }: CreateIvsChannelParams) => {
 
     const ivsCreateChannelRes = await ivs.send(command);
 
-    console.dir(
-      {
-        ivsCreateChannelRes,
-      },
-      { depth: 20 }
-    );
-
     if (
       !ivsCreateChannelRes ||
       !ivsCreateChannelRes.channel ||
@@ -116,15 +109,6 @@ export const refreshIvsChannelStreamKey = async ({
     const createStreamKeyRes = await createIvsStreamKey(channelArn);
 
     if (!createStreamKeyRes) return null;
-
-    console.dir(
-      {
-        createStreamKeyRes,
-      },
-      {
-        depth: 20,
-      }
-    );
 
     return createStreamKeyRes;
   } catch (error) {
