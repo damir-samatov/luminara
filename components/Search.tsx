@@ -64,7 +64,13 @@ export const Search = () => {
           ) : users.length < 1 ? (
             <p className="text-sm text-gray-300">Not found</p>
           ) : (
-            users.map((user) => <UserProfileLink user={user} key={user.id} />)
+            users.map((user) => (
+              <UserProfileLink
+                username={user.username}
+                imageUrl={user.imageUrl}
+                key={user.id}
+              />
+            ))
           )}
         </div>
       )}

@@ -49,7 +49,8 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
           <UserProfileLink
             isActive={pathname === `/users/${subscription.user.username}`}
             key={subscription.user.id}
-            user={subscription.user}
+            imageUrl={subscription.user.imageUrl}
+            username={subscription.user.username}
           />
         ))}
         <p className="p-2 text-sm font-semibold leading-6 text-gray-400">
@@ -194,7 +195,9 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
           </div>
         </div>
 
-        <div className="flex grow flex-col overflow-x-clip">{children}</div>
+        <div className="flex flex-grow flex-col overflow-x-clip">
+          {children}
+        </div>
       </div>
     </>
   );

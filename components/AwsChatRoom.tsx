@@ -93,6 +93,7 @@ export const AwsChatRoom: FC<AwsChatRoomProps> = ({ chatRoomToken }) => {
           maxLength={100}
           onChange={setMessage}
           placeholder="Type..."
+          onEnter={onSendMessage}
         />
         <Button size="max-content" onClick={onSendMessage}>
           <PaperAirplaneIcon className="h-6 w-6" />

@@ -7,6 +7,7 @@ type TextInputProps = {
   placeholder?: string;
   maxLength?: number;
   className?: string;
+  onEnter?: () => void;
 };
 
 export const TextInput: FC<TextInputProps> = ({
@@ -15,9 +16,16 @@ export const TextInput: FC<TextInputProps> = ({
   placeholder,
   maxLength = 255,
   className = "",
+  onEnter,
 }) => {
   return (
     <input
+      onKeyDown={(e) => {
+        if (e.key === "Enter" && onEnter) {
+          e.preventDefault();
+          onEnter();
+        }
+      }}
       autoComplete="off"
       type="text"
       className={classNames(

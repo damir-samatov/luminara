@@ -1,22 +1,23 @@
-import { User } from ".prisma/client";
 import { FC } from "react";
 import Link from "next/link";
 import { UserProfileLogo } from "@/components/UserProfileLogo";
 import { classNames, stringToColor } from "@/utils/style.utils";
 
 type UserProfileLinkProps = {
-  user: User;
+  username: string;
+  imageUrl: string;
   isActive?: boolean;
 };
 
 export const UserProfileLink: FC<UserProfileLinkProps> = ({
-  user,
+  username,
+  imageUrl,
   isActive,
 }) => {
-  const userColor = stringToColor(user.username);
+  const userColor = stringToColor(username);
   return (
     <Link
-      href={`/users/${user.username}`}
+      href={`/users/${username}`}
       className={classNames(
         "flex",
         "items-center",
@@ -34,7 +35,7 @@ export const UserProfileLink: FC<UserProfileLinkProps> = ({
         isActive && "bg-gray-800 text-white"
       )}
     >
-      <UserProfileLogo user={user} />
+      <UserProfileLogo imageUrl={imageUrl} username={username} />
       <p>
         <span
           style={{
@@ -43,7 +44,7 @@ export const UserProfileLink: FC<UserProfileLinkProps> = ({
         >
           @
         </span>
-        <span>{user.username}</span>
+        <span>{username}</span>
       </p>
     </Link>
   );

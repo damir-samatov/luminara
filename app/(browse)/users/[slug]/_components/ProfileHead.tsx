@@ -2,6 +2,7 @@ import { FC } from "react";
 import Image from "next/image";
 import { ProfileActions } from "@/app/(browse)/users/[slug]/_components/ProfileActions";
 import { stringToColor } from "@/utils/style.utils";
+import Link from "next/link";
 
 type ProfileHeadProps = {
   user: {
@@ -55,6 +56,7 @@ export const ProfileHead: FC<ProfileHeadProps> = ({ user }) => {
             <span>240 posts</span>
           </div>
           <ProfileActions isSubscribed={isSelfSubscribed} userId={id} />
+          <Link href={`/streams/${username}`}>View Stream</Link>
         </div>
       </div>
     </div>

@@ -36,6 +36,9 @@ export const getStreamByUsername = async (username: string) => {
           username,
         },
       },
+      include: {
+        user: true,
+      },
     });
   } catch (error) {
     console.error("getStreamByUserId", error);

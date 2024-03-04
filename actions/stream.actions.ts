@@ -201,17 +201,16 @@ export const onRefreshSelfStreamKey =
   };
 
 type OnGetStreamViewerTokenResponse = ActionDataResponse<{
-  streamData: {
-    title: string;
-    playbackUrl: string;
-    thumbnailUrl: string;
-  };
-  chatRoomData: {
-    chatRoomToken: IvsChatRoomToken;
-  };
+  title: string;
+  playbackUrl: string;
+  thumbnailUrl: string;
+  description: string;
+  streamerUsername: string;
+  streamerImageUrl: string;
+  chatRoomToken: IvsChatRoomToken;
 }>;
 
-export const onGetStreamViewerData = async (
+export const onGetStreamDataAsViewer = async (
   streamerUsername: string
 ): Promise<OnGetStreamViewerTokenResponse> => {
   try {
@@ -239,18 +238,17 @@ export const onGetStreamViewerData = async (
     return {
       success: true,
       data: {
-        streamData: {
-          title: stream.title,
-          playbackUrl: `${stream.playbackUrl}?token=${viewerToken}`,
-          thumbnailUrl: thumbnailUrl || "",
-        },
-        chatRoomData: {
-          chatRoomToken,
-        },
+        title: stream.title,
+        description: "Welcome to the stream! Enjoy your stay!",
+        playbackUrl: `${stream.playbackUrl}?token=${viewerToken}`,
+        thumbnailUrl: thumbnailUrl || stream.user.imageUrl,
+        streamerImageUrl: stream.user.imageUrl,
+        streamerUsername: stream.user.username,
+        chatRoomToken,
       },
     };
   } catch (error) {
-    console.error("onGetStreamViewerData", error);
+    console.error("onGetStreamDataAsViewer", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };
