@@ -37,7 +37,7 @@ export const onGetStreamDataAsViewer = async (
         username: self.username,
         capabilities: ["SEND_MESSAGE"],
       }),
-      stream.thumbnailKey ? getSignedFileReadUrl(stream.thumbnailKey) : "",
+      stream.thumbnailKey ? getSignedFileReadUrl(stream.thumbnailKey) : null,
     ]);
 
     if (!viewerToken || !chatRoomToken)

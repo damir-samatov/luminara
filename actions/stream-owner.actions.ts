@@ -10,15 +10,20 @@ import {
 } from "@/services/stream.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import { ActionDataResponse } from "@/types/action.types";
-import { Stream } from ".prisma/client";
+import { Stream, User } from ".prisma/client";
 import { StreamSettingsUpdateDto } from "@/types/stream.types";
 import { revalidatePath } from "next/cache";
 import {
   createIvsChannel,
+  getIvsViewerToken,
   refreshIvsChannelStreamKey,
 } from "@/services/ivs.service";
-import { deleteFile } from "@/services/s3.service";
-import { createIvsChatRoom } from "@/services/ivs-chat.service";
+import { deleteFile, getSignedFileReadUrl } from "@/services/s3.service";
+import {
+  createIvsChatRoom,
+  getIvsChatToken,
+} from "@/services/ivs-chat.service";
+import { IvsChatRoomToken } from "@/types/ivs.types";
 
 type StreamActionsResponse = ActionDataResponse<{ stream: Stream }>;
 
@@ -210,3 +215,52 @@ export const onGoOffline = async (): Promise<StreamActionsResponse> => {
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };
+
+type OnGetStreamDataAsOwnerResponse = ActionDataResponse<{
+  stream: Stream;
+  user: User;
+  playbackUrl: string;
+  appliedThumbnailUrl: string;
+  chatRoomToken: IvsChatRoomToken;
+}>;
+
+export const onGetStreamDataAsOwner =
+  async (): Promise<OnGetStreamDataAsOwnerResponse> => {
+    try {
+      const self = await getSelf();
+      if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+
+      const stream = await getStreamByUserId(self.id);
+
+      if (!stream) return ERROR_RESPONSES.NOT_FOUND;
+
+      const [viewerToken, chatRoomToken, thumbnailUrl] = await Promise.all([
+        getIvsViewerToken(stream.channelArn),
+        getIvsChatToken({
+          userId: self.id,
+          chatRoomArn: stream.chatRoomArn,
+          imageUrl: self.imageUrl,
+          username: self.username,
+          capabilities: ["SEND_MESSAGE"],
+        }),
+        stream.thumbnailKey ? getSignedFileReadUrl(stream.thumbnailKey) : null,
+      ]);
+
+      if (!viewerToken || !chatRoomToken)
+        return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+      return {
+        success: true,
+        data: {
+          stream,
+          user: self,
+          playbackUrl: `${stream.playbackUrl}?token=${viewerToken}`,
+          appliedThumbnailUrl: thumbnailUrl || self.imageUrl,
+          chatRoomToken,
+        },
+      };
+    } catch (error) {
+      console.error("onGetStreamDataAsOwner", error);
+      return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+    }
+  };

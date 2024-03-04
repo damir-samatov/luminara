@@ -60,7 +60,7 @@ export const AwsChatRoom: FC<AwsChatRoomProps> = ({ chatRoomToken }) => {
   };
 
   return (
-    <div className="flex h-full w-full flex-col gap-4">
+    <div className="flex h-full w-full flex-col gap-6">
       <div className="relative flex-grow overflow-y-auto">
         <div
           ref={messagesContainerRef}

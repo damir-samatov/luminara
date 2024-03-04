@@ -1,43 +1,50 @@
-import { onGetSelfStream } from "@/actions/stream-owner.actions";
+import { onGetStreamDataAsOwner } from "@/actions/stream-owner.actions";
 import { notFound } from "next/navigation";
 import { StreamSettings } from "@/app/(browse)/dashboard/stream/_components/StreamConfigurator";
 import { StreamCredentials } from "@/app/(browse)/dashboard/stream/_components/StreamCredentials";
 import React from "react";
 import { StreamThumbnail } from "./_components/StreamThumbnail";
 import { ErrorResponseType } from "@/types/action.types";
-import { onGetSignedFileReadUrl } from "@/actions/file.actions";
 import { StreamCreate } from "@/app/(browse)/dashboard/stream/_components/StreamCreate";
+import { AwsStream } from "@/components/AwsStream";
 
 const StreamPage = async () => {
-  const res = await onGetSelfStream();
+  const res = await onGetStreamDataAsOwner();
 
   if (res.success) {
-    const { title, isLive, isChatEnabled, streamKey, serverUrl, thumbnailKey } =
-      res.data.stream;
-
-    let thumbnailUrl = "";
-
-    if (thumbnailKey) {
-      const res = await onGetSignedFileReadUrl({ key: thumbnailKey });
-
-      if (res.success) thumbnailUrl = res.data.signedUrl;
-    }
+    const { stream, user, chatRoomToken, playbackUrl, appliedThumbnailUrl } =
+      res.data;
 
     return (
       <div className="flex flex-col gap-6 p-6">
         <div className="grid grid-cols-2 gap-4">
           <StreamSettings
-            initialIsLive={isLive}
-            initialStreamSettings={{ title, isChatEnabled }}
+            initialIsLive={stream.isLive}
+            initialStreamSettings={{
+              title: stream.title,
+              isChatEnabled: stream.isChatEnabled,
+            }}
           />
           <StreamCredentials
             initialStreamCredentials={{
-              streamKey,
-              serverUrl,
+              streamKey: stream.streamKey,
+              serverUrl: stream.serverUrl,
             }}
           />
         </div>
-        <StreamThumbnail initialThumbnailUrl={thumbnailUrl} />
+        <StreamThumbnail initialThumbnailUrl={appliedThumbnailUrl} />
+        <p className="text-lg font-semibold">Stream Preview</p>
+        <div className="aspect-video w-full overflow-hidden rounded-lg border-2 border-gray-700">
+          <AwsStream
+            streamerImageUrl={user.imageUrl}
+            streamerUsername={user.username}
+            playbackUrl={playbackUrl}
+            thumbnailUrl={appliedThumbnailUrl}
+            chatRoomToken={chatRoomToken}
+            title={stream.title}
+            description="Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream Welcome to wiut's Stream "
+          />
+        </div>
       </div>
     );
   }

@@ -86,7 +86,10 @@ export const AwsStreamPlayer: FC<AwsStreamPlayerProps> = ({
   return (
     <div className="bg-black">
       {!isReady && (
-        <VideoPlaceholder text="Waiting for the streamer..." state="loading" />
+        <VideoPlaceholder
+          text="Waiting for the streamer..."
+          placeholderUrl={thumbnailUrl}
+        />
       )}
       <div
         ref={playerWrapperElRef}

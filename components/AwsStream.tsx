@@ -29,33 +29,34 @@ export const AwsStream: FC<AwsStreamProps> = ({
 
   return (
     <div className="relative h-full w-full flex-grow">
-      <div className="pr-96">
-        <div className="flex flex-col gap-4 p-4">
+      <div className="absolute bottom-0 left-0 right-96 top-0 overflow-y-auto p-4">
+        <div className="flex flex-col gap-4">
           <AwsStreamPlayer
             playbackUrl={playbackUrl}
             thumbnailUrl={thumbnailUrl}
           />
-          <Link href={`/users/${streamerUsername}`}>
-            <div className="flex items-end gap-2">
-              <div className="h-14 w-14 overflow-hidden rounded-full">
-                <Image
-                  src={streamerImageUrl}
-                  alt={streamerUsername}
-                  height={120}
-                  width={120}
-                />
-              </div>
-              <p className="text-xl">
-                <span
-                  style={{
-                    color: streamerColor,
-                  }}
-                >
-                  @
-                </span>
-                <span>{streamerUsername}</span>
-              </p>
+          <Link
+            className="flex w-max items-end gap-2"
+            href={`/users/${streamerUsername}`}
+          >
+            <div className="h-12 w-12 overflow-hidden rounded-full">
+              <Image
+                src={streamerImageUrl}
+                alt={streamerUsername}
+                height={120}
+                width={120}
+              />
             </div>
+            <p className="text-xl">
+              <span
+                style={{
+                  color: streamerColor,
+                }}
+              >
+                @
+              </span>
+              <span>{streamerUsername}</span>
+            </p>
           </Link>
           <h1 className="text-2xl">{title}</h1>
           <p className="text-sm">{description}</p>
