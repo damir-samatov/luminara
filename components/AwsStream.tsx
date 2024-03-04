@@ -59,7 +59,10 @@ export const AwsStream: FC<AwsStreamProps> = ({
             </p>
           </Link>
           <h1 className="text-2xl">{title}</h1>
-          <p className="text-sm">{description}</p>
+          <div
+            className="text-sm"
+            dangerouslySetInnerHTML={{ __html: description }}
+          />
         </div>
       </div>
       <div className="absolute bottom-0 right-0 top-0 w-full max-w-96 bg-gray-900 p-4">

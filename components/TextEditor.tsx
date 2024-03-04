@@ -34,14 +34,14 @@ export const TextEditor: FC<TextEditorProps> = ({
   if (!editor) return null;
 
   return (
-    <div className="rounded-md border-2 border-gray-500 bg-gray-950">
-      <div className="flex gap-2 border-0 border-b-2 border-gray-600 p-2 text-xl">
+    <div className="rounded-md border-2 border-gray-700 bg-gray-950">
+      <div className="flex gap-2 border-0 border-b-2 border-gray-700 p-2 text-xl">
         <button
           onClick={() => editor.chain().focus().toggleUnderline().run()}
           disabled={!editor.can().chain().focus().toggleUnderline().run()}
           className={classNames(
-            "w-16 rounded-md border-2 border-gray-500 px-2 text-gray-500 underline",
-            editor.isActive("underline") && "bg-gray-500 text-gray-900"
+            "w-16 rounded-md border-2 border-gray-300 px-2 text-gray-300 underline",
+            editor.isActive("underline") && "bg-gray-300 text-gray-900"
           )}
         >
           U
@@ -50,8 +50,8 @@ export const TextEditor: FC<TextEditorProps> = ({
           onClick={() => editor.chain().focus().toggleBold().run()}
           disabled={!editor.can().chain().focus().toggleBold().run()}
           className={classNames(
-            "w-16 rounded-md border-2 border-gray-500 px-2 font-bold text-gray-500",
-            editor.isActive("bold") && "bg-gray-500 text-gray-900"
+            "w-16 rounded-md border-2 border-gray-300 px-2 font-bold text-gray-300",
+            editor.isActive("bold") && "bg-gray-300 text-gray-900"
           )}
         >
           B
@@ -60,8 +60,8 @@ export const TextEditor: FC<TextEditorProps> = ({
           onClick={() => editor.chain().focus().toggleItalic().run()}
           disabled={!editor.can().chain().focus().toggleItalic().run()}
           className={classNames(
-            "w-16 rounded-md border-2 border-gray-500 px-2 italic text-gray-500",
-            editor.isActive("italic") && "bg-gray-500 text-gray-900"
+            "w-16 rounded-md border-2 border-gray-300 px-2 italic text-gray-300",
+            editor.isActive("italic") && "bg-gray-300 text-gray-900"
           )}
         >
           I
@@ -70,8 +70,8 @@ export const TextEditor: FC<TextEditorProps> = ({
           onClick={() => editor.chain().focus().toggleStrike().run()}
           disabled={!editor.can().chain().focus().toggleStrike().run()}
           className={classNames(
-            "w-16 rounded-md border-2 border-gray-500 px-2 text-gray-500 line-through",
-            editor.isActive("strike") && "bg-gray-500 text-gray-900"
+            "w-16 rounded-md border-2 border-gray-300 px-2 text-gray-300 line-through",
+            editor.isActive("strike") && "bg-gray-300 text-gray-900"
           )}
         >
           S

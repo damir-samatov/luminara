@@ -47,7 +47,7 @@ export const onGetStreamDataAsViewer = async (
       success: true,
       data: {
         title: stream.title,
-        description: "Welcome to the stream! Enjoy your stay!",
+        description: stream.description,
         playbackUrl: `${stream.playbackUrl}?token=${viewerToken}`,
         thumbnailUrl: thumbnailUrl || stream.user.imageUrl,
         streamerImageUrl: stream.user.imageUrl,

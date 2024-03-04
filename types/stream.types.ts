@@ -1,5 +1,6 @@
 export type StreamCreateDto = {
   title: string;
+  description: string;
   isLive: boolean;
   isChatEnabled: boolean;
 
@@ -15,6 +16,7 @@ export type StreamCreateDto = {
 
 export type StreamSettingsUpdateDto = {
   title: string;
+  description: string;
   isChatEnabled: boolean;
 };
 

@@ -123,6 +123,7 @@ export const onCreateSelfStream = async (): Promise<StreamActionsResponse> => {
 
     const stream = await createStream(self.id, {
       title: `Welcome to ${self.username}'s Stream`,
+      description: "",
       channelArn: ivsChannel.channelArn,
       chatRoomArn: ivsChatRoom.chatRoomArn,
       serverUrl: ivsChannel.serverUrl,

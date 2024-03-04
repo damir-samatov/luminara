@@ -58,6 +58,7 @@ model Stream {
   id            String  @id @default(auto()) @map("_id") @db.ObjectId
   userId        String  @unique @db.ObjectId
   title         String
+  description   String
   thumbnailKey  String
   isLive        Boolean @default(false)
   isChatEnabled Boolean @default(true)

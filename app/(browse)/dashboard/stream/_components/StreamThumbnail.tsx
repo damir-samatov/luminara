@@ -1,21 +1,18 @@
-"use client";
 import { ImagePicker } from "@/components/ImagePicker";
 import React, { FC, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/Button";
-import { onUpdateSelfStreamThumbnailKey } from "@/actions/stream-owner.actions";
-import { uploadFile } from "@/helpers/file.helpers";
-import { onGetSignedFileReadUrl } from "@/actions/file.actions";
 import { classNames } from "@/utils/style.utils";
 
 type StreamThumbnailProps = {
-  initialThumbnailUrl: string;
+  thumbnailUrl: string;
+  onUploadThumbnail: (file: File) => Promise<unknown>;
 };
 
 export const StreamThumbnail: FC<StreamThumbnailProps> = ({
-  initialThumbnailUrl,
+  thumbnailUrl,
+  onUploadThumbnail,
 }) => {
-  const [thumbnailUrl, setThumbnailUrl] = useState(initialThumbnailUrl);
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const onThumbnailChange = (files: File[]) => {
@@ -27,36 +24,15 @@ export const StreamThumbnail: FC<StreamThumbnailProps> = ({
   };
 
   const onUpdateStreamThumbnailClick = async () => {
+    if (!file) return;
     setIsLoading(true);
-
-    try {
-      if (!file) return;
-      const uploadRes = await uploadFile(file);
-      if (!uploadRes) return;
-      const resThumbnailKey = await onUpdateSelfStreamThumbnailKey(
-        uploadRes.fileKey
-      );
-      if (!resThumbnailKey.success) return;
-
-      const { thumbnailKey } = resThumbnailKey.data.stream;
-
-      const resThumbnailUrl = await onGetSignedFileReadUrl({
-        key: thumbnailKey,
-      });
-
-      if (resThumbnailUrl.success)
-        setThumbnailUrl(resThumbnailUrl.data.signedUrl);
-
-      setFile(null);
-    } catch (error) {
-      console.error(error);
-    }
-
+    await onUploadThumbnail(file);
+    setFile(null);
     setIsLoading(false);
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 rounded-lg border-2 border-gray-700 p-4">
       <p className="text-lg font-semibold">Thumbnail</p>
       <div
         className={classNames(
@@ -83,15 +59,16 @@ export const StreamThumbnail: FC<StreamThumbnailProps> = ({
               onChange={onThumbnailChange}
             />
           </div>
-          <Button
-            size="max-content"
-            isDisabled={isLoading || !file}
-            isLoading={isLoading}
-            loadingText="Applying the thumbnail..."
-            onClick={onUpdateStreamThumbnailClick}
-          >
-            Apply the thumbnail
-          </Button>
+          <div className="max-w-80">
+            <Button
+              isDisabled={isLoading || !file}
+              isLoading={isLoading}
+              loadingText="Applying the thumbnail..."
+              onClick={onUpdateStreamThumbnailClick}
+            >
+              Apply the thumbnail
+            </Button>
+          </div>
         </div>
       </div>
     </div>
