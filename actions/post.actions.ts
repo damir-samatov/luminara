@@ -5,13 +5,13 @@ import { ActionDataResponse } from "@/types/action.types";
 import { Post, Image } from ".prisma/client";
 import { PostCreateDto } from "@/types/post.types";
 
-type OnGetSelfPosts = ActionDataResponse<{
+type OnGetSelfPostsResponse = ActionDataResponse<{
   posts: (Post & {
     images: Image[];
   })[];
 }>;
 
-export const onGetSelfPosts = async (): Promise<OnGetSelfPosts> => {
+export const onGetSelfPosts = async (): Promise<OnGetSelfPostsResponse> => {
   try {
     const self = await getSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
@@ -28,13 +28,13 @@ export const onGetSelfPosts = async (): Promise<OnGetSelfPosts> => {
   }
 };
 
-type OnCreatePost = ActionDataResponse<{
+type OnCreatePostResponse = ActionDataResponse<{
   post: Post;
 }>;
 
 export const onCreatePost = async (
   postCreateDto: Omit<PostCreateDto, "userId">
-): Promise<OnCreatePost> => {
+): Promise<OnCreatePostResponse> => {
   try {
     const self = await getSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;

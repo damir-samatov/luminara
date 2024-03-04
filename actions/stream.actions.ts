@@ -44,26 +44,6 @@ export const onGetSelfStream = async (): Promise<OnGetSelfStreamResponse> => {
   }
 };
 
-type OnGetStreamByUsernameResponse = ActionDataResponse<{ stream: Stream }>;
-
-export const onGetStreamByUsername = async (
-  username: string
-): Promise<OnGetStreamByUsernameResponse> => {
-  try {
-    const self = await getSelf();
-    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
-    const stream = await getStreamByUsername(username);
-    if (!stream) return ERROR_RESPONSES.NOT_FOUND;
-    return {
-      success: true,
-      data: { stream },
-    };
-  } catch (error) {
-    console.error("onGetSelfStream", error);
-    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-  }
-};
-
 type OnUpdateSelfStreamThumbnailKeyResponse = ActionDataResponse<{
   stream: Stream;
 }>;
@@ -130,8 +110,12 @@ export const onUpdateSelfStreamSettings = async (
   }
 };
 
+type OnCreateSelfStreamResponse = ActionDataResponse<{
+  stream: Stream;
+}>;
+
 export const onCreateSelfStream =
-  async (): Promise<OnGetSelfStreamResponse> => {
+  async (): Promise<OnCreateSelfStreamResponse> => {
     try {
       const self = await getSelf();
 
@@ -271,7 +255,11 @@ export const onGetStreamViewerData = async (
   }
 };
 
-export const onGoLive = async () => {
+type OnGoLiveResponse = ActionDataResponse<{
+  stream: Stream;
+}>;
+
+export const onGoLive = async (): Promise<OnGoLiveResponse> => {
   try {
     const self = await getSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
@@ -287,7 +275,11 @@ export const onGoLive = async () => {
   }
 };
 
-export const onGoOffline = async () => {
+type OnGoOfflineResponse = ActionDataResponse<{
+  stream: Stream;
+}>;
+
+export const onGoOffline = async (): Promise<OnGoOfflineResponse> => {
   try {
     const self = await getSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;

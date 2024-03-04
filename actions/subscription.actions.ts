@@ -45,23 +45,24 @@ export const onUnsubscribe = async (
   }
 };
 
-type GetSubscriptionsResponse = ActionDataResponse<{
+type OnGetSubscriptionsResponse = ActionDataResponse<{
   subscriptions: SubscriptionWithUser[];
 }>;
 
-export const getSubscriptions = async (): Promise<GetSubscriptionsResponse> => {
-  try {
-    const self = await getSelf();
-    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
-    const subscriptions = await getSubscriptionsByUserId(self.id);
-    return {
-      success: true,
-      data: {
-        subscriptions,
-      },
-    };
-  } catch (error) {
-    console.error("getSubscriptions", error);
-    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-  }
-};
+export const onGetSubscriptions =
+  async (): Promise<OnGetSubscriptionsResponse> => {
+    try {
+      const self = await getSelf();
+      if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+      const subscriptions = await getSubscriptionsByUserId(self.id);
+      return {
+        success: true,
+        data: {
+          subscriptions,
+        },
+      };
+    } catch (error) {
+      console.error("onGetSubscriptions", error);
+      return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+    }
+  };

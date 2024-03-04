@@ -8,16 +8,16 @@ import { ActionDataResponse } from "@/types/action.types";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import { getPostsByUserId } from "@/services/post.service";
 
-type GetProfileDataResponse = ActionDataResponse<{
+type OnGetProfileDataResponse = ActionDataResponse<{
   user: User;
   posts: Post[];
   isSelfSubscribed: boolean;
   isSelfBanned: boolean;
 }>;
 
-export const getProfileData = async (
+export const onGetProfileData = async (
   username: string
-): Promise<GetProfileDataResponse> => {
+): Promise<OnGetProfileDataResponse> => {
   try {
     const [self, user] = await Promise.all([
       getSelf(),
@@ -41,7 +41,7 @@ export const getProfileData = async (
       },
     };
   } catch (error) {
-    console.error("getProfileData", error);
+    console.error("onGetProfileData", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };

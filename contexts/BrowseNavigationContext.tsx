@@ -9,7 +9,7 @@ import {
   useState,
   useContext,
 } from "react";
-import { getSubscriptions } from "@/actions/subscription.actions";
+import { onGetSubscriptions } from "@/actions/subscription.actions";
 
 type BrowseNavigationContext = {
   subscriptions: SubscriptionWithUser[];
@@ -35,7 +35,7 @@ export const BrowseNavigationContextProvider: FC<
     useState<SubscriptionWithUser[]>(initialSubscriptions);
 
   const refresh = async () => {
-    const res = await getSubscriptions();
+    const res = await onGetSubscriptions();
     if (!res.success) return;
     setSubscriptions(res.data.subscriptions);
   };

@@ -5,13 +5,13 @@ import { ActionDataResponse } from "@/types/action.types";
 import { User } from ".prisma/client";
 import { searchUserByUsername } from "@/services/user.service";
 
-type OnSearchUsersResponseResponse = ActionDataResponse<{
+type OnSearchUsersResponse = ActionDataResponse<{
   users: User[];
 }>;
 
 export const onSearchUsers = async (
   usernameSearch: string
-): Promise<OnSearchUsersResponseResponse> => {
+): Promise<OnSearchUsersResponse> => {
   try {
     const self = await getSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;

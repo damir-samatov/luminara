@@ -14,7 +14,7 @@ type GetSignedFileUploadUrlParams = {
   type: string;
 };
 
-type OnGetSignedFileUploadUrl = ActionDataResponse<{
+type OnGetSignedFileUploadUrlResponse = ActionDataResponse<{
   signedUrl: string;
   fileKey: string;
   title: string;
@@ -24,7 +24,7 @@ export const onGetSignedFileUploadUrl = async ({
   title,
   size,
   type,
-}: GetSignedFileUploadUrlParams): Promise<OnGetSignedFileUploadUrl> => {
+}: GetSignedFileUploadUrlParams): Promise<OnGetSignedFileUploadUrlResponse> => {
   try {
     const self = await getSelf();
 
@@ -62,13 +62,13 @@ type GetSignedFileReadUrlParams = {
   key: string;
 };
 
-type OnGetSignedFileReadUrl = ActionDataResponse<{
+type OnGetSignedFileReadUrlResponse = ActionDataResponse<{
   signedUrl: string;
 }>;
 
 export const onGetSignedFileReadUrl = async ({
   key,
-}: GetSignedFileReadUrlParams): Promise<OnGetSignedFileReadUrl> => {
+}: GetSignedFileReadUrlParams): Promise<OnGetSignedFileReadUrlResponse> => {
   try {
     const self = await getSelf();
 
