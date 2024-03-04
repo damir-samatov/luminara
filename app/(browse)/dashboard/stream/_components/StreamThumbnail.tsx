@@ -3,7 +3,7 @@ import { ImagePicker } from "@/components/ImagePicker";
 import React, { FC, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/Button";
-import { onUpdateSelfStreamThumbnailKey } from "@/actions/stream.actions";
+import { onUpdateSelfStreamThumbnailKey } from "@/actions/stream-owner.actions";
 import { uploadFile } from "@/helpers/file.helpers";
 import { onGetSignedFileReadUrl } from "@/actions/file.actions";
 import { classNames } from "@/utils/style.utils";

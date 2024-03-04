@@ -1,4 +1,4 @@
-import { onGetSelfStream } from "@/actions/stream.actions";
+import { onGetSelfStream } from "@/actions/stream-owner.actions";
 import { notFound, redirect } from "next/navigation";
 import { StreamSettings } from "@/app/(browse)/dashboard/stream/_components/StreamConfigurator";
 import { StreamCredentials } from "@/app/(browse)/dashboard/stream/_components/StreamCredentials";

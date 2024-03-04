@@ -3,7 +3,7 @@ import { SensitiveText } from "@/components/SensitiveText";
 import { StreamCredentialsUpdateDto } from "@/types/stream.types";
 import { FC, useState } from "react";
 import { Button } from "@/components/Button";
-import { onRefreshSelfStreamKey } from "@/actions/stream.actions";
+import { onRefreshSelfStreamKey } from "@/actions/stream-owner.actions";
 
 type StreamCredentialsProps = {
   initialStreamCredentials: StreamCredentialsUpdateDto;
@@ -23,7 +23,7 @@ export const StreamCredentials: FC<StreamCredentialsProps> = ({
       if (!res.success) return;
       setStreamCredentials((prev) => ({
         ...prev,
-        streamKey: res.data.streamKey,
+        streamKey: res.data.stream.streamKey,
       }));
     } catch (error) {
       console.error(error);

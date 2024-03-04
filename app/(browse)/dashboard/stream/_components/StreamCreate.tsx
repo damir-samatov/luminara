@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/Button";
-import { onCreateSelfStream } from "@/actions/stream.actions";
+import { onCreateSelfStream } from "@/actions/stream-owner.actions";
 import React, { useState } from "react";
 import Image from "next/image";
 import streamerImg from "@/public/images/streamer.webp";

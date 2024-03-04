@@ -6,7 +6,7 @@ import {
   onUpdateSelfStreamSettings,
   onGoLive,
   onGoOffline,
-} from "@/actions/stream.actions";
+} from "@/actions/stream-owner.actions";
 import { TextInput } from "@/components/TextInput";
 import { StreamSettingsUpdateDto } from "@/types/stream.types";
 import { ToggleInput } from "@/components/ToggleInput";

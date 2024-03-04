@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { FC } from "react";
-import { onGetStreamDataAsViewer } from "@/actions/stream.actions";
 import { AwsStream } from "@/components/AwsStream";
+import { onGetStreamDataAsViewer } from "@/actions/stream-viewer.actions";
 
 type LiveStreamPageProps = {
   params: {
