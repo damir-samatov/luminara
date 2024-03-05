@@ -50,7 +50,7 @@ export const StreamSettings: FC<StreamSettingsProps> = ({
         initialValue={streamSettings.description}
         placeholder="Description..."
       />
-      <div className="flex max-w-80 gap-2">
+      <div className="flex gap-2 sm:max-w-80">
         <Button
           isDisabled={isLoading || !changeDetected}
           isLoading={isLoading}

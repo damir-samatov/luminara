@@ -59,7 +59,7 @@ export const StreamThumbnail: FC<StreamThumbnailProps> = ({
               onChange={onThumbnailChange}
             />
           </div>
-          <div className="max-w-80">
+          <div className="sm:max-w-80">
             <Button
               isDisabled={isLoading || !file}
               isLoading={isLoading}
