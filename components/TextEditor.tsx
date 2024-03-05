@@ -13,6 +13,11 @@ type TextEditorProps = {
   placeholder?: string;
 };
 
+const BUTTON_CLASSNAMES =
+  "w-16 rounded-md border-2 border-gray-700 px-2 text-gray-300";
+
+const BUTTON_ACTIVE_CLASSNAMES = "bg-gray-700";
+
 export const TextEditor: FC<TextEditorProps> = ({
   initialValue,
   onChange,
@@ -40,8 +45,9 @@ export const TextEditor: FC<TextEditorProps> = ({
           onClick={() => editor.chain().focus().toggleUnderline().run()}
           disabled={!editor.can().chain().focus().toggleUnderline().run()}
           className={classNames(
-            "w-16 rounded-md border-2 border-gray-300 px-2 text-gray-300 underline",
-            editor.isActive("underline") && "bg-gray-300 text-gray-900"
+            " underline",
+            BUTTON_CLASSNAMES,
+            editor.isActive("underline") && BUTTON_ACTIVE_CLASSNAMES
           )}
         >
           U
@@ -50,8 +56,9 @@ export const TextEditor: FC<TextEditorProps> = ({
           onClick={() => editor.chain().focus().toggleBold().run()}
           disabled={!editor.can().chain().focus().toggleBold().run()}
           className={classNames(
-            "w-16 rounded-md border-2 border-gray-300 px-2 font-bold text-gray-300",
-            editor.isActive("bold") && "bg-gray-300 text-gray-900"
+            "font-bold",
+            BUTTON_CLASSNAMES,
+            editor.isActive("bold") && BUTTON_ACTIVE_CLASSNAMES
           )}
         >
           B
@@ -60,8 +67,9 @@ export const TextEditor: FC<TextEditorProps> = ({
           onClick={() => editor.chain().focus().toggleItalic().run()}
           disabled={!editor.can().chain().focus().toggleItalic().run()}
           className={classNames(
-            "w-16 rounded-md border-2 border-gray-300 px-2 italic text-gray-300",
-            editor.isActive("italic") && "bg-gray-300 text-gray-900"
+            "italic",
+            BUTTON_CLASSNAMES,
+            editor.isActive("italic") && BUTTON_ACTIVE_CLASSNAMES
           )}
         >
           I
@@ -70,8 +78,9 @@ export const TextEditor: FC<TextEditorProps> = ({
           onClick={() => editor.chain().focus().toggleStrike().run()}
           disabled={!editor.can().chain().focus().toggleStrike().run()}
           className={classNames(
-            "w-16 rounded-md border-2 border-gray-300 px-2 text-gray-300 line-through",
-            editor.isActive("strike") && "bg-gray-300 text-gray-900"
+            "line-through",
+            BUTTON_CLASSNAMES,
+            editor.isActive("strike") && BUTTON_ACTIVE_CLASSNAMES
           )}
         >
           S

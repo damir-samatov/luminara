@@ -114,7 +114,7 @@ export const AwsChatRoom: FC<AwsChatRoomProps> = ({
           value={message}
           maxLength={100}
           onChange={setMessage}
-          placeholder="Type..."
+          placeholder="Type your message..."
           onEnter={onSendMessage}
         />
         <Button size="max-content" onClick={onSendMessage}>

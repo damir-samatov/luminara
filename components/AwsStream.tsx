@@ -35,7 +35,7 @@ export const AwsStream: FC<AwsStreamProps> = ({
     <div className="relative h-full w-full flex-grow">
       <div
         className={classNames(
-          "lg:absolute lg:bottom-0 lg:left-0 lg:top-0 lg:overflow-y-auto",
+          "overflow-x-hidden lg:absolute lg:bottom-0 lg:left-0 lg:top-0 lg:overflow-y-auto",
           isChatEnabled ? "right-96" : "right-0"
         )}
       >
@@ -43,7 +43,7 @@ export const AwsStream: FC<AwsStreamProps> = ({
           playbackUrl={playbackUrl}
           thumbnailUrl={thumbnailUrl}
         />
-        <div className="flex flex-col gap-4 p-4">
+        <div className="flex flex-col gap-2 p-4">
           <Link
             className="flex w-max items-end gap-2"
             href={`/users/${streamerUsername}`}
@@ -68,10 +68,12 @@ export const AwsStream: FC<AwsStreamProps> = ({
             </p>
           </Link>
           <h1 className="text-lg lg:text-xl">{title}</h1>
-          <div
-            className="hidden text-sm lg:block"
-            dangerouslySetInnerHTML={{ __html: description }}
-          />
+          {description && (
+            <div
+              className="hidden text-sm lg:block"
+              dangerouslySetInnerHTML={{ __html: description }}
+            />
+          )}
         </div>
       </div>
       {isChatEnabled && (

@@ -15,6 +15,7 @@ import { StreamSettingsUpdateDto } from "@/types/stream.types";
 import { useObjectShadow } from "@/hooks/useObjectShadow";
 import { uploadFile } from "@/helpers/file.helpers";
 import { onGetSignedFileReadUrl } from "@/actions/file.actions";
+import { classNames } from "@/utils/style.utils";
 
 type StreamEditorProps = {
   stream: Stream;
@@ -31,7 +32,17 @@ const StreamEditor: FC<StreamEditorProps> = ({
   chatRoomToken,
   playbackUrl,
 }) => {
+  const [activeTab, setActiveTab] = useState(0);
+
   const [stream, setStream] = useState<Stream>(initialStream);
+
+  const [streamSettings, setStreamSettings] = useState<StreamSettingsUpdateDto>(
+    {
+      description: stream.description,
+      title: stream.title,
+      isChatEnabled: stream.isChatEnabled,
+    }
+  );
 
   const [appliedThumbnailUrl, setAppliedThumbnailUrl] = useState<string>(
     initialAppliedThumbnailUrl
@@ -51,27 +62,19 @@ const StreamEditor: FC<StreamEditorProps> = ({
     setPrevState: setSettingsPrevState,
     changeDetected: settingsChangeDetected,
     prevState: settingsPrevState,
-  } = useObjectShadow({
-    title: stream.title,
-    description: stream.description,
-    isChatEnabled: stream.isChatEnabled,
-  });
+  } = useObjectShadow(streamSettings);
 
   const onSettingsChange = <T extends keyof StreamSettingsUpdateDto>(
     key: T,
     value: StreamSettingsUpdateDto[T]
   ) => {
-    setStream((prev) => ({ ...prev, [key]: value }));
+    setStreamSettings((prev) => ({ ...prev, [key]: value }));
   };
 
   const onSaveSettings = async () => {
     if (!settingsChangeDetected) return;
     try {
-      const res = await onUpdateSelfStreamSettings({
-        title: stream.title,
-        isChatEnabled: stream.isChatEnabled,
-        description: stream.description,
-      });
+      const res = await onUpdateSelfStreamSettings(streamSettings);
       if (!res.success) return;
       const { title, isChatEnabled, description } = res.data.stream;
       setSettingsPrevState({
@@ -91,12 +94,7 @@ const StreamEditor: FC<StreamEditorProps> = ({
   };
 
   const onDiscardSettings = () => {
-    setStream((prev) => ({
-      ...prev,
-      title: settingsPrevState.title,
-      description: settingsPrevState.description,
-      isChatEnabled: settingsPrevState.isChatEnabled,
-    }));
+    setStreamSettings(settingsPrevState);
   };
 
   const onUploadThumbnail = async (file: File) => {
@@ -122,43 +120,76 @@ const StreamEditor: FC<StreamEditorProps> = ({
     }
   };
 
-  return (
-    <div className="flex flex-col gap-4 p-2 lg:gap-6 lg:p-6">
-      <div className="w-full overflow-hidden rounded-lg border-2 border-gray-700 lg:aspect-video">
-        <AwsStream
-          isChatEnabled={stream.isChatEnabled}
-          streamerImageUrl={user.imageUrl}
-          streamerUsername={user.username}
-          playbackUrl={playbackUrl}
-          thumbnailUrl={appliedThumbnailUrl}
-          chatRoomToken={chatRoomToken}
-          title={stream.title}
-          description={stream.description}
-          isModerator={true}
+  const tabs = [
+    {
+      component: (
+        <StreamSettings
+          streamSettings={streamSettings}
+          onDiscardSettings={onDiscardSettings}
+          onSaveSettings={onSaveSettings}
+          onChange={onSettingsChange}
+          changeDetected={settingsChangeDetected}
         />
+      ),
+      label: "Settings",
+    },
+    {
+      component: (
+        <StreamCredentials
+          onRefreshStreamKey={onRefreshStreamKeyClick}
+          streamCredentials={{
+            streamKey: stream.streamKey,
+            serverUrl: stream.serverUrl,
+          }}
+        />
+      ),
+      label: "Credentials",
+    },
+    {
+      component: (
+        <StreamThumbnail
+          onUploadThumbnail={onUploadThumbnail}
+          thumbnailUrl={appliedThumbnailUrl}
+        />
+      ),
+      label: "Thumbnail",
+    },
+    {
+      component: (
+        <div className="w-full overflow-hidden rounded-lg border-2 border-gray-700 p-4 lg:aspect-video">
+          <AwsStream
+            title={stream.title}
+            description={stream.description}
+            isChatEnabled={stream.isChatEnabled}
+            streamerImageUrl={user.imageUrl}
+            streamerUsername={user.username}
+            playbackUrl={playbackUrl}
+            thumbnailUrl={appliedThumbnailUrl}
+            chatRoomToken={chatRoomToken}
+          />
+        </div>
+      ),
+      label: "Preview",
+    },
+  ];
+
+  return (
+    <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 p-2 lg:gap-8 lg:p-4">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-4">
+        {tabs.map((tab, i) => (
+          <button
+            className={classNames(
+              "w-full flex-grow rounded-lg border-2 border-gray-700 p-2 text-gray-300",
+              activeTab === i && "bg-gray-700"
+            )}
+            onClick={() => setActiveTab(i)}
+            key={tab.label}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
-      <StreamCredentials
-        onRefreshStreamKey={onRefreshStreamKeyClick}
-        streamCredentials={{
-          streamKey: stream.streamKey,
-          serverUrl: stream.serverUrl,
-        }}
-      />
-      <StreamSettings
-        streamSettings={{
-          description: stream.description,
-          title: stream.title,
-          isChatEnabled: stream.isChatEnabled,
-        }}
-        onDiscardSettings={onDiscardSettings}
-        onSaveSettings={onSaveSettings}
-        onChange={onSettingsChange}
-        changeDetected={settingsChangeDetected}
-      />
-      <StreamThumbnail
-        onUploadThumbnail={onUploadThumbnail}
-        thumbnailUrl={appliedThumbnailUrl}
-      />
+      {tabs[activeTab]?.component}
     </div>
   );
 };

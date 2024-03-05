@@ -33,7 +33,6 @@ export const StreamSettings: FC<StreamSettingsProps> = ({
 
   return (
     <div className="flex flex-col gap-4 rounded-lg border-2 border-gray-700 p-4">
-      <p className="text-lg font-semibold">Settings</p>
       <ToggleInput
         label="Enable Chat"
         value={streamSettings.isChatEnabled}
