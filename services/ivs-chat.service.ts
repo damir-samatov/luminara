@@ -3,6 +3,7 @@ import {
   ChatTokenCapability,
   CreateChatTokenCommand,
   CreateRoomCommand,
+  DeleteMessageCommand,
 } from "@aws-sdk/client-ivschat";
 import { ivsChat } from "@/lib/ivs-chat";
 import { IvsChatRoomToken } from "@/types/ivs.types";
@@ -47,7 +48,7 @@ export const getIvsChatToken = async ({
   username,
 }: GetIvsChatTokenProps): Promise<IvsChatRoomToken | null> => {
   try {
-    const input = {
+    const command = new CreateChatTokenCommand({
       userId,
       capabilities,
       attributes: {
@@ -56,8 +57,7 @@ export const getIvsChatToken = async ({
       },
       roomIdentifier: chatRoomArn,
       sessionDurationInMinutes: 60,
-    };
-    const command = new CreateChatTokenCommand(input);
+    });
 
     const ivsGetChatRoomTokenRes = await ivsChat.send(command);
     if (
@@ -75,6 +75,37 @@ export const getIvsChatToken = async ({
     };
   } catch (error) {
     console.error("getIvsChatToken", error);
+    return null;
+  }
+};
+
+type DeleteIvsChatMessageProps = {
+  chatRoomArn: string;
+  messageId: string;
+  reason: string;
+};
+
+export const deleteIvsChatMessage = async ({
+  chatRoomArn,
+  messageId,
+  reason,
+}: DeleteIvsChatMessageProps) => {
+  try {
+    const command = new DeleteMessageCommand({
+      roomIdentifier: chatRoomArn,
+      id: messageId,
+      reason,
+    });
+
+    const ivsDeleteChatMessageRes = await ivsChat.send(command);
+
+    if (!ivsDeleteChatMessageRes?.id) return null;
+
+    return {
+      id: ivsDeleteChatMessageRes.id,
+    };
+  } catch (error) {
+    console.error("deleteIvsChatMessage", error);
     return null;
   }
 };

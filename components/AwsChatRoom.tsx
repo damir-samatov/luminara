@@ -6,13 +6,18 @@ import { v4 as uuid } from "uuid";
 import { TextInput } from "@/components/TextInput";
 import { IvsChatRoomToken } from "@/types/ivs.types";
 import { stringToColor } from "@/utils/style.utils";
-import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
+import { PaperAirplaneIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { onDeleteSelfChatMessage } from "@/actions/stream-owner.actions";
 
 type AwsChatRoomProps = {
   chatRoomToken: IvsChatRoomToken;
+  isModerator: boolean;
 };
 
-export const AwsChatRoom: FC<AwsChatRoomProps> = ({ chatRoomToken }) => {
+export const AwsChatRoom: FC<AwsChatRoomProps> = ({
+  chatRoomToken,
+  isModerator,
+}) => {
   const [room] = useState(
     () =>
       new ChatRoom({
@@ -32,7 +37,16 @@ export const AwsChatRoom: FC<AwsChatRoomProps> = ({ chatRoomToken }) => {
       "disconnect",
       console.log
     );
+
     const unsubscribeOnMessage = room.addListener("message", onMessageReceived);
+    const unsubscribeOnMessageDelete = room.addListener(
+      "messageDelete",
+      (e) => {
+        setMessages((prev) =>
+          prev.filter((message) => e.messageId !== message.id)
+        );
+      }
+    );
 
     if (room.state === "disconnected") room.connect();
 
@@ -41,6 +55,7 @@ export const AwsChatRoom: FC<AwsChatRoomProps> = ({ chatRoomToken }) => {
       unsubscribeOnConnecting();
       unsubscribeOnConnected();
       unsubscribeOnDisconnected();
+      unsubscribeOnMessageDelete();
     };
   }, [room]);
 
@@ -57,6 +72,10 @@ export const AwsChatRoom: FC<AwsChatRoomProps> = ({ chatRoomToken }) => {
       requestId: uuid(),
     });
     setMessage("");
+  };
+
+  const onDeleteMessage = async (messageId: string) => {
+    await onDeleteSelfChatMessage(messageId);
   };
 
   return (
@@ -80,6 +99,11 @@ export const AwsChatRoom: FC<AwsChatRoomProps> = ({ chatRoomToken }) => {
                   @{name}:{" "}
                 </span>
                 <span>{text}</span>
+                {isModerator && (
+                  <button onClick={() => onDeleteMessage(message.id)}>
+                    <TrashIcon className="h-4 w-4 text-red-500"></TrashIcon>
+                  </button>
+                )}
               </div>
             );
           })}

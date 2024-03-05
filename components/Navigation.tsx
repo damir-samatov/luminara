@@ -98,7 +98,7 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
     []
   );
 
-  const siderbarBottom = useMemo(
+  const sidebarBottom = useMemo(
     () => (
       <div className="sticky bottom-0 bg-gray-900 px-4 py-6">
         <SignOutButton>
@@ -117,10 +117,10 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
       <div className="flex h-screen w-full flex-col bg-gray-900">
         {siderbarTop}
         {sidebarChildren}
-        {siderbarBottom}
+        {sidebarBottom}
       </div>
     ),
-    [sidebarChildren, siderbarTop, siderbarBottom]
+    [sidebarChildren, siderbarTop, sidebarBottom]
   );
 
   return (
@@ -128,7 +128,7 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
       <Transition.Root show={sidebarOpen} as={Fragment}>
         <Dialog
           as="div"
-          className="relative z-50 lg:hidden"
+          className="relative z-50 xl:hidden"
           onClose={setSidebarOpen}
         >
           <div className="fixed inset-0 flex">
@@ -172,22 +172,22 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
         </Dialog>
       </Transition.Root>
 
-      <div className="fixed inset-y-0 z-50 hidden w-72 lg:block">
+      <div className="fixed inset-y-0 z-50 hidden w-72 xl:block">
         {sidebarContainer}
       </div>
 
-      <div className="flex min-h-screen flex-col lg:pl-72">
+      <div className="flex min-h-screen flex-col xl:pl-72">
         <div className="sticky top-0 z-40 flex h-14 items-center gap-x-4 bg-gray-800 px-4">
           <button
             type="button"
-            className="lg:hidden"
+            className="xl:hidden"
             onClick={() => setSidebarOpen(true)}
           >
             <span className="sr-only">Open sidebar</span>
             <Bars3Icon className="h-6 w-6 text-white" aria-hidden="true" />
           </button>
 
-          <div className="flex w-full items-center gap-x-4 lg:gap-x-6">
+          <div className="flex w-full items-center gap-x-4 xl:gap-x-6">
             <Search />
             <div className="ml-auto">
               <UserButton afterSignOutUrl="/sign-in" />

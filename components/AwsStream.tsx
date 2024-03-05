@@ -15,6 +15,7 @@ type AwsStreamProps = {
   title: string;
   description: string;
   isChatEnabled: boolean;
+  isModerator?: boolean;
 };
 
 export const AwsStream: FC<AwsStreamProps> = ({
@@ -26,6 +27,7 @@ export const AwsStream: FC<AwsStreamProps> = ({
   streamerUsername,
   streamerImageUrl,
   isChatEnabled,
+  isModerator = false,
 }) => {
   const streamerColor = stringToColor(streamerUsername);
 
@@ -33,20 +35,20 @@ export const AwsStream: FC<AwsStreamProps> = ({
     <div className="relative h-full w-full flex-grow">
       <div
         className={classNames(
-          "absolute bottom-0 left-0  top-0 overflow-y-auto p-4",
+          "lg:absolute lg:bottom-0 lg:left-0 lg:top-0 lg:overflow-y-auto",
           isChatEnabled ? "right-96" : "right-0"
         )}
       >
-        <div className="flex flex-col gap-4">
-          <AwsStreamPlayer
-            playbackUrl={playbackUrl}
-            thumbnailUrl={thumbnailUrl}
-          />
+        <AwsStreamPlayer
+          playbackUrl={playbackUrl}
+          thumbnailUrl={thumbnailUrl}
+        />
+        <div className="flex flex-col gap-4 p-4">
           <Link
             className="flex w-max items-end gap-2"
             href={`/users/${streamerUsername}`}
           >
-            <div className="h-12 w-12 overflow-hidden rounded-full">
+            <div className="h-10 w-10 overflow-hidden rounded-full">
               <Image
                 src={streamerImageUrl}
                 alt={streamerUsername}
@@ -54,7 +56,7 @@ export const AwsStream: FC<AwsStreamProps> = ({
                 width={120}
               />
             </div>
-            <p className="text-xl">
+            <p className="text-lg">
               <span
                 style={{
                   color: streamerColor,
@@ -65,16 +67,19 @@ export const AwsStream: FC<AwsStreamProps> = ({
               <span>{streamerUsername}</span>
             </p>
           </Link>
-          <h1 className="text-2xl">{title}</h1>
+          <h1 className="text-lg lg:text-xl">{title}</h1>
           <div
-            className="text-sm"
+            className="hidden text-sm lg:block"
             dangerouslySetInnerHTML={{ __html: description }}
           />
         </div>
       </div>
       {isChatEnabled && (
-        <div className="absolute bottom-0 right-0 top-0 w-full max-w-96 bg-gray-900 p-4">
-          <AwsChatRoom chatRoomToken={chatRoomToken} />
+        <div className="h-[300px] w-full bg-gray-900 p-4 lg:absolute lg:bottom-0 lg:right-0 lg:top-0 lg:h-auto lg:max-w-96">
+          <AwsChatRoom
+            chatRoomToken={chatRoomToken}
+            isModerator={isModerator}
+          />
         </div>
       )}
     </div>

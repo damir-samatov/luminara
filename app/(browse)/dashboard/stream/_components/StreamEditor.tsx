@@ -123,8 +123,8 @@ const StreamEditor: FC<StreamEditorProps> = ({
   };
 
   return (
-    <div className="flex flex-col gap-6 p-6">
-      <div className="aspect-video w-full overflow-hidden rounded-lg border-2 border-gray-700">
+    <div className="flex flex-col gap-4 p-2 lg:gap-6 lg:p-6">
+      <div className="w-full overflow-hidden rounded-lg border-2 border-gray-700 lg:aspect-video">
         <AwsStream
           isChatEnabled={stream.isChatEnabled}
           streamerImageUrl={user.imageUrl}
@@ -134,6 +134,7 @@ const StreamEditor: FC<StreamEditorProps> = ({
           chatRoomToken={chatRoomToken}
           title={stream.title}
           description={stream.description}
+          isModerator={true}
         />
       </div>
       <StreamCredentials

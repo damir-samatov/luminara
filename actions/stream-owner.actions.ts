@@ -21,6 +21,7 @@ import {
 import { deleteFile, getSignedFileReadUrl } from "@/services/s3.service";
 import {
   createIvsChatRoom,
+  deleteIvsChatMessage,
   getIvsChatToken,
 } from "@/services/ivs-chat.service";
 import { IvsChatRoomToken } from "@/types/ivs.types";
@@ -265,3 +266,32 @@ export const onGetStreamDataAsOwner =
       return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
     }
   };
+
+export const onDeleteSelfChatMessage = async (messageId: string) => {
+  try {
+    const self = await getSelf();
+    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+
+    const stream = await getStreamByUserId(self.id);
+    if (!stream) return ERROR_RESPONSES.NOT_FOUND;
+
+    const deleteIvsChatMessageRes = await deleteIvsChatMessage({
+      messageId,
+      chatRoomArn: stream.chatRoomArn,
+      reason: "I don't like this message.",
+    });
+
+    if (!deleteIvsChatMessageRes) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    return {
+      success: true,
+      data: {
+        stream,
+        user: self,
+      },
+    };
+  } catch (error) {
+    console.error("onDeleteSelfChatMessage", error);
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+  }
+};
