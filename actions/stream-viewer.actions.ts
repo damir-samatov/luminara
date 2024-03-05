@@ -16,6 +16,7 @@ type OnGetStreamViewerTokenResponse = ActionDataResponse<{
   streamerUsername: string;
   streamerImageUrl: string;
   chatRoomToken: IvsChatRoomToken;
+  isChatEnabled: boolean;
 }>;
 
 export const onGetStreamDataAsViewer = async (
@@ -30,13 +31,19 @@ export const onGetStreamDataAsViewer = async (
 
     const [viewerToken, chatRoomToken, thumbnailUrl] = await Promise.all([
       getIvsViewerToken(stream.channelArn),
-      getIvsChatToken({
-        userId: self.id,
-        chatRoomArn: stream.chatRoomArn,
-        imageUrl: self.imageUrl,
-        username: self.username,
-        capabilities: ["SEND_MESSAGE"],
-      }),
+      stream.isChatEnabled
+        ? getIvsChatToken({
+            userId: self.id,
+            chatRoomArn: stream.chatRoomArn,
+            imageUrl: self.imageUrl,
+            username: self.username,
+            capabilities: ["SEND_MESSAGE"],
+          })
+        : {
+            token: "",
+            sessionExpirationTime: new Date(),
+            tokenExpirationTime: new Date(),
+          },
       stream.thumbnailKey ? getSignedFileReadUrl(stream.thumbnailKey) : null,
     ]);
 
@@ -52,6 +59,7 @@ export const onGetStreamDataAsViewer = async (
         thumbnailUrl: thumbnailUrl || stream.user.imageUrl,
         streamerImageUrl: stream.user.imageUrl,
         streamerUsername: stream.user.username,
+        isChatEnabled: stream.isChatEnabled,
         chatRoomToken,
       },
     };

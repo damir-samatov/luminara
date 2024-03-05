@@ -1,5 +1,5 @@
 "use client";
-import React, { FC } from "react";
+import { FC } from "react";
 import { WifiIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 

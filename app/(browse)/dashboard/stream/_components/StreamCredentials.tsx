@@ -1,6 +1,6 @@
 import { SensitiveText } from "@/components/SensitiveText";
 import { StreamCredentialsUpdateDto } from "@/types/stream.types";
-import React, { FC, useState } from "react";
+import { FC, useState } from "react";
 import { Button } from "@/components/Button";
 
 type StreamCredentialsProps = {

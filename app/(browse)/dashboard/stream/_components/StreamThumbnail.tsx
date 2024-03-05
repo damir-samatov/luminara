@@ -1,5 +1,5 @@
 import { ImagePicker } from "@/components/ImagePicker";
-import React, { FC, useState } from "react";
+import { FC, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/Button";
 import { classNames } from "@/utils/style.utils";

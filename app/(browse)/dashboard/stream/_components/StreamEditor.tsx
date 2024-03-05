@@ -126,6 +126,7 @@ const StreamEditor: FC<StreamEditorProps> = ({
     <div className="flex flex-col gap-6 p-6">
       <div className="aspect-video w-full overflow-hidden rounded-lg border-2 border-gray-700">
         <AwsStream
+          isChatEnabled={stream.isChatEnabled}
           streamerImageUrl={user.imageUrl}
           streamerUsername={user.username}
           playbackUrl={playbackUrl}

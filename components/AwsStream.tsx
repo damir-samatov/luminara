@@ -1,10 +1,10 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { AwsStreamPlayer } from "@/components/AwsStreamPlayer";
 import { AwsChatRoom } from "@/components/AwsChatRoom";
 import { IvsChatRoomToken } from "@/types/ivs.types";
 import Image from "next/image";
 import Link from "next/link";
-import { stringToColor } from "@/utils/style.utils";
+import { classNames, stringToColor } from "@/utils/style.utils";
 
 type AwsStreamProps = {
   streamerImageUrl: string;
@@ -14,6 +14,7 @@ type AwsStreamProps = {
   chatRoomToken: IvsChatRoomToken;
   title: string;
   description: string;
+  isChatEnabled: boolean;
 };
 
 export const AwsStream: FC<AwsStreamProps> = ({
@@ -24,12 +25,18 @@ export const AwsStream: FC<AwsStreamProps> = ({
   description,
   streamerUsername,
   streamerImageUrl,
+  isChatEnabled,
 }) => {
   const streamerColor = stringToColor(streamerUsername);
 
   return (
     <div className="relative h-full w-full flex-grow">
-      <div className="absolute bottom-0 left-0 right-96 top-0 overflow-y-auto p-4">
+      <div
+        className={classNames(
+          "absolute bottom-0 left-0  top-0 overflow-y-auto p-4",
+          isChatEnabled ? "right-96" : "right-0"
+        )}
+      >
         <div className="flex flex-col gap-4">
           <AwsStreamPlayer
             playbackUrl={playbackUrl}
@@ -65,9 +72,11 @@ export const AwsStream: FC<AwsStreamProps> = ({
           />
         </div>
       </div>
-      <div className="absolute bottom-0 right-0 top-0 w-full max-w-96 bg-gray-900 p-4">
-        <AwsChatRoom chatRoomToken={chatRoomToken} />
-      </div>
+      {isChatEnabled && (
+        <div className="absolute bottom-0 right-0 top-0 w-full max-w-96 bg-gray-900 p-4">
+          <AwsChatRoom chatRoomToken={chatRoomToken} />
+        </div>
+      )}
     </div>
   );
 };

@@ -1,6 +1,5 @@
 import { onGetStreamDataAsOwner } from "@/actions/stream-owner.actions";
 import { notFound } from "next/navigation";
-import React from "react";
 import { ErrorResponseType } from "@/types/action.types";
 import { StreamCreate } from "@/app/(browse)/dashboard/stream/_components/StreamCreate";
 import StreamEditor from "@/app/(browse)/dashboard/stream/_components/StreamEditor";

@@ -42,7 +42,6 @@ img {
     @apply left-0.5;
     @apply -translate-x-0.5;
     @apply -translate-y-0.5;
-
   }
 
   .vjs-big-play-button {
@@ -51,13 +50,13 @@ img {
     transform: translate(-50%, -50%) !important;
   }
 
-  .vjs-poster{
+  .vjs-poster {
     background-size: cover !important;
   }
 }
 
 .text-editor {
-  [contenteditable=true] {
+  [contenteditable="true"] {
     @apply outline-0;
     @apply min-h-32;
     @apply py-4;

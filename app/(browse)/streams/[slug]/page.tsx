@@ -22,10 +22,12 @@ const LiveStreamPage: FC<LiveStreamPageProps> = async ({ params }) => {
     description,
     streamerImageUrl,
     streamerUsername,
+    isChatEnabled,
   } = res.data;
 
   return (
     <AwsStream
+      isChatEnabled={isChatEnabled}
       title={title}
       description={description}
       streamerImageUrl={streamerImageUrl}

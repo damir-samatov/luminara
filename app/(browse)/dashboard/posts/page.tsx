@@ -3,7 +3,6 @@ import { onGetSelfPosts } from "@/actions/post.actions";
 import { PostItem } from "@/components/PostItem";
 import { classNames } from "@/utils/style.utils";
 import Link from "next/link";
-import React from "react";
 import { PencilIcon } from "@heroicons/react/24/outline";
 
 const PostsPage = async () => {
