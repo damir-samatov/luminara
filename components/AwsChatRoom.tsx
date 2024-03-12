@@ -63,9 +63,10 @@ export const AwsChatRoom: FC<AwsChatRoomProps> = ({
     setMessages((prev) => [...prev, newMessage]);
   };
 
-  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const chatScrollerRef = useRef<HTMLDivElement>(null);
 
   const onSendMessage = async () => {
+    if (!message) return;
     await room.sendMessage({
       action: "SEND_MESSAGE",
       content: message,
@@ -78,13 +79,19 @@ export const AwsChatRoom: FC<AwsChatRoomProps> = ({
     await onDeleteSelfChatMessage(messageId);
   };
 
+  useEffect(() => {
+    if (!chatScrollerRef.current) return;
+    chatScrollerRef.current.scrollTop = chatScrollerRef.current.scrollHeight;
+  }, [messages, chatScrollerRef]);
+
   return (
     <div className="flex h-full w-full flex-col gap-6">
-      <div className="relative flex-grow overflow-y-auto">
-        <div
-          ref={messagesContainerRef}
-          className="inset-0 mt-auto flex flex-col justify-end gap-4"
-        >
+      <div
+        ref={chatScrollerRef}
+        id="chat"
+        className="relative flex-grow overflow-y-auto"
+      >
+        <div className="inset-0 mt-auto flex flex-col justify-end gap-4">
           {messages.map((message) => {
             const name = message.sender.attributes?.username || "unnamed";
             const color = stringToColor(name);
