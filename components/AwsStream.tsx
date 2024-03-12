@@ -30,11 +30,11 @@ export const AwsStream: FC<AwsStreamProps> = ({
   const streamerColor = stringToColor(streamerUsername);
 
   return (
-    <div className="relative h-full w-full flex-grow">
+    <div className="relative flex h-full w-full flex-grow flex-col gap-4">
       <div
         className={classNames(
-          "overflow-x-hidden p-4 lg:absolute lg:bottom-0 lg:left-0 lg:top-0 lg:overflow-y-auto",
-          isChatEnabled ? "right-96" : "right-0"
+          "absolute left-0 right-0 top-0 overflow-y-auto overflow-x-hidden p-4 lg:bottom-0",
+          isChatEnabled ? "bottom-72 lg:right-96" : "bottom-0"
         )}
       >
         <AwsStreamPlayer
@@ -75,7 +75,7 @@ export const AwsStream: FC<AwsStreamProps> = ({
         </div>
       </div>
       {isChatEnabled && (
-        <div className="h-[300px] w-full bg-gray-900 p-4 lg:absolute lg:bottom-0 lg:right-0 lg:top-0 lg:h-auto lg:max-w-96">
+        <div className="absolute bottom-0 right-0 h-72 w-full bg-gray-900 p-4 lg:top-0 lg:h-auto lg:max-w-96">
           <AwsChatRoom
             streamerUsername={streamerUsername}
             isModerator={isModerator}

@@ -17,7 +17,7 @@ img {
 
 * {
   ::-webkit-scrollbar {
-    @apply w-1.5;
+    @apply w-1;
   }
 
   ::-webkit-scrollbar-track {

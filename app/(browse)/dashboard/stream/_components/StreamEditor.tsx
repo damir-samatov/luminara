@@ -173,7 +173,7 @@ export const StreamEditor: FC<StreamEditorProps> = ({
       },
       {
         component: (
-          <div className="h-full w-full flex-grow overflow-hidden rounded-lg border-2 border-gray-700">
+          <div className="flex aspect-[9/16] h-full w-full flex-grow flex-col overflow-y-auto rounded-lg border-2 border-gray-700 lg:aspect-auto">
             <AwsStream
               title={stream.title}
               description={stream.description}
@@ -204,13 +204,13 @@ export const StreamEditor: FC<StreamEditorProps> = ({
   );
 
   return (
-    <div className="flex flex-col-reverse gap-4 p-4 lg:grid lg:flex-grow lg:grid-cols-5 lg:items-start">
-      <div className="flex h-full flex-col gap-4 lg:col-span-4">
+    <div className="flex flex-grow flex-col gap-4 p-4 lg:grid lg:grid-cols-5 lg:items-start">
+      <div className="flex h-full flex-grow flex-col gap-4 lg:col-span-4">
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {tabs.map((tab, i) => (
             <button
               className={classNames(
-                "w-full flex-grow rounded-lg border-2 border-gray-700 p-2 text-gray-300 transition-colors duration-200 hover:bg-gray-700",
+                "w-full rounded-lg border-2 border-gray-700 p-2 text-gray-300 transition-colors duration-200 hover:bg-gray-700",
                 activeTab === i && "bg-gray-700"
               )}
               onClick={() => setActiveTab(i)}
