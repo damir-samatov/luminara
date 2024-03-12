@@ -67,7 +67,7 @@ export const CreatePostForm = () => {
       />
       <TextEditor
         placeholder="Start writing your post"
-        initialValue={postContent.body}
+        value={postContent.body}
         onChange={(value) => onPostContentChange("body", value)}
       />
       <Button

@@ -1,5 +1,4 @@
-import { FC, useCallback, useState } from "react";
-import { debounce } from "ts-debounce";
+import { FC } from "react";
 import { classNames } from "@/utils/style.utils";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
@@ -9,7 +8,7 @@ import { TextStyle } from "@tiptap/extension-text-style";
 
 type TextEditorProps = {
   onChange: (value: string) => void;
-  initialValue: string;
+  value: string;
   placeholder?: string;
 };
 
@@ -19,20 +18,16 @@ const BUTTON_CLASSNAMES =
 const BUTTON_ACTIVE_CLASSNAMES = "bg-gray-700";
 
 export const TextEditor: FC<TextEditorProps> = ({
-  initialValue,
+  value,
   onChange,
   placeholder = "",
 }) => {
-  const [text, setText] = useState(initialValue);
-  const onInput = useCallback(debounce(onChange, 50), []);
-
   const editor = useEditor({
     extensions: [StarterKit, Underline, Link, TextStyle],
-    content: text,
+    content: value,
     onUpdate: ({ editor }) => {
-      const text = editor.getHTML();
-      setText(text);
-      onInput(text);
+      const newText = editor.getHTML();
+      onChange(newText);
     },
   });
 

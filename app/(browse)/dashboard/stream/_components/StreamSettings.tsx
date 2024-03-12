@@ -46,7 +46,7 @@ export const StreamSettings: FC<StreamSettingsProps> = ({
       />
       <TextEditor
         onChange={(value) => onChange("description", value)}
-        initialValue={streamSettings.description}
+        value={streamSettings.description}
         placeholder="Description..."
       />
       <div className="flex gap-2 sm:max-w-80">

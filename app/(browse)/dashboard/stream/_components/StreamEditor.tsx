@@ -176,7 +176,7 @@ const StreamEditor: FC<StreamEditorProps> = ({
       },
       {
         component: (
-          <div className="w-full overflow-hidden rounded-lg border-2 border-gray-700 lg:aspect-video">
+          <div className="h-full w-full flex-grow overflow-hidden rounded-lg border-2 border-gray-700">
             <AwsStream
               title={stream.title}
               description={stream.description}
@@ -209,8 +209,8 @@ const StreamEditor: FC<StreamEditorProps> = ({
   );
 
   return (
-    <div className="grid grid-cols-5 items-start gap-4 p-4">
-      <div className="col-span-4 flex flex-col gap-4">
+    <div className="flex flex-col-reverse gap-4 p-4 lg:grid lg:flex-grow lg:grid-cols-5 lg:items-start">
+      <div className="flex h-full flex-col gap-4 lg:col-span-4">
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {tabs.map((tab, i) => (
             <button
@@ -225,7 +225,9 @@ const StreamEditor: FC<StreamEditorProps> = ({
             </button>
           ))}
         </div>
-        {tabs[activeTab]?.component}
+        <div className="flex flex-grow flex-col">
+          {tabs[activeTab]?.component}
+        </div>
       </div>
       <div className="flex flex-col gap-4 rounded-lg border-2 border-gray-700 p-4 text-sm text-gray-300">
         <p>

@@ -59,6 +59,8 @@ img {
   [contenteditable="true"] {
     @apply outline-0;
     @apply min-h-32;
+    @apply max-h-96;
+    @apply overflow-y-auto;
     @apply py-4;
     @apply px-2;
   }
