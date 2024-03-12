@@ -7,7 +7,7 @@ import { ImagePicker } from "@/components/ImagePicker";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import { useRouter } from "next/navigation";
 import { TextEditor } from "@/components/TextEditor";
-import { uploadFile } from "@/helpers/file.helpers";
+import { uploadFile } from "@/helpers/client/file.helpers";
 
 type PostContent = {
   title: string;

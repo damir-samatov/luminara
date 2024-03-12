@@ -66,12 +66,12 @@ export const AwsStreamPlayer: FC<AwsStreamPlayerProps> = ({
           ivsPlayerRef.current = ivsPlayer;
 
           ivsPlayer.addEventListener(PlayerEventType.ERROR, () => {
-            setTimeout(() => player.src(playbackUrl), 2000);
+            setTimeout(() => player.src(playbackUrl), 5000);
             setIsReady(false);
           });
 
           ivsPlayer.addEventListener(PlayerState.ENDED, () => {
-            setTimeout(() => player.src(playbackUrl), 2000);
+            setTimeout(() => player.src(playbackUrl), 5000);
             setIsReady(false);
           });
 

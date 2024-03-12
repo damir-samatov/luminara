@@ -18,7 +18,6 @@ const LiveStreamPage: FC<LiveStreamPageProps> = async ({ params }) => {
     thumbnailUrl,
     playbackUrl,
     title,
-    chatRoomToken,
     description,
     streamerImageUrl,
     streamerUsername,
@@ -34,7 +33,6 @@ const LiveStreamPage: FC<LiveStreamPageProps> = async ({ params }) => {
       streamerUsername={streamerUsername}
       playbackUrl={playbackUrl}
       thumbnailUrl={thumbnailUrl}
-      chatRoomToken={chatRoomToken}
     />
   );
 };

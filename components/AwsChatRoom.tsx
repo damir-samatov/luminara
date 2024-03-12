@@ -4,25 +4,25 @@ import { ChatMessage, ChatRoom } from "amazon-ivs-chat-messaging";
 import { Button } from "@/components/Button";
 import { v4 as uuid } from "uuid";
 import { TextInput } from "@/components/TextInput";
-import { IvsChatRoomToken } from "@/types/ivs.types";
 import { stringToColor } from "@/utils/style.utils";
 import { PaperAirplaneIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { onDeleteSelfChatMessage } from "@/actions/stream-owner.actions";
+import { chatRoomTokenProvider } from "@/helpers/client/chat-room.helpers";
 
 type AwsChatRoomProps = {
-  chatRoomToken: IvsChatRoomToken;
+  streamerUsername: string;
   isModerator: boolean;
 };
 
 export const AwsChatRoom: FC<AwsChatRoomProps> = ({
-  chatRoomToken,
+  streamerUsername,
   isModerator,
 }) => {
   const [room] = useState(
     () =>
       new ChatRoom({
         regionOrUrl: "eu-central-1",
-        tokenProvider: async () => chatRoomToken,
+        tokenProvider: () => chatRoomTokenProvider(streamerUsername),
       })
   );
 

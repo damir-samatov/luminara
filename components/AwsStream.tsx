@@ -1,7 +1,7 @@
+"use client";
 import { FC } from "react";
 import { AwsStreamPlayer } from "@/components/AwsStreamPlayer";
 import { AwsChatRoom } from "@/components/AwsChatRoom";
-import { IvsChatRoomToken } from "@/types/ivs.types";
 import Image from "next/image";
 import Link from "next/link";
 import { classNames, stringToColor } from "@/utils/style.utils";
@@ -11,7 +11,6 @@ type AwsStreamProps = {
   streamerUsername: string;
   playbackUrl: string;
   thumbnailUrl: string;
-  chatRoomToken: IvsChatRoomToken;
   title: string;
   description: string;
   isChatEnabled: boolean;
@@ -22,7 +21,6 @@ export const AwsStream: FC<AwsStreamProps> = ({
   playbackUrl,
   thumbnailUrl,
   title,
-  chatRoomToken,
   description,
   streamerUsername,
   streamerImageUrl,
@@ -79,7 +77,7 @@ export const AwsStream: FC<AwsStreamProps> = ({
       {isChatEnabled && (
         <div className="h-[300px] w-full bg-gray-900 p-4 lg:absolute lg:bottom-0 lg:right-0 lg:top-0 lg:h-auto lg:max-w-96">
           <AwsChatRoom
-            chatRoomToken={chatRoomToken}
+            streamerUsername={streamerUsername}
             isModerator={isModerator}
           />
         </div>

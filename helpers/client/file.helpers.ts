@@ -1,3 +1,4 @@
+"use client";
 import { onGetSignedFileUploadUrl } from "@/actions/file.actions";
 
 export const uploadFile = async (file: File) => {

@@ -4,7 +4,6 @@ import { AwsStream } from "@/components/AwsStream";
 import { StreamCredentials } from "@/app/(browse)/dashboard/stream/_components/StreamCredentials";
 import { StreamSettings } from "@/app/(browse)/dashboard/stream/_components/StreamSettings";
 import { StreamThumbnail } from "@/app/(browse)/dashboard/stream/_components/StreamThumbnail";
-import { IvsChatRoomToken } from "@/types/ivs.types";
 import { User, Stream } from ".prisma/client";
 import {
   onGoLive,
@@ -15,7 +14,7 @@ import {
 } from "@/actions/stream-owner.actions";
 import { StreamSettingsUpdateDto } from "@/types/stream.types";
 import { useObjectShadow } from "@/hooks/useObjectShadow";
-import { uploadFile } from "@/helpers/file.helpers";
+import { uploadFile } from "@/helpers/client/file.helpers";
 import { onGetSignedFileReadUrl } from "@/actions/file.actions";
 import { classNames } from "@/utils/style.utils";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
@@ -25,14 +24,12 @@ type StreamEditorProps = {
   user: User;
   playbackUrl: string;
   appliedThumbnailUrl: string;
-  chatRoomToken: IvsChatRoomToken;
 };
 
-const StreamEditor: FC<StreamEditorProps> = ({
+export const StreamEditor: FC<StreamEditorProps> = ({
   stream: initialStream,
   appliedThumbnailUrl: initialAppliedThumbnailUrl,
   user,
-  chatRoomToken,
   playbackUrl,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -185,7 +182,6 @@ const StreamEditor: FC<StreamEditorProps> = ({
               streamerUsername={user.username}
               playbackUrl={playbackUrl}
               thumbnailUrl={appliedThumbnailUrl}
-              chatRoomToken={chatRoomToken}
             />
           </div>
         ),
@@ -197,7 +193,6 @@ const StreamEditor: FC<StreamEditorProps> = ({
       appliedThumbnailUrl,
       playbackUrl,
       user,
-      chatRoomToken,
       onRefreshStreamKeyClick,
       onSettingsChange,
       onDiscardSettings,
@@ -246,9 +241,15 @@ const StreamEditor: FC<StreamEditorProps> = ({
               className={classNames(
                 "flex w-full items-center justify-center gap-2 rounded-lg border-2 border-gray-700 p-2 font-bold text-gray-300 hover:bg-gray-700"
               )}
-              onClick={() => {}}
+              onClick={() =>
+                window.open(
+                  `/moderation/${user.username}`,
+                  "_blank",
+                  "noopener,noreferrer"
+                )
+              }
             >
-              <span>Moderate</span>
+              <span>Moderation</span>
               <ArrowTopRightOnSquareIcon className="h-4 w-4 text-white" />
             </button>
           )}
@@ -273,5 +274,3 @@ const StreamEditor: FC<StreamEditorProps> = ({
     </div>
   );
 };
-
-export default StreamEditor;
