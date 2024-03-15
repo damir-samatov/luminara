@@ -8,15 +8,16 @@ import { stringToColor } from "@/utils/style.utils";
 import { PaperAirplaneIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { onDeleteSelfChatMessage } from "@/actions/stream-owner.actions";
 import { chatRoomTokenProvider } from "@/helpers/client/chat-room.helpers";
+import { StreamUserRoles } from "@/types/stream.types";
 
 type AwsChatRoomProps = {
   streamerUsername: string;
-  isModerator: boolean;
+  userRole: StreamUserRoles;
 };
 
 export const AwsChatRoom: FC<AwsChatRoomProps> = ({
   streamerUsername,
-  isModerator,
+  userRole,
 }) => {
   const [room] = useState(
     () =>
@@ -106,7 +107,7 @@ export const AwsChatRoom: FC<AwsChatRoomProps> = ({
                   @{name}:{" "}
                 </span>
                 <span>{text}</span>
-                {isModerator && (
+                {userRole === StreamUserRoles.STREAMER && (
                   <button onClick={() => onDeleteMessage(message.id)}>
                     <TrashIcon className="h-4 w-4 text-red-500"></TrashIcon>
                   </button>

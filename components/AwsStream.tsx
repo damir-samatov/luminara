@@ -5,6 +5,7 @@ import { AwsChatRoom } from "@/components/AwsChatRoom";
 import Image from "next/image";
 import Link from "next/link";
 import { classNames, stringToColor } from "@/utils/style.utils";
+import { StreamUserRoles } from "@/types/stream.types";
 
 type AwsStreamProps = {
   streamerImageUrl: string;
@@ -14,7 +15,7 @@ type AwsStreamProps = {
   title: string;
   description: string;
   isChatEnabled: boolean;
-  isModerator?: boolean;
+  userRole?: StreamUserRoles;
 };
 
 export const AwsStream: FC<AwsStreamProps> = ({
@@ -25,7 +26,7 @@ export const AwsStream: FC<AwsStreamProps> = ({
   streamerUsername,
   streamerImageUrl,
   isChatEnabled,
-  isModerator = false,
+  userRole = StreamUserRoles.VIEWER,
 }) => {
   const streamerColor = stringToColor(streamerUsername);
 
@@ -78,7 +79,7 @@ export const AwsStream: FC<AwsStreamProps> = ({
         <div className="absolute bottom-0 right-0 h-72 w-full bg-gray-900 p-4 lg:top-0 lg:h-auto lg:max-w-96">
           <AwsChatRoom
             streamerUsername={streamerUsername}
-            isModerator={isModerator}
+            userRole={userRole}
           />
         </div>
       )}

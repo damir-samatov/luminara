@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { AwsStream } from "@/components/AwsStream";
 import { FC } from "react";
 import Head from "next/head";
+import { StreamUserRoles } from "@/types/stream.types";
+import { stringToColor } from "@/utils/style.utils";
 
 type StreamModerationPageProps = {
   params: {
@@ -27,21 +29,29 @@ const StreamModerationPage: FC<StreamModerationPageProps> = async ({
     isChatEnabled,
   } = res.data;
 
+  const color = stringToColor(streamerUsername);
+
   return (
     <>
       <Head>
         <title>Moderation of {params.slug}&apos;s Stream</title>
       </Head>
-      <AwsStream
-        isChatEnabled={isChatEnabled}
-        title={title}
-        description={description}
-        streamerImageUrl={streamerImageUrl}
-        streamerUsername={streamerUsername}
-        playbackUrl={playbackUrl}
-        thumbnailUrl={thumbnailUrl}
-        isModerator
-      />
+      <div className="flex flex-grow flex-col">
+        <div className="text-md bg-gray-900 p-4 text-center">
+          <span style={{ color }}>@</span>
+          {streamerUsername}&apos;s Stream Moderation
+        </div>
+        <AwsStream
+          isChatEnabled={isChatEnabled}
+          title={title}
+          description={description}
+          streamerImageUrl={streamerImageUrl}
+          streamerUsername={streamerUsername}
+          playbackUrl={playbackUrl}
+          thumbnailUrl={thumbnailUrl}
+          userRole={StreamUserRoles.STREAMER}
+        />
+      </div>
     </>
   );
 };

@@ -54,15 +54,19 @@ export const StreamEditor: FC<StreamEditorProps> = ({
     prevState: settingsPrevState,
   } = useObjectShadow(streamSettings);
 
-  const onOpenModerationPage = useCallback(() => {
-    const moderationWindow = window.open(
-      `/moderation/${user.username}`,
-      "_blank",
-      "noopener,noreferrer"
-    );
+  const [moderationWindow, setModerationWindow] = useState<Window | null>(null);
 
-    console.log(moderationWindow);
-  }, [user.username]);
+  const onOpenModerationPage = useCallback(() => {
+    moderationWindow?.close();
+    const newModerationWindow = window.open(
+      `/moderation/${user.username}`,
+      "_blank"
+    );
+    if (newModerationWindow) {
+      setModerationWindow(newModerationWindow);
+      newModerationWindow.focus();
+    }
+  }, [user.username, moderationWindow]);
 
   const onGoLiveClick = useCallback(async () => {
     setIsLoading(true);
@@ -83,11 +87,12 @@ export const StreamEditor: FC<StreamEditorProps> = ({
       const res = await onGoOffline();
       if (!res.success) return;
       setStream(res.data.stream);
+      moderationWindow?.close();
     } catch (error) {
       console.error(error);
     }
     setIsLoading(false);
-  }, []);
+  }, [moderationWindow]);
 
   const onRefreshStreamKeyClick = useCallback(async () => {
     try {
@@ -162,15 +167,19 @@ export const StreamEditor: FC<StreamEditorProps> = ({
     () => [
       {
         component: (
-          <StreamSettings
-            streamSettings={streamSettings}
-            onDiscardSettings={onDiscardSettings}
-            onSaveSettings={onSaveSettings}
-            onChange={onSettingsChange}
-            changeDetected={settingsChangeDetected}
-          />
+          <div className="flex aspect-[9/16] h-full w-full flex-grow flex-col overflow-y-auto rounded-lg border-2 border-gray-700 lg:aspect-auto">
+            <AwsStream
+              title={stream.title}
+              description={stream.description}
+              isChatEnabled={stream.isChatEnabled}
+              streamerImageUrl={user.imageUrl}
+              streamerUsername={user.username}
+              playbackUrl={playbackUrl}
+              thumbnailUrl={appliedThumbnailUrl}
+            />
+          </div>
         ),
-        label: "Settings",
+        label: "Preview",
       },
       {
         component: (
@@ -186,28 +195,24 @@ export const StreamEditor: FC<StreamEditorProps> = ({
       },
       {
         component: (
+          <StreamSettings
+            streamSettings={streamSettings}
+            onDiscardSettings={onDiscardSettings}
+            onSaveSettings={onSaveSettings}
+            onChange={onSettingsChange}
+            changeDetected={settingsChangeDetected}
+          />
+        ),
+        label: "Settings",
+      },
+      {
+        component: (
           <StreamThumbnail
             onUploadThumbnail={onUploadThumbnail}
             thumbnailUrl={appliedThumbnailUrl}
           />
         ),
         label: "Thumbnail",
-      },
-      {
-        component: (
-          <div className="flex aspect-[9/16] h-full w-full flex-grow flex-col overflow-y-auto rounded-lg border-2 border-gray-700 lg:aspect-auto">
-            <AwsStream
-              title={stream.title}
-              description={stream.description}
-              isChatEnabled={stream.isChatEnabled}
-              streamerImageUrl={user.imageUrl}
-              streamerUsername={user.username}
-              playbackUrl={playbackUrl}
-              thumbnailUrl={appliedThumbnailUrl}
-            />
-          </div>
-        ),
-        label: "Preview",
       },
     ],
     [

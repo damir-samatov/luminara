@@ -24,3 +24,9 @@ export type StreamCredentialsUpdateDto = {
   serverUrl: string;
   streamKey: string;
 };
+
+export enum StreamUserRoles {
+  MODERATOR = "MODERATOR",
+  STREAMER = "STREAMER",
+  VIEWER = "VIEWER",
+}
