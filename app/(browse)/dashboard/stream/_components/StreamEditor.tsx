@@ -34,7 +34,6 @@ export const StreamEditor: FC<StreamEditorProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
-
   const [stream, setStream] = useState<Stream>(initialStream);
 
   const [appliedThumbnailUrl, setAppliedThumbnailUrl] = useState<string>(
@@ -55,17 +54,40 @@ export const StreamEditor: FC<StreamEditorProps> = ({
     prevState: settingsPrevState,
   } = useObjectShadow(streamSettings);
 
-  const onLiveToggleClick = useCallback(async () => {
+  const onOpenModerationPage = useCallback(() => {
+    const moderationWindow = window.open(
+      `/moderation/${user.username}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+
+    console.log(moderationWindow);
+  }, [user.username]);
+
+  const onGoLiveClick = useCallback(async () => {
     setIsLoading(true);
     try {
-      const res = await (stream.isLive ? onGoOffline : onGoLive)();
+      const res = await onGoLive();
+      if (!res.success) return;
+      setStream(res.data.stream);
+      onOpenModerationPage();
+    } catch (error) {
+      console.error(error);
+    }
+    setIsLoading(false);
+  }, [onOpenModerationPage]);
+
+  const onGoOfflineClick = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const res = await onGoOffline();
       if (!res.success) return;
       setStream(res.data.stream);
     } catch (error) {
       console.error(error);
     }
     setIsLoading(false);
-  }, [stream.isLive]);
+  }, []);
 
   const onRefreshStreamKeyClick = useCallback(async () => {
     try {
@@ -241,13 +263,7 @@ export const StreamEditor: FC<StreamEditorProps> = ({
               className={classNames(
                 "flex w-full items-center justify-center gap-2 rounded-lg border-2 border-gray-700 p-2 font-bold text-gray-300 hover:bg-gray-700"
               )}
-              onClick={() =>
-                window.open(
-                  `/moderation/${user.username}`,
-                  "_blank",
-                  "noopener,noreferrer"
-                )
-              }
+              onClick={onOpenModerationPage}
             >
               <span>Moderation</span>
               <ArrowTopRightOnSquareIcon className="h-4 w-4 text-white" />
@@ -261,7 +277,7 @@ export const StreamEditor: FC<StreamEditorProps> = ({
                 ? "border-red-600 text-red-600 hover:bg-red-600"
                 : "border-green-600 text-green-600 hover:bg-green-600"
             )}
-            onClick={onLiveToggleClick}
+            onClick={stream.isLive ? onGoOfflineClick : onGoLiveClick}
           >
             {isLoading
               ? "Loading..."
