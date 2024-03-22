@@ -17,7 +17,6 @@ import { useObjectShadow } from "@/hooks/useObjectShadow";
 import { uploadFile } from "@/helpers/client/file.helpers";
 import { onGetSignedFileReadUrl } from "@/actions/file.actions";
 import { classNames } from "@/utils/style.utils";
-import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
 
 type StreamEditorProps = {
   stream: Stream;
@@ -252,17 +251,19 @@ export const StreamEditor: FC<StreamEditorProps> = ({
         </div>
       </div>
       <div className="flex flex-col gap-4 rounded-lg border-2 border-gray-700 p-4 text-sm text-gray-300">
-        <p>
-          You are currently
+        <p className="text-xl">
+          <span>Status: </span>
           {stream.isLive ? (
-            <span className="font-bold text-green-600"> LIVE</span>
+            <span className="font-bold text-green-500">LIVE</span>
           ) : (
-            <span className="font-bold text-red-600"> OFFLINE</span>
+            <span className="font-bold text-red-500">OFFLINE</span>
           )}
         </p>
-        <p>Going online will make your stream available to your audience.</p>
+        <p className="text-lg">
+          Starting the stream will make it available for your audience
+        </p>
 
-        <div className="mt-4 flex flex-col gap-2">
+        <div className="flex flex-col gap-2">
           {stream.isLive && (
             <button
               className={classNames(
@@ -270,8 +271,7 @@ export const StreamEditor: FC<StreamEditorProps> = ({
               )}
               onClick={onOpenModerationPage}
             >
-              <span>Moderation</span>
-              <ArrowTopRightOnSquareIcon className="h-4 w-4 text-white" />
+              <span>Moderation Tab</span>
             </button>
           )}
           <button
@@ -284,11 +284,7 @@ export const StreamEditor: FC<StreamEditorProps> = ({
             )}
             onClick={stream.isLive ? onGoOfflineClick : onGoLiveClick}
           >
-            {isLoading
-              ? "Loading..."
-              : stream.isLive
-                ? "Go Offline"
-                : "Go Live"}
+            {isLoading ? "Loading..." : stream.isLive ? "Stop" : "Start"}
           </button>
         </div>
       </div>
