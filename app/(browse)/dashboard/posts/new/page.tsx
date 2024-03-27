@@ -1,11 +1,11 @@
-import { CreatePostForm } from "@/app/(browse)/dashboard/posts/new/_components/CreatePostForm";
+import { CreateImagePostForm } from "@/app/(browse)/dashboard/posts/new/_components/CreateImagePostForm";
 
-const PostsNewPage = async () => {
+const PostCreatePage = async () => {
   return (
     <div className="p-4">
-      <CreatePostForm />
+      <CreateImagePostForm />
     </div>
   );
 };
 
-export default PostsNewPage;
+export default PostCreatePage;

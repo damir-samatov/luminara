@@ -1,25 +1,26 @@
+"use server";
+import { ActionDataResponse } from "@/types/action.types";
+import { Post, Video } from ".prisma/client";
 import { getSelf } from "@/services/auth.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import {
-  createImagePost,
-  getImagePostsByUserId,
+  createVideoPost,
+  getVideoPostsByUserId,
 } from "@/services/post.service";
-import { ActionDataResponse } from "@/types/action.types";
-import { Post, Image } from ".prisma/client";
-import { ImagePostCreateDto } from "@/types/post.types";
+import { VideoPostCreateDto } from "@/types/post.types";
 
-type OnGetSelfPostsResponse = ActionDataResponse<{
+type OnGetSelfVideoPostsResponse = ActionDataResponse<{
   posts: (Post & {
-    images: Image[];
+    videos: Video[];
   })[];
 }>;
 
-export const onGetSelfImagePosts =
-  async (): Promise<OnGetSelfPostsResponse> => {
+export const onGetSelfVideoPosts =
+  async (): Promise<OnGetSelfVideoPostsResponse> => {
     try {
       const self = await getSelf();
       if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
-      const posts = await getImagePostsByUserId(self.id);
+      const posts = await getVideoPostsByUserId(self.id);
       return {
         success: true,
         data: {
@@ -27,23 +28,23 @@ export const onGetSelfImagePosts =
         },
       };
     } catch (error) {
-      console.error("onGetSelfImagePosts", error);
+      console.error("onGetSelfPosts", error);
       return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
     }
   };
 
-type OnCreateImagePostResponse = ActionDataResponse<{
+type OnCreateVideoPostResponse = ActionDataResponse<{
   post: Post;
 }>;
 
-export const onCreateImagePost = async (
-  imagePostCreateDto: Omit<ImagePostCreateDto, "userId">
-): Promise<OnCreateImagePostResponse> => {
+export const onCreateVideoPost = async (
+  videoPostCreateDto: Omit<VideoPostCreateDto, "userId">
+): Promise<OnCreateVideoPostResponse> => {
   try {
     const self = await getSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
-    const post = await createImagePost({
-      ...imagePostCreateDto,
+    const post = await createVideoPost({
+      ...videoPostCreateDto,
       userId: self.id,
     });
     if (!post) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
@@ -54,7 +55,7 @@ export const onCreateImagePost = async (
       },
     };
   } catch (error) {
-    console.error("onCreateImagePost", error);
+    console.error("onCreatePost", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };

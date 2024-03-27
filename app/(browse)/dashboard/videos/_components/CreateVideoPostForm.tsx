@@ -2,39 +2,18 @@
 import { useState } from "react";
 import { Button } from "@/components/Button";
 import { TextInput } from "@/components/TextInput";
-import { onCreatePost } from "@/actions/post.actions";
 import { ImagePicker } from "@/components/ImagePicker";
-import { ERROR_RESPONSES } from "@/configs/responses.config";
 import { useRouter } from "next/navigation";
 import { TextEditor } from "@/components/TextEditor";
-import { uploadFile } from "@/helpers/client/file.helpers";
+import { VideoPicker } from "@/components/VideoPicker";
+import { publishVideoPost } from "@/helpers/client/post.helpers";
+import { PostContent } from "@/types/post.types";
 
-type PostContent = {
-  title: string;
-  body: string;
-};
-
-const createPost = async (postContent: PostContent, imageFiles: File[]) => {
-  try {
-    const imageUploads = await Promise.all(imageFiles.map(uploadFile));
-
-    return await onCreatePost({
-      title: postContent.title,
-      body: postContent.body,
-      images: imageUploads.filter(Boolean).map((upload) => ({
-        key: upload.fileKey,
-        title: upload.title,
-      })),
-    });
-  } catch (error) {
-    console.error(error);
-    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-  }
-};
-
-export const CreatePostForm = () => {
+export const CreateVideoPostForm = () => {
   const router = useRouter();
-  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+
   const [postContent, setPostContent] = useState<PostContent>({
     title: "",
     body: "",
@@ -48,17 +27,35 @@ export const CreatePostForm = () => {
     setPostContent((prev) => ({ ...prev, [key]: value }));
   };
 
-  const onCreatePostClick = async () => {
+  const onCreateVideoPostClick = async () => {
     if (!postContent.title || !postContent.body) return;
     setIsLoading(true);
-    const res = await createPost(postContent, imageFiles);
-    if (res.success) router.push("/dashboard/posts");
+    if (!videoFile || !thumbnailFile) return;
+    const res = await publishVideoPost(postContent, videoFile, thumbnailFile);
+    if (res.success) router.push("/dashboard/videos");
     setIsLoading(false);
   };
 
   return (
     <div className="flex flex-col gap-6">
-      <ImagePicker files={imageFiles} onChange={setImageFiles} />
+      <div className="grid grid-cols-2 gap-6">
+        <ImagePicker
+          vertical
+          files={thumbnailFile ? [thumbnailFile] : []}
+          onChange={(files) => {
+            if (files[0]) return setThumbnailFile(files[0]);
+            setThumbnailFile(null);
+          }}
+        />
+        <VideoPicker
+          vertical
+          files={videoFile ? [videoFile] : []}
+          onChange={(files) => {
+            if (files[0]) return setVideoFile(files[0]);
+            setVideoFile(null);
+          }}
+        />
+      </div>
       <TextInput
         placeholder="Enter your post title"
         className="h-auto rounded-md border-2 border-gray-500 bg-transparent p-2"
@@ -72,11 +69,11 @@ export const CreatePostForm = () => {
       />
       <Button
         size="max-content"
-        onClick={onCreatePostClick}
+        onClick={onCreateVideoPostClick}
         loadingText="Creating Post..."
         isLoading={isLoading}
       >
-        Create Post
+        Create Video Post
       </Button>
     </div>
   );

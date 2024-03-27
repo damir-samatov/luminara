@@ -66,12 +66,20 @@ export const AwsStreamPlayer: FC<AwsStreamPlayerProps> = ({
           ivsPlayerRef.current = ivsPlayer;
 
           ivsPlayer.addEventListener(PlayerEventType.ERROR, () => {
-            setTimeout(() => player.src(playbackUrl), 5000);
+            setTimeout(() => {
+              if (!player.isDisposed()) {
+                player.src(playbackUrl);
+              }
+            }, 5000);
             setIsReady(false);
           });
 
           ivsPlayer.addEventListener(PlayerState.ENDED, () => {
-            setTimeout(() => player.src(playbackUrl), 5000);
+            setTimeout(() => {
+              if (!player.isDisposed()) {
+                player.src(playbackUrl);
+              }
+            }, 5000);
             setIsReady(false);
           });
 
@@ -82,6 +90,21 @@ export const AwsStreamPlayer: FC<AwsStreamPlayerProps> = ({
       ) as videojs.Player & VideoJSIVSTech & VideoJSQualityPlugin;
     })();
   }, [videoElRef, playerWrapperElRef, isReady, playbackUrl, thumbnailUrl]);
+
+  useEffect(() => {
+    return () => {
+      try {
+        if (ivsPlayerRef.current) {
+          ivsPlayerRef.current.delete();
+        }
+        if (playerRef.current && !playerRef.current.isDisposed()) {
+          playerRef.current.dispose();
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  }, []);
 
   return (
     <div className="bg-black">

@@ -9,17 +9,23 @@ datasource db {
 }
 
 model User {
-  id             String  @id @default(auto()) @map("_id") @db.ObjectId
-  externalUserId String  @unique
-  username       String  @unique
-  firstName      String  @default("")
-  lastName       String  @default("")
-  imageUrl       String
-  posts          Post[]
-  stream         Stream?
+  id             String @id @default(auto()) @map("_id") @db.ObjectId
+  externalUserId String @unique
 
-  subscribedTo Subscription[] @relation("SubscribedBy")
+  username String @unique
+
+  firstName String @default("")
+  lastName  String @default("")
+  imageUrl  String
+
+  comments           Comment[]
+  posts              Post[]
+  likes              Like[]
+  subscriptionLevels SubscriptionLevel[]
+  stream             Stream?
+
   subscribedBy Subscription[] @relation("SubscribedTo")
+  subscribedTo Subscription[] @relation("SubscribedBy")
 
   bannedUsers Ban[] @relation("BannedBy")
   bannedBy    Ban[] @relation("Banned")
@@ -35,6 +41,9 @@ model Subscription {
 
   user       User @relation(name: "SubscribedTo", fields: [userId], references: [id], onDelete: Cascade)
   subscriber User @relation(name: "SubscribedBy", fields: [subscriberId], references: [id], onDelete: Cascade)
+
+  subscriptionLevelId String?            @db.ObjectId
+  subscriptionLevel   SubscriptionLevel? @relation(fields: [subscriptionLevelId], references: [id])
 
   createdAt DateTime @default(now())
 
@@ -79,24 +88,30 @@ model Stream {
 }
 
 model Post {
-  id     String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId String  @db.ObjectId
-  title  String
-  body   String
-  images Image[]
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+
+  title String
+  body  String
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  images   Image[]
+  videos   Video[]
+  comments Comment[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Like      Like[]
 
   @@fulltext([title, body])
 }
 
 model Image {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  title String
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
   key   String
+  title String
 
   postId String @db.ObjectId
   post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
@@ -108,13 +123,57 @@ model Image {
 }
 
 model Video {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId
-  title        String
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
   key          String
   thumbnailKey String
+  title        String
+
+  postId String @db.ObjectId
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@fulltext([title])
+}
+
+model Comment {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  postId String @db.ObjectId
+
+  body String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@fulltext([body])
+}
+
+model Like {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  postId String @db.ObjectId
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
+
+model SubscriptionLevel {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+
+  value Int
+
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subscriptions Subscription[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -1,6 +1,7 @@
 import {
   ArrowTrendingUpIcon,
   Cog6ToothIcon,
+  FilmIcon,
   HomeIcon,
   MegaphoneIcon,
   NewspaperIcon,
@@ -32,6 +33,12 @@ export const SIDEBAR_LINKS = [
     label: "Posts",
     activeOn: ["/dashboard/posts"],
     icon: <MegaphoneIcon className="h-6 w-6 shrink-0" />,
+  },
+  {
+    href: "/dashboard/videos",
+    label: "Videos",
+    activeOn: ["/dashboard/videos"],
+    icon: <FilmIcon className="h-6 w-6 shrink-0" />,
   },
   {
     href: "/dashboard/stream",
