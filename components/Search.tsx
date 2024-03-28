@@ -41,7 +41,7 @@ export const Search = () => {
     if (searchTerm.length < 1) return;
     setIsLoading(true);
     search(searchTerm);
-  }, [searchTerm]);
+  }, [searchTerm, search]);
 
   return (
     <div

@@ -13,7 +13,7 @@ const VideosPage = async () => {
   return (
     <div className="p-4">
       <Link
-        href="/dashboard/videos/new"
+        href="/videos/new"
         className={classNames(
           "ml-auto flex max-w-max items-center gap-2 rounded-md bg-gray-800 p-4 text-sm font-semibold leading-6 text-gray-100"
         )}

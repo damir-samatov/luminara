@@ -18,7 +18,7 @@ export const StreamCreate = () => {
         return;
       }
       setIsStreamCreated(true);
-      redirect("/dashboard/stream");
+      redirect("/stream");
     } catch (error) {
       console.error(error);
     }

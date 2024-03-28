@@ -1,9 +1,9 @@
 "use client";
 import { FC, useCallback, useMemo, useState } from "react";
 import { AwsStream } from "@/components/AwsStream";
-import { StreamCredentials } from "@/app/(browse)/dashboard/stream/_components/StreamCredentials";
-import { StreamSettings } from "@/app/(browse)/dashboard/stream/_components/StreamSettings";
-import { StreamThumbnail } from "@/app/(browse)/dashboard/stream/_components/StreamThumbnail";
+import { StreamCredentials } from "../_components/StreamCredentials";
+import { StreamSettings } from "../_components/StreamSettings";
+import { StreamThumbnail } from "../_components/StreamThumbnail";
 import { User, Stream } from "@prisma/client";
 import {
   onGoLive,

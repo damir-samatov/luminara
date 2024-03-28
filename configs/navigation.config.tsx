@@ -1,6 +1,5 @@
 import {
   ArrowTrendingUpIcon,
-  Cog6ToothIcon,
   FilmIcon,
   HomeIcon,
   MegaphoneIcon,
@@ -23,39 +22,33 @@ export const SIDEBAR_LINKS = [
     icon: <NewspaperIcon className="h-6 w-6 shrink-0" />,
   },
   {
-    href: "/dashboard",
-    label: "Dashboard",
-    activeOn: ["/dashboard"],
-    icon: <Cog6ToothIcon className="h-6 w-6 shrink-0" />,
-  },
-  {
-    href: "/dashboard/posts",
+    href: "/posts",
     label: "Posts",
-    activeOn: ["/dashboard/posts"],
+    activeOn: ["/posts"],
     icon: <MegaphoneIcon className="h-6 w-6 shrink-0" />,
   },
   {
-    href: "/dashboard/videos",
+    href: "/videos",
     label: "Videos",
-    activeOn: ["/dashboard/videos"],
+    activeOn: ["/videos"],
     icon: <FilmIcon className="h-6 w-6 shrink-0" />,
   },
   {
-    href: "/dashboard/stream",
+    href: "/stream",
     label: "Stream",
-    activeOn: ["/dashboard/stream/create", "/dashboard/stream"],
+    activeOn: ["/stream/create", "/stream"],
     icon: <VideoCameraIcon className="h-6 w-6 shrink-0" />,
   },
 ];
 
 export const COMING_SOON_LINKS = [
   {
-    href: "/dashboard/community",
+    href: "/community",
     label: "Community",
     icon: <UserGroupIcon className="h-6 w-6 shrink-0" />,
   },
   {
-    href: "/dashboard/analytics",
+    href: "/analytics",
     label: "Analytics",
     icon: <ArrowTrendingUpIcon className="h-6 w-6 shrink-0" />,
   },

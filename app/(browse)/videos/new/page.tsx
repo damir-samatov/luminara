@@ -1,4 +1,4 @@
-import { CreateVideoPostForm } from "@/app/(browse)/dashboard/videos/_components/CreateVideoPostForm";
+import { CreateVideoPostForm } from "../_components/CreateVideoPostForm";
 
 const VideoCreatePage = () => {
   return (

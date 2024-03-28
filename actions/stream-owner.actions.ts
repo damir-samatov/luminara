@@ -136,7 +136,7 @@ export const onCreateSelfStream = async (): Promise<StreamActionsResponse> => {
 
     if (!stream) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
-    revalidatePath("/dashboard/stream", "page");
+    revalidatePath("/stream", "page");
 
     return {
       data: { stream },
