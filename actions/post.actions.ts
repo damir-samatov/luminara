@@ -5,7 +5,7 @@ import {
   getImagePostsByUserId,
 } from "@/services/post.service";
 import { ActionDataResponse } from "@/types/action.types";
-import { Post, Image } from ".prisma/client";
+import { Post, Image } from "@prisma/client";
 import { ImagePostCreateDto } from "@/types/post.types";
 
 type OnGetSelfPostsResponse = ActionDataResponse<{

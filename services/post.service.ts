@@ -1,7 +1,7 @@
 "use server";
 import { db } from "@/lib/db";
 import { ImagePostCreateDto, VideoPostCreateDto } from "@/types/post.types";
-import { Post, Image, Video } from ".prisma/client";
+import { Post, Image, Video } from "@prisma/client";
 
 export const createImagePost = async (postCreateDto: ImagePostCreateDto) => {
   const { userId, title, body, images } = postCreateDto;

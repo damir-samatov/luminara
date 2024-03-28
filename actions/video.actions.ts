@@ -1,6 +1,6 @@
 "use server";
 import { ActionDataResponse } from "@/types/action.types";
-import { Post, Video } from ".prisma/client";
+import { Post, Video } from "@prisma/client";
 import { getSelf } from "@/services/auth.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import {

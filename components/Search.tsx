@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { TextInput } from "@/components/TextInput";
-import { User } from ".prisma/client";
+import { User } from "@prisma/client";
 import { onSearchUsers } from "@/actions/user.actions";
 import { useServerAction } from "@/hooks/useServerAction";
 import { debounce } from "ts-debounce";

@@ -10,7 +10,7 @@ import {
 } from "@/services/stream.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import { ActionDataResponse } from "@/types/action.types";
-import { Stream, User } from ".prisma/client";
+import { Stream, User } from "@prisma/client";
 import { StreamSettingsUpdateDto } from "@/types/stream.types";
 import { revalidatePath } from "next/cache";
 import {

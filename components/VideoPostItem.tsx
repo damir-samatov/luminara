@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Post, Video } from ".prisma/client";
+import { Post, Video } from "@prisma/client";
 import { onGetSignedFileReadUrl } from "@/actions/file.actions";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import { ActionDataResponse } from "@/types/action.types";

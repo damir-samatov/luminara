@@ -4,7 +4,7 @@ import { AwsStream } from "@/components/AwsStream";
 import { StreamCredentials } from "@/app/(browse)/dashboard/stream/_components/StreamCredentials";
 import { StreamSettings } from "@/app/(browse)/dashboard/stream/_components/StreamSettings";
 import { StreamThumbnail } from "@/app/(browse)/dashboard/stream/_components/StreamThumbnail";
-import { User, Stream } from ".prisma/client";
+import { User, Stream } from "@prisma/client";
 import {
   onGoLive,
   onGoOffline,

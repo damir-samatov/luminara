@@ -6,12 +6,14 @@ import { dark } from "@clerk/themes";
 import { classNames } from "@/utils/style.utils";
 import "@/public/global.css";
 
-const inter = Inter({ subsets: ["latin"] });
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "My App",
   description: "My App",
 };
+
+const inter = Inter({ subsets: ["latin"] });
 
 type BrowseLayoutProps = {
   children: ReactNode;

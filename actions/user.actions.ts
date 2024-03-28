@@ -2,7 +2,7 @@
 import { getSelf } from "@/services/auth.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import { ActionDataResponse } from "@/types/action.types";
-import { User } from ".prisma/client";
+import { User } from "@prisma/client";
 import { searchUserByUsername } from "@/services/user.service";
 
 type OnSearchUsersResponse = ActionDataResponse<{

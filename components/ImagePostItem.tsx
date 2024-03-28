@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Post, Image } from ".prisma/client";
+import { Post, Image } from "@prisma/client";
 import { onGetSignedFileReadUrl } from "@/actions/file.actions";
 import NextImage from "next/image";
 

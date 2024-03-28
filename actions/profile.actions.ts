@@ -3,7 +3,7 @@ import { getUserByUsername } from "@/services/user.service";
 import { getSelf } from "@/services/auth.service";
 import { getSubscription } from "@/services/subscription.service";
 import { getBan } from "@/services/ban.service";
-import { Post, User } from ".prisma/client";
+import { Post, User } from "@prisma/client";
 import { ActionDataResponse } from "@/types/action.types";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import { getImagePostsByUserId } from "@/services/post.service";
