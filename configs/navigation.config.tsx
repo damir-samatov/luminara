@@ -1,11 +1,10 @@
 import {
-  ArrowTrendingUpIcon,
   FilmIcon,
   HomeIcon,
   MegaphoneIcon,
   NewspaperIcon,
-  UserGroupIcon,
-  VideoCameraIcon,
+  SignalIcon,
+  TicketIcon,
 } from "@heroicons/react/24/outline";
 
 export const SIDEBAR_LINKS = [
@@ -21,6 +20,9 @@ export const SIDEBAR_LINKS = [
     activeOn: ["/subscriptions"],
     icon: <NewspaperIcon className="h-6 w-6 shrink-0" />,
   },
+];
+
+export const STUDIO_LINKS = [
   {
     href: "/posts",
     label: "Posts",
@@ -37,19 +39,12 @@ export const SIDEBAR_LINKS = [
     href: "/stream",
     label: "Stream",
     activeOn: ["/stream/create", "/stream"],
-    icon: <VideoCameraIcon className="h-6 w-6 shrink-0" />,
-  },
-];
-
-export const COMING_SOON_LINKS = [
-  {
-    href: "/community",
-    label: "Community",
-    icon: <UserGroupIcon className="h-6 w-6 shrink-0" />,
+    icon: <SignalIcon className="h-6 w-6 shrink-0" />,
   },
   {
-    href: "/analytics",
-    label: "Analytics",
-    icon: <ArrowTrendingUpIcon className="h-6 w-6 shrink-0" />,
+    href: "/subscription-levels",
+    label: "Subscription Levels",
+    activeOn: ["/subscription-levels"],
+    icon: <TicketIcon className="h-6 w-6 shrink-0" />,
   },
 ];

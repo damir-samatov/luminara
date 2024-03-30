@@ -11,7 +11,7 @@ import { usePathname } from "next/navigation";
 import { SidebarLink } from "@/components/SidebarLink";
 import { UserProfileLink } from "@/components/UserProfileLink";
 import { useBrowseNavigationContext } from "@/contexts/BrowseNavigationContext";
-import { COMING_SOON_LINKS, SIDEBAR_LINKS } from "@/configs/navigation.config";
+import { SIDEBAR_LINKS, STUDIO_LINKS } from "@/configs/navigation.config";
 import Link from "next/link";
 import { Search } from "@/components/Search";
 
@@ -40,6 +40,16 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
             isActive={activeOn.indexOf(pathname) !== -1}
           />
         ))}
+        <hr className="my-2 border-gray-600" />
+        {STUDIO_LINKS.map(({ href, label, icon }) => (
+          <SidebarLink
+            key={href}
+            href={href}
+            label={label}
+            icon={icon}
+            isActive={href === pathname}
+          />
+        ))}
         {subscriptions.length > 0 && (
           <p className="p-2 text-sm font-semibold leading-6 text-gray-400">
             Subscriptions:
@@ -52,19 +62,6 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
             imageUrl={subscription.user.imageUrl}
             username={subscription.user.username}
           />
-        ))}
-        <p className="p-2 text-sm font-semibold leading-6 text-gray-400">
-          Coming Soon:
-        </p>
-        {COMING_SOON_LINKS.map(({ href, label, icon }) => (
-          <div key={href} className="pointer-events-none cursor-not-allowed">
-            <SidebarLink
-              href={href}
-              label={label}
-              icon={icon}
-              isActive={href === pathname}
-            />
-          </div>
         ))}
       </nav>
     ),

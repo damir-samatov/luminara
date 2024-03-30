@@ -169,7 +169,11 @@ model SubscriptionLevel {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
   userId String @db.ObjectId
 
-  value Int
+  title       String
+  description String @default("")
+
+  imageKey String
+  price    Int
 
   user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   subscriptions Subscription[]
