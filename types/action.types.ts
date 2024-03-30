@@ -3,6 +3,7 @@ export enum ErrorResponseType {
   SOMETHING_WENT_WRONG = "SOMETHING_WENT_WRONG",
   STREAM_EXISTS = "STREAM_EXISTS",
   NOT_FOUND = "NOT_FOUND",
+  FORBIDDEN = "FORBIDDEN",
 }
 
 export type ActionErrorResponse = {

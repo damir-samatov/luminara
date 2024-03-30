@@ -3,6 +3,7 @@ import Image from "next/image";
 import { ProfileActions } from "@/app/(browse)/users/[slug]/_components/ProfileActions";
 import { stringToColor } from "@/utils/style.utils";
 import Link from "next/link";
+import { Subscription, SubscriptionLevel } from "@prisma/client";
 
 type ProfileHeadProps = {
   user: {
@@ -11,13 +12,17 @@ type ProfileHeadProps = {
     firstName: string;
     lastName: string;
     imageUrl: string;
-    isSelfSubscribed: boolean;
   };
+  subscription: Subscription | null;
+  subscriptionLevels: SubscriptionLevel[];
 };
 
-export const ProfileHead: FC<ProfileHeadProps> = ({ user }) => {
-  const { id, username, firstName, lastName, imageUrl, isSelfSubscribed } =
-    user;
+export const ProfileHead: FC<ProfileHeadProps> = ({
+  user,
+  subscriptionLevels,
+  subscription,
+}) => {
+  const { id, username, firstName, lastName, imageUrl } = user;
   const userColor = stringToColor(username);
   return (
     <div className="p-4">
@@ -55,7 +60,11 @@ export const ProfileHead: FC<ProfileHeadProps> = ({ user }) => {
             <span>‧</span>
             <span>240 posts</span>
           </div>
-          <ProfileActions isSubscribed={isSelfSubscribed} userId={id} />
+          <ProfileActions
+            subscription={subscription}
+            userId={id}
+            subscriptionLevels={subscriptionLevels}
+          />
           <Link href={`/streams/${username}`}>View Stream</Link>
         </div>
       </div>

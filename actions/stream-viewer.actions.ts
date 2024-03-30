@@ -7,6 +7,7 @@ import { getStreamByUsername } from "@/services/stream.service";
 import { getIvsViewerToken } from "@/services/ivs.service";
 import { getIvsChatToken } from "@/services/ivs-chat.service";
 import { getSignedFileReadUrl } from "@/services/s3.service";
+import { hasRequiredSubscriptionLevel } from "@/services/subscription-levels.service";
 
 type OnGetChatRoomTokenResponse = ActionDataResponse<{
   chatRoomToken: IvsChatRoomToken;
@@ -64,6 +65,13 @@ export const onGetStreamDataAsViewer = async (
 
     const stream = await getStreamByUsername(streamerUsername);
     if (!stream || !stream.isLive) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    const hasAccess = await hasRequiredSubscriptionLevel({
+      userId: self.id,
+      requiredSubscriptionLevelId: stream.subscriptionLevelId,
+    });
+
+    if (!hasAccess) return ERROR_RESPONSES.FORBIDDEN;
 
     const [viewerToken, thumbnailUrl] = await Promise.all([
       getIvsViewerToken(stream.channelArn),

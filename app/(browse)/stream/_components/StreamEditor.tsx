@@ -4,12 +4,14 @@ import { AwsStream } from "@/components/AwsStream";
 import { StreamCredentials } from "../_components/StreamCredentials";
 import { StreamSettings } from "../_components/StreamSettings";
 import { StreamThumbnail } from "../_components/StreamThumbnail";
-import { User, Stream } from "@prisma/client";
+import { User, Stream, SubscriptionLevel } from "@prisma/client";
 import {
   onGoLive,
   onGoOffline,
   onRefreshSelfStreamKey,
+  onRemoveSelfStreamSubscriptionLevel,
   onUpdateSelfStreamSettings,
+  onUpdateSelfStreamSubscriptionLevel,
   onUpdateSelfStreamThumbnailKey,
 } from "@/actions/stream-owner.actions";
 import { StreamSettingsUpdateDto } from "@/types/stream.types";
@@ -21,11 +23,13 @@ import { classNames } from "@/utils/style.utils";
 type StreamEditorProps = {
   stream: Stream;
   user: User;
+  subscriptionLevels: SubscriptionLevel[];
   playbackUrl: string;
   appliedThumbnailUrl: string;
 };
 
 export const StreamEditor: FC<StreamEditorProps> = ({
+  subscriptionLevels,
   stream: initialStream,
   appliedThumbnailUrl: initialAppliedThumbnailUrl,
   user,
@@ -162,6 +166,20 @@ export const StreamEditor: FC<StreamEditorProps> = ({
     }
   }, []);
 
+  const onSubscriptionLevelClick = useCallback(async (id: string) => {
+    const res = await onUpdateSelfStreamSubscriptionLevel(id);
+    console.log(res);
+    if (!res.success) return;
+    setStream(res.data.stream);
+  }, []);
+
+  const onRemoveSubscriptionLevelClick = useCallback(async () => {
+    const res = await onRemoveSelfStreamSubscriptionLevel();
+    console.log(res);
+    if (!res.success) return;
+    setStream(res.data.stream);
+  }, []);
+
   const tabs = useMemo(
     () => [
       {
@@ -262,6 +280,37 @@ export const StreamEditor: FC<StreamEditorProps> = ({
         <p className="text-lg">
           Starting the stream will make it available for your audience
         </p>
+
+        {!stream.isLive && (
+          <>
+            <p className="text-sm">Subscription Levels:</p>
+            <button
+              className={classNames(
+                "w-full rounded-lg border-2 border-gray-700 p-2 text-gray-300 transition-colors duration-200 hover:bg-gray-700",
+                !stream.subscriptionLevelId && "bg-gray-700"
+              )}
+              key={"free"}
+              onClick={onRemoveSubscriptionLevelClick}
+            >
+              Free Subscription
+            </button>
+            {subscriptionLevels.map((subscriptionLevel) => {
+              return (
+                <button
+                  className={classNames(
+                    "w-full rounded-lg border-2 border-gray-700 p-2 text-gray-300 transition-colors duration-200 hover:bg-gray-700",
+                    subscriptionLevel.id === stream.subscriptionLevelId &&
+                      "bg-gray-700"
+                  )}
+                  key={subscriptionLevel.id}
+                  onClick={() => onSubscriptionLevelClick(subscriptionLevel.id)}
+                >
+                  {subscriptionLevel.title} {subscriptionLevel.price}$
+                </button>
+              );
+            })}
+          </>
+        )}
 
         <div className="flex flex-col gap-2">
           {stream.isLive && (

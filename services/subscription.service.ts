@@ -49,6 +49,30 @@ export const deleteSubscription = async (
   });
 };
 
+type UpdateSubscriptionActiveLevelProps = {
+  subscriptionId: string;
+  subscriptionLevelId: string;
+};
+
+export const updateSubscriptionActiveLevel = async ({
+  subscriptionId,
+  subscriptionLevelId,
+}: UpdateSubscriptionActiveLevelProps) => {
+  try {
+    return await db.subscription.update({
+      where: {
+        id: subscriptionId,
+      },
+      data: {
+        subscriptionLevelId,
+      },
+    });
+  } catch (error) {
+    console.error("updateSubscription", error);
+    return null;
+  }
+};
+
 export const getSubscriptionsByUserId = async (
   userId: string
 ): Promise<SubscriptionWithUser[]> => {

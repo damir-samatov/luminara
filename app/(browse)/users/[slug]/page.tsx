@@ -14,7 +14,7 @@ const ProfilePage: FC<ProfilePageProps> = async ({ params }) => {
 
   if (!res.success) return notFound();
 
-  const { user, isSelfSubscribed, posts } = res.data;
+  const { user, subscriptionLevels, subscription } = res.data;
 
   return (
     <div>
@@ -25,10 +25,10 @@ const ProfilePage: FC<ProfilePageProps> = async ({ params }) => {
           lastName: user.lastName,
           username: user.username,
           imageUrl: user.imageUrl,
-          isSelfSubscribed: isSelfSubscribed,
         }}
+        subscription={subscription}
+        subscriptionLevels={subscriptionLevels}
       />
-      <pre>{JSON.stringify(posts, null, 2)}</pre>
     </div>
   );
 };

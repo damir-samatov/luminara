@@ -46,6 +46,7 @@ model Subscription {
   subscriptionLevel   SubscriptionLevel? @relation(fields: [subscriptionLevelId], references: [id])
 
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([userId, subscriberId])
 }
@@ -64,13 +65,14 @@ model Ban {
 }
 
 model Stream {
-  id            String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId        String  @unique @db.ObjectId
-  title         String
-  description   String
-  thumbnailKey  String
-  isLive        Boolean @default(false)
-  isChatEnabled Boolean @default(true)
+  id                  String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId              String  @unique @db.ObjectId
+  title               String
+  description         String
+  thumbnailKey        String
+  isLive              Boolean @default(false)
+  isChatEnabled       Boolean @default(true)
+  subscriptionLevelId String? @db.ObjectId
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -173,7 +175,7 @@ model SubscriptionLevel {
   description String @default("")
 
   imageKey String
-  price    Int
+  price    Float
 
   user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   subscriptions Subscription[]

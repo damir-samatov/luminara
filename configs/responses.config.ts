@@ -4,6 +4,11 @@ import {
   ErrorResponseType,
 } from "@/types/action.types";
 export const ERROR_RESPONSES = {
+  [ErrorResponseType.FORBIDDEN]: {
+    success: false,
+    message: "Forbidden resource",
+    type: ErrorResponseType.FORBIDDEN,
+  },
   [ErrorResponseType.UNAUTHORIZED]: {
     success: false,
     message: "Client is unauthorized",

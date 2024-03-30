@@ -12,29 +12,31 @@ type LiveStreamPageProps = {
 const LiveStreamPage: FC<LiveStreamPageProps> = async ({ params }) => {
   const res = await onGetStreamDataAsViewer(params.slug);
 
-  if (!res.success) return notFound();
+  if (res.success) {
+    const {
+      thumbnailUrl,
+      playbackUrl,
+      title,
+      description,
+      streamerImageUrl,
+      streamerUsername,
+      isChatEnabled,
+    } = res.data;
 
-  const {
-    thumbnailUrl,
-    playbackUrl,
-    title,
-    description,
-    streamerImageUrl,
-    streamerUsername,
-    isChatEnabled,
-  } = res.data;
+    return (
+      <AwsStream
+        isChatEnabled={isChatEnabled}
+        title={title}
+        description={description}
+        streamerImageUrl={streamerImageUrl}
+        streamerUsername={streamerUsername}
+        playbackUrl={playbackUrl}
+        thumbnailUrl={thumbnailUrl}
+      />
+    );
+  }
 
-  return (
-    <AwsStream
-      isChatEnabled={isChatEnabled}
-      title={title}
-      description={description}
-      streamerImageUrl={streamerImageUrl}
-      streamerUsername={streamerUsername}
-      playbackUrl={playbackUrl}
-      thumbnailUrl={thumbnailUrl}
-    />
-  );
+  return notFound();
 };
 
 export default LiveStreamPage;

@@ -110,7 +110,7 @@ export const AwsStreamPlayer: FC<AwsStreamPlayerProps> = ({
     <div className="bg-black">
       {!isReady && (
         <VideoPlaceholder
-          text="Host is offline"
+          text="Streamer is offline"
           placeholderUrl={thumbnailUrl}
         />
       )}

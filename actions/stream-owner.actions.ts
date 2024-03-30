@@ -3,9 +3,11 @@ import { getSelf } from "@/services/auth.service";
 import {
   createStream,
   getStreamByUserId,
+  removeStreamSubscriptionLevelByUserId,
   updateStreamKeyByUserId,
   updateStreamSettingsByUserId,
   updateStreamStatusByUserId,
+  updateStreamSubscriptionLevelByUserId,
   updateStreamThumbnailByUserId,
 } from "@/services/stream.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
@@ -41,6 +43,56 @@ export const onGetSelfStream = async (): Promise<StreamActionsResponse> => {
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };
+
+export const onUpdateSelfStreamSubscriptionLevel = async (
+  subscriptionLevelId: string
+): Promise<StreamActionsResponse> => {
+  try {
+    const self = await getSelf();
+
+    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+
+    const stream = await updateStreamSubscriptionLevelByUserId(
+      self.id,
+      subscriptionLevelId
+    );
+
+    if (!stream) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    return {
+      success: true,
+      data: {
+        stream,
+      },
+    };
+  } catch (error) {
+    console.error("onUpdateSelfStreamSubscriptionLevel", error);
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+  }
+};
+
+export const onRemoveSelfStreamSubscriptionLevel =
+  async (): Promise<StreamActionsResponse> => {
+    try {
+      const self = await getSelf();
+
+      if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+
+      const stream = await removeStreamSubscriptionLevelByUserId(self.id);
+
+      if (!stream) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+      return {
+        success: true,
+        data: {
+          stream,
+        },
+      };
+    } catch (error) {
+      console.error("onRemoveSelfStreamSubscriptionLevel", error);
+      return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+    }
+  };
 
 export const onUpdateSelfStreamThumbnailKey = async (
   thumbnailKey: string
