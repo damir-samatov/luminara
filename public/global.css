@@ -65,3 +65,8 @@ img {
     @apply px-2;
   }
 }
+
+.disabled-block {
+  @apply cursor-not-allowed;
+  @apply opacity-80;
+}

@@ -167,17 +167,25 @@ export const StreamEditor: FC<StreamEditorProps> = ({
   }, []);
 
   const onSubscriptionLevelClick = useCallback(async (id: string) => {
-    const res = await onUpdateSelfStreamSubscriptionLevel(id);
-    console.log(res);
-    if (!res.success) return;
-    setStream(res.data.stream);
+    setIsLoading(true);
+    try {
+      const res = await onUpdateSelfStreamSubscriptionLevel(id);
+      if (res.success) setStream(res.data.stream);
+    } catch (error) {
+      console.log(error);
+    }
+    setIsLoading(false);
   }, []);
 
   const onRemoveSubscriptionLevelClick = useCallback(async () => {
-    const res = await onRemoveSelfStreamSubscriptionLevel();
-    console.log(res);
-    if (!res.success) return;
-    setStream(res.data.stream);
+    setIsLoading(true);
+    try {
+      const res = await onRemoveSelfStreamSubscriptionLevel();
+      if (res.success) setStream(res.data.stream);
+    } catch (error) {
+      console.log(error);
+    }
+    setIsLoading(false);
   }, []);
 
   const tabs = useMemo(
@@ -268,7 +276,12 @@ export const StreamEditor: FC<StreamEditorProps> = ({
           {tabs[activeTab]?.component}
         </div>
       </div>
-      <div className="flex flex-col gap-4 rounded-lg border-2 border-gray-700 p-4 text-sm text-gray-300">
+      <div
+        className={classNames(
+          isLoading && "disabled-block",
+          "flex flex-col gap-4 rounded-lg border-2 border-gray-700 p-4 text-sm text-gray-300"
+        )}
+      >
         <p className="text-xl">
           <span>Status: </span>
           {stream.isLive ? (
@@ -283,16 +296,15 @@ export const StreamEditor: FC<StreamEditorProps> = ({
 
         {!stream.isLive && (
           <>
-            <p className="text-sm">Subscription Levels:</p>
+            <p className="text-sm">Required level:</p>
             <button
               className={classNames(
                 "w-full rounded-lg border-2 border-gray-700 p-2 text-gray-300 transition-colors duration-200 hover:bg-gray-700",
                 !stream.subscriptionLevelId && "bg-gray-700"
               )}
-              key={"free"}
               onClick={onRemoveSubscriptionLevelClick}
             >
-              Free Subscription
+              Follower
             </button>
             {subscriptionLevels.map((subscriptionLevel) => {
               return (
