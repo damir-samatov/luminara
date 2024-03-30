@@ -35,8 +35,8 @@ export const getImagePostsByUserId = async (
     return await db.post.findMany({
       where: {
         userId,
-        images: {
-          some: {},
+        videos: {
+          none: {},
         },
       },
       include: {

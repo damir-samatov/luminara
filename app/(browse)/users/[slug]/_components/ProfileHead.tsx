@@ -1,7 +1,7 @@
 import { FC } from "react";
 import Image from "next/image";
 import { ProfileActions } from "@/app/(browse)/users/[slug]/_components/ProfileActions";
-import { stringToColor } from "@/utils/style.utils";
+import { classNames, stringToColor } from "@/utils/style.utils";
 import Link from "next/link";
 import { Subscription, SubscriptionLevel } from "@prisma/client";
 
@@ -45,7 +45,7 @@ export const ProfileHead: FC<ProfileHeadProps> = ({
             className="rounded-full"
           />
         </div>
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-2">
           <h1 className="text-xl">
             <span style={{ color: userColor }}>@</span>
             {username}
@@ -55,17 +55,23 @@ export const ProfileHead: FC<ProfileHeadProps> = ({
               {firstName} {lastName}
             </h2>
           )}
-          <div className="flex min-w-max gap-0.5 text-sm">
-            <span>234k subs</span>
-            <span>‧</span>
-            <span>240 posts</span>
-          </div>
+          {subscription && (
+            <Link
+              className={classNames(
+                "w-full rounded-lg border-2 border-gray-700 p-2 text-center text-gray-300 transition-colors duration-200 hover:bg-gray-700"
+              )}
+              href={`/streams/${username}`}
+            >
+              View Stream
+            </Link>
+          )}
+        </div>
+        <div>
           <ProfileActions
             subscription={subscription}
             userId={id}
             subscriptionLevels={subscriptionLevels}
           />
-          <Link href={`/streams/${username}`}>View Stream</Link>
         </div>
       </div>
     </div>

@@ -22,6 +22,7 @@ model User {
   posts              Post[]
   likes              Like[]
   subscriptionLevels SubscriptionLevel[]
+  profile            Profile?
   stream             Stream?
 
   subscribedBy Subscription[] @relation("SubscribedTo")
@@ -60,8 +61,23 @@ model Ban {
   bannedUser User @relation(name: "Banned", fields: [bannedUserId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([userId, bannedUserId])
+}
+
+model Profile {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @unique @db.ObjectId
+
+  title         String
+  description   String
+  coverImageKey String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Stream {
@@ -74,7 +90,8 @@ model Stream {
   isChatEnabled       Boolean @default(true)
   subscriptionLevelId String? @db.ObjectId
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subscriptionLevel SubscriptionLevel? @relation(fields: [subscriptionLevelId], references: [id])
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   serverUrl    String
   playbackUrl  String
@@ -98,13 +115,15 @@ model Post {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  images   Image[]
-  videos   Video[]
-  comments Comment[]
+  images              Image[]
+  videos              Video[]
+  comments            Comment[]
+  likes               Like[]
+  subscriptionLevelId String?            @db.ObjectId
+  subscriptionLevel   SubscriptionLevel? @relation(fields: [subscriptionLevelId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Like      Like[]
 
   @@fulltext([title, body])
 }
@@ -165,6 +184,7 @@ model Like {
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model SubscriptionLevel {
@@ -178,6 +198,8 @@ model SubscriptionLevel {
   price    Float
 
   user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  posts         Post[]
+  stream        Stream[]
   subscriptions Subscription[]
 
   createdAt DateTime @default(now())
