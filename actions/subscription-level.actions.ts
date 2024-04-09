@@ -8,9 +8,13 @@ import {
   getSubscriptionLevels,
 } from "@/services/subscription-levels.service";
 import { SubscriptionLevelCreateDto } from "@/types/subscription-levels.types";
+import { getSignedFileReadUrl } from "@/services/s3.service";
+import { revalidatePath } from "next/cache";
 
 type OnGetSelfSubscriptionLevelsResponse = ActionDataResponse<{
-  subscriptionLevels: SubscriptionLevel[];
+  subscriptionLevels: (SubscriptionLevel & {
+    imageUrl: string | null;
+  })[];
 }>;
 
 export const onGetSelfSubscriptionLevels =
@@ -20,10 +24,22 @@ export const onGetSelfSubscriptionLevels =
       if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
       const subscriptionLevels = await getSubscriptionLevels(self.id);
       if (!subscriptionLevels) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+      const subscriptionLevelsWithImageUrls = await Promise.all(
+        subscriptionLevels.map(async (subscriptionLevel) => {
+          const imageUrl = await getSignedFileReadUrl(
+            subscriptionLevel.imageKey
+          );
+          return {
+            ...subscriptionLevel,
+            imageUrl,
+          };
+        })
+      );
+
       return {
         success: true,
         data: {
-          subscriptionLevels,
+          subscriptionLevels: subscriptionLevelsWithImageUrls,
         },
       };
     } catch (error) {
@@ -47,6 +63,7 @@ export const onCreateSubscriptionLevel = async (
       userId: self.id,
     });
     if (!subscriptionLevel) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+    revalidatePath("/subscription-levels");
     return {
       success: true,
       data: {

@@ -63,6 +63,7 @@ export const getSignedFileUploadUrl = async ({
 
 export const getSignedFileReadUrl = async (key: string) => {
   try {
+    if (key.length < 1) return null;
     const getObjectCommand = new GetObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET_NAME,
       Key: key,
