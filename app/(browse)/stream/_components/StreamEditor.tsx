@@ -12,12 +12,9 @@ import {
   onRemoveSelfStreamSubscriptionLevel,
   onUpdateSelfStreamSettings,
   onUpdateSelfStreamSubscriptionLevel,
-  onUpdateSelfStreamThumbnailKey,
 } from "@/actions/stream-owner.actions";
 import { StreamSettingsUpdateDto } from "@/types/stream.types";
 import { useObjectShadow } from "@/hooks/useObjectShadow";
-import { uploadFile } from "@/helpers/client/file.helpers";
-import { onGetSignedFileReadUrl } from "@/actions/file.actions";
 import { classNames } from "@/utils/style.utils";
 
 type StreamEditorProps = {
@@ -143,29 +140,6 @@ export const StreamEditor: FC<StreamEditorProps> = ({
     setStreamSettings(settingsPrevState);
   }, [settingsPrevState]);
 
-  const onUploadThumbnail = useCallback(async (file: File) => {
-    try {
-      if (!file) return;
-      const uploadRes = await uploadFile(file);
-      if (!uploadRes) return;
-      const resThumbnailKey = await onUpdateSelfStreamThumbnailKey(
-        uploadRes.fileKey
-      );
-      if (!resThumbnailKey.success) return;
-
-      const { thumbnailKey } = resThumbnailKey.data.stream;
-
-      const resThumbnailUrl = await onGetSignedFileReadUrl({
-        key: thumbnailKey,
-      });
-
-      if (resThumbnailUrl.success)
-        setAppliedThumbnailUrl(resThumbnailUrl.data.signedUrl);
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
-
   const onSubscriptionLevelClick = useCallback(async (id: string) => {
     setIsLoading(true);
     try {
@@ -233,7 +207,7 @@ export const StreamEditor: FC<StreamEditorProps> = ({
       {
         component: (
           <StreamThumbnail
-            onUploadThumbnail={onUploadThumbnail}
+            setThumbnailUrl={setAppliedThumbnailUrl}
             thumbnailUrl={appliedThumbnailUrl}
           />
         ),
@@ -250,7 +224,6 @@ export const StreamEditor: FC<StreamEditorProps> = ({
       onDiscardSettings,
       onSaveSettings,
       settingsChangeDetected,
-      onUploadThumbnail,
       streamSettings,
     ]
   );

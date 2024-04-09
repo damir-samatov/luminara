@@ -1,20 +1,54 @@
 import { ImagePicker } from "@/components/ImagePicker";
-import { FC, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/Button";
 import { classNames } from "@/utils/style.utils";
+import { uploadFile } from "@/helpers/client/file.helpers";
+import { onUpdateSelfStreamThumbnailKey } from "@/actions/stream-owner.actions";
+import { onGetSignedFileReadUrl } from "@/actions/file.actions";
 
 type StreamThumbnailProps = {
   thumbnailUrl: string;
-  onUploadThumbnail: (file: File) => Promise<unknown>;
+  setThumbnailUrl: (url: string) => void;
 };
 
 export const StreamThumbnail: FC<StreamThumbnailProps> = ({
   thumbnailUrl,
-  onUploadThumbnail,
+  setThumbnailUrl,
 }) => {
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  const onUploadThumbnail = useCallback(
+    async (file: File) => {
+      setIsLoading(true);
+      try {
+        if (!file) return;
+        const uploadRes = await uploadFile(file, setProgress);
+        if (!uploadRes) return;
+        const resThumbnailKey = await onUpdateSelfStreamThumbnailKey(
+          uploadRes.fileKey
+        );
+        if (!resThumbnailKey.success) return;
+
+        const { thumbnailKey } = resThumbnailKey.data.stream;
+
+        const resThumbnailUrl = await onGetSignedFileReadUrl({
+          key: thumbnailKey,
+        });
+
+        if (resThumbnailUrl.success)
+          setThumbnailUrl(resThumbnailUrl.data.signedUrl);
+      } catch (error) {
+        console.error(error);
+      }
+      setIsLoading(false);
+      setProgress(0);
+    },
+    [setThumbnailUrl]
+  );
+
   const onThumbnailChange = (files: File[]) => {
     if (files[0]) {
       setFile(files[0]);
@@ -62,10 +96,10 @@ export const StreamThumbnail: FC<StreamThumbnailProps> = ({
             <Button
               isDisabled={isLoading || !file}
               isLoading={isLoading}
-              loadingText="Applying the thumbnail..."
+              loadingText={`Progress: ${(progress * 100).toFixed(2)}%`}
               onClick={onUpdateStreamThumbnailClick}
             >
-              Apply the thumbnail
+              Upload Thumbnail
             </Button>
           </div>
         </div>

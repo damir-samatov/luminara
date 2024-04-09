@@ -1,7 +1,10 @@
 "use client";
 import { onGetSignedFileUploadUrl } from "@/actions/file.actions";
+import axios from "axios";
 
-export const uploadFile = async (file: File) => {
+type OnProgress = (progress: number) => void;
+
+export const uploadFile = async (file: File, onProgress?: OnProgress) => {
   try {
     const res = await onGetSignedFileUploadUrl({
       title: file.name,
@@ -11,11 +14,9 @@ export const uploadFile = async (file: File) => {
 
     if (!res.success) return null;
 
-    await fetch(res.data.signedUrl, {
-      method: "PUT",
-      body: file,
-      headers: {
-        "Content-Type": file.type,
+    await axios.put(res.data.signedUrl, file, {
+      onUploadProgress: (progressEvent) => {
+        onProgress && onProgress(progressEvent?.progress || 0);
       },
     });
 
