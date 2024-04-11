@@ -86,7 +86,6 @@ export const StreamThumbnail: FC<StreamThumbnailProps> = ({
         <div className="flex flex-col gap-4">
           <div className="flex-grow">
             <ImagePicker
-              vertical
               label="Drop the thumbnail here"
               files={!!file ? [file] : []}
               onChange={onThumbnailChange}

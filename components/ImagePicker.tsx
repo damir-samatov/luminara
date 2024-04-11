@@ -8,23 +8,16 @@ type ImagePickerProps = {
   label?: string;
   files: File[];
   onChange: (files: File[]) => void;
-  vertical?: boolean;
 };
 
 export const ImagePicker: FC<ImagePickerProps> = ({
   files,
   onChange,
   label = "Drop the images here",
-  vertical = false,
 }) => {
   const hasFiles = files.length > 0;
   return (
-    <div
-      className={classNames(
-        "grid h-full items-stretch gap-4",
-        !vertical && hasFiles ? "grid-cols-2" : "grid-cols-1"
-      )}
-    >
+    <div className={classNames("flex h-full flex-col items-stretch gap-4")}>
       {hasFiles && (
         <div className="flex flex-col gap-4">
           {files.map((file) => (
@@ -38,7 +31,7 @@ export const ImagePicker: FC<ImagePickerProps> = ({
           ))}
         </div>
       )}
-      <div>
+      <div className="flex-grow">
         <FileDrop
           label={label}
           onChange={onChange}

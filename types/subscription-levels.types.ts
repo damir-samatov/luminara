@@ -4,3 +4,8 @@ export type SubscriptionLevelCreateDto = {
   description: string;
   imageKey: string;
 };
+
+export type SubscriptionLevelUpdateContentDto = {
+  title: string;
+  description: string;
+};

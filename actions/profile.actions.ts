@@ -7,7 +7,7 @@ import { Post, Subscription, SubscriptionLevel, User } from "@prisma/client";
 import { ActionDataResponse } from "@/types/action.types";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import { getImagePostsByUserId } from "@/services/post.service";
-import { getSubscriptionLevels } from "@/services/subscription-levels.service";
+import { getSubscriptionLevelsByUserId } from "@/services/subscription-levels.service";
 
 type OnGetProfileDataResponse = ActionDataResponse<{
   user: User;
@@ -31,7 +31,7 @@ export const onGetProfileData = async (
     const [subscription, posts, subscriptionLevels] = await Promise.all([
       getSubscription(self.id, user.id),
       getImagePostsByUserId(user.id),
-      getSubscriptionLevels(user.id),
+      getSubscriptionLevelsByUserId(user.id),
     ]);
 
     if (!subscriptionLevels) return ERROR_RESPONSES.NOT_FOUND;

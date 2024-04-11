@@ -40,7 +40,6 @@ export const CreateVideoPostForm = () => {
     <div className="flex flex-col gap-6">
       <div className="grid grid-cols-2 gap-6">
         <ImagePicker
-          vertical
           files={thumbnailFile ? [thumbnailFile] : []}
           onChange={(files) => {
             if (files[0]) return setThumbnailFile(files[0]);

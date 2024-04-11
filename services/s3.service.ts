@@ -25,6 +25,7 @@ type GetSignedFileUploadUrlParams = {
 
 export const deleteFile = async (key: string) => {
   try {
+    if (key.length < 1) return null;
     const deleteObjectCommand = new DeleteObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET_NAME,
       Key: key,

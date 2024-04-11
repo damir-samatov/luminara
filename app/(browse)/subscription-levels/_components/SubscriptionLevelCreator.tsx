@@ -9,7 +9,7 @@ import { createSubscriptionLevel } from "@/helpers/client/subscription-level.hel
 import { SliderInput } from "@/components/SliderInput";
 import { useRouter } from "next/navigation";
 
-export const SubscriptionLevelCreate = () => {
+export const SubscriptionLevelCreator = () => {
   const router = useRouter();
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [subscriptionLevelContent, setSubscriptionLevelContent] = useState<
@@ -52,7 +52,6 @@ export const SubscriptionLevelCreate = () => {
     <div className="flex grid-cols-3 flex-col gap-6 p-6 lg:grid">
       <div className="col-span-1">
         <ImagePicker
-          vertical
           label="Drop the image here"
           files={imageFile ? [imageFile] : []}
           onChange={(files) => {

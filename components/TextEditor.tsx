@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { classNames } from "@/utils/style.utils";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
@@ -10,6 +10,7 @@ type TextEditorProps = {
   onChange: (value: string) => void;
   value: string;
   placeholder?: string;
+  forceUpdate?: unknown;
 };
 
 const BUTTON_CLASSNAMES =
@@ -21,6 +22,7 @@ export const TextEditor: FC<TextEditorProps> = ({
   value,
   onChange,
   placeholder = "",
+  forceUpdate,
 }) => {
   const editor = useEditor({
     extensions: [StarterKit, Underline, Link, TextStyle],
@@ -31,10 +33,15 @@ export const TextEditor: FC<TextEditorProps> = ({
     },
   });
 
+  useEffect(() => {
+    if (editor) editor.commands.setContent(value);
+    console.log("forceUpdate", forceUpdate);
+  }, [forceUpdate]);
+
   if (!editor) return null;
 
   return (
-    <div className="rounded-md border-2 border-gray-700 bg-gray-950">
+    <div className="rounded border-2 border-gray-700 bg-gray-950">
       <div className="flex gap-2 border-0 border-b-2 border-gray-700 p-2 text-xl">
         <button
           onClick={() => editor.chain().focus().toggleUnderline().run()}

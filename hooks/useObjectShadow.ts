@@ -15,13 +15,18 @@ export const useObjectShadow = <T extends Record<string, unknown>>(
     }, 200)
   );
 
+  const updatePrevState = (newState: T) => {
+    setPrevState(newState);
+    setChangeDetected(!deepEqual(newState, state));
+  };
+
   useEffect(() => {
     debounced.current(prevState, state);
-  }, [state, prevState]);
+  }, [prevState, state]);
 
   return {
     prevState,
-    setPrevState,
+    updatePrevState,
     changeDetected,
   };
 };

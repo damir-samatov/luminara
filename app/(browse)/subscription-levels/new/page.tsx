@@ -1,7 +1,7 @@
-import { SubscriptionLevelCreate } from "@/app/(browse)/subscription-levels/_components/SubscriptionLevelCreate";
+import { SubscriptionLevelCreator } from "@/app/(browse)/subscription-levels/_components/SubscriptionLevelCreator";
 
 const SubscriptionLevelCreatePage = () => {
-  return <SubscriptionLevelCreate />;
+  return <SubscriptionLevelCreator />;
 };
 
 export default SubscriptionLevelCreatePage;

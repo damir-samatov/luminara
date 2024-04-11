@@ -49,7 +49,7 @@ export const StreamEditor: FC<StreamEditorProps> = ({
   );
 
   const {
-    setPrevState: setSettingsPrevState,
+    updatePrevState: setSettingsPrevState,
     changeDetected: settingsChangeDetected,
     prevState: settingsPrevState,
   } = useObjectShadow(streamSettings);

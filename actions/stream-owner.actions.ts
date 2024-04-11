@@ -106,8 +106,7 @@ export const onUpdateSelfStreamThumbnailKey = async (
 
     if (!existingStream) return ERROR_RESPONSES.NOT_FOUND;
 
-    if (existingStream.thumbnailKey)
-      await deleteFile(existingStream.thumbnailKey);
+    deleteFile(existingStream.thumbnailKey);
 
     const stream = await updateStreamThumbnailByUserId({
       userId: self.id,
