@@ -24,9 +24,9 @@ export const publishVideoPost = async (
       body: postContent.body,
       videos: [
         {
-          title: videoUpload.title,
-          key: videoUpload.fileKey,
-          thumbnailKey: thumbnailUpload.fileKey,
+          title: "video",
+          key: videoUpload.key,
+          thumbnailKey: thumbnailUpload.key,
         },
       ],
     });
@@ -49,8 +49,8 @@ export const createImagePost = async (
       title: postContent.title,
       body: postContent.body,
       images: imageUploads.filter(Boolean).map((upload) => ({
-        key: upload.fileKey,
-        title: upload.title,
+        key: upload.key,
+        title: "image",
       })),
     });
   } catch (error) {

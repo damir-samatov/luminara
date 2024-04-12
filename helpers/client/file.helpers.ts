@@ -7,7 +7,6 @@ type OnProgress = (progress: number) => void;
 export const uploadFile = async (file: File, onProgress?: OnProgress) => {
   try {
     const res = await onGetSignedFileUploadUrl({
-      title: file.name,
       type: file.type,
       size: file.size,
     });

@@ -32,7 +32,7 @@ export const SubscriptionLevelImageEditor: FC<
 
       const updateRes = await onUpdateSubscriptionLevelImageKey({
         subscriptionLevelId,
-        imageKey: uploadRes.fileKey,
+        imageKey: uploadRes.key,
       });
 
       if (!updateRes.success) return;

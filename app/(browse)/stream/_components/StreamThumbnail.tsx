@@ -28,7 +28,7 @@ export const StreamThumbnail: FC<StreamThumbnailProps> = ({
         const uploadRes = await uploadFile(file, setProgress);
         if (!uploadRes) return;
         const resThumbnailKey = await onUpdateSelfStreamThumbnailKey(
-          uploadRes.fileKey
+          uploadRes.key
         );
         if (!resThumbnailKey.success) return;
 

@@ -15,7 +15,7 @@ export const createSubscriptionLevel = async (
 
     return await onCreateSubscriptionLevel({
       ...subscriptionLevelCreateDto,
-      imageKey: imageUpload.fileKey,
+      imageKey: imageUpload.key,
     });
   } catch (error) {
     console.error(error);

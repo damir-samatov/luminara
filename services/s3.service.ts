@@ -11,6 +11,8 @@ import {
   UPLOAD_FILE_EXPIRATION_TIME,
 } from "@/configs/file.config";
 
+//TODO add ChecksumSHA256 for object integrity
+
 if (!process.env.AWS_S3_BUCKET_NAME)
   throw new Error("AWS_S3_BUCKET_NAME is not defined");
 
@@ -21,29 +23,15 @@ type GetSignedFileUploadUrlParams = {
   userId: string;
 };
 
-//TODO add ChecksumSHA256 for object integrity
-
-export const deleteFile = async (key: string) => {
-  try {
-    if (key.length < 1) return null;
-    const deleteObjectCommand = new DeleteObjectCommand({
-      Bucket: process.env.AWS_S3_BUCKET_NAME,
-      Key: key,
-    });
-
-    return await s3.send(deleteObjectCommand);
-  } catch (error) {
-    return null;
-  }
-};
-
 export const getSignedFileUploadUrl = async ({
-  userId,
   key,
+  userId,
   size,
   type,
 }: GetSignedFileUploadUrlParams) => {
   try {
+    if (key.length < 1) return null;
+
     const putObjectCommand = new PutObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET_NAME,
       Key: key,
@@ -54,10 +42,16 @@ export const getSignedFileUploadUrl = async ({
       },
     });
 
-    return await getSignedUrl(s3, putObjectCommand, {
+    const signedUrl = await getSignedUrl(s3, putObjectCommand, {
       expiresIn: UPLOAD_FILE_EXPIRATION_TIME,
     });
+
+    return {
+      signedUrl,
+      key,
+    };
   } catch (error) {
+    console.error("getSignedFileUploadUrl", error);
     return null;
   }
 };
@@ -74,6 +68,22 @@ export const getSignedFileReadUrl = async (key: string) => {
       expiresIn: READ_FILE_EXPIRATION_TIME,
     });
   } catch (error) {
+    console.error("getSignedFileReadUrl", error);
+    return null;
+  }
+};
+
+export const deleteFile = async (key: string) => {
+  try {
+    if (key.length < 1) return null;
+    const deleteObjectCommand = new DeleteObjectCommand({
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Key: key,
+    });
+
+    return await s3.send(deleteObjectCommand);
+  } catch (error) {
+    console.error("deleteFile", error);
     return null;
   }
 };
