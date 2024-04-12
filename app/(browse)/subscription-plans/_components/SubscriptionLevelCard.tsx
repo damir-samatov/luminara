@@ -33,7 +33,7 @@ export const SubscriptionLevelCard: FC<SubscriptionLevelCardProps> = ({
       <div className="mt-auto flex justify-end">
         <Link
           className="block max-w-max items-center gap-2 rounded-md border-2 border-transparent p-2 hover:border-gray-600"
-          href={`/subscription-levels/${subscriptionLevel.id}`}
+          href={`/subscription-plans/${subscriptionLevel.id}`}
         >
           <PencilIcon className="h-6 w-6 text-gray-600" />
         </Link>

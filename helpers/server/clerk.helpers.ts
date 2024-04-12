@@ -1,3 +1,4 @@
+"use server";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { clerkWebhookReceiver } from "@/lib/clerkWebhookReceiver";

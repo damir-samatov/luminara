@@ -1,6 +1,6 @@
 import { onGetSelfSubscriptionLevels } from "@/actions/subscription-level.actions";
 import { notFound } from "next/navigation";
-import { SubscriptionLevelCard } from "@/app/(browse)/subscription-levels/_components/SubscriptionLevelCard";
+import { SubscriptionLevelCard } from "./_components/SubscriptionLevelCard";
 import { classNames } from "@/utils/style.utils";
 import { PencilIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
@@ -21,7 +21,7 @@ const SubscriptionLevelsPage = async () => {
         ))}
       </div>
       <Link
-        href="/subscription-levels/new"
+        href="/subscription-plans/new"
         className={classNames(
           "mt-4 flex max-w-max items-center gap-2 rounded-md bg-gray-800 p-4 text-sm font-semibold leading-6 text-gray-100"
         )}

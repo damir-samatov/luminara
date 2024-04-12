@@ -42,9 +42,9 @@ export const STUDIO_LINKS = [
     icon: <SignalIcon className="h-6 w-6 shrink-0" />,
   },
   {
-    href: "/subscription-levels",
-    label: "Subscription Levels",
-    activeOn: ["/subscription-levels"],
+    href: "/subscription-plans",
+    label: "Subscription Plans",
+    activeOn: ["/subscription-plans"],
     icon: <TicketIcon className="h-6 w-6 shrink-0" />,
   },
 ];

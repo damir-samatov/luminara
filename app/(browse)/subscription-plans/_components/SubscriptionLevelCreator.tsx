@@ -10,8 +10,10 @@ import { uploadFile } from "@/helpers/client/file.helpers";
 import { onCreateSubscriptionLevel } from "@/actions/subscription-level.actions";
 import { ProgressBar } from "@/components/ProgressBar";
 import { toast } from "react-toastify";
+import Link from "next/link";
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 
-const FIVE_MB = 5 * 1024 * 1024;
+const IMAGE_MAX_SIZE = 5 * 1024 * 1024;
 
 export const SubscriptionLevelCreator = () => {
   const router = useRouter();
@@ -21,7 +23,7 @@ export const SubscriptionLevelCreator = () => {
   const [subscriptionLevelContent, setSubscriptionLevelContent] = useState({
     title: "",
     description: "",
-    price: 0,
+    price: 0.1,
   });
 
   const onChange = useCallback(
@@ -36,20 +38,15 @@ export const SubscriptionLevelCreator = () => {
 
   const onSubmit = useCallback(async () => {
     try {
-      if (
-        !subscriptionLevelContent.title ||
-        !imageFile ||
-        subscriptionLevelContent.price < 0.1 ||
-        isLoading
-      )
-        return;
+      if (!subscriptionLevelContent.title || !imageFile || isLoading) return;
 
       setIsLoading(true);
       setProgress(0);
 
       const imageUpload = await uploadFile(imageFile, setProgress);
 
-      if (!imageUpload) return;
+      if (!imageUpload)
+        return toast("Failed to upload. Please try again later.");
 
       const res = await onCreateSubscriptionLevel({
         title: subscriptionLevelContent.title,
@@ -58,12 +55,11 @@ export const SubscriptionLevelCreator = () => {
         imageKey: imageUpload.key,
       });
 
-      if (res.success) {
-        router.push("/subscription-levels");
-        toast("Subscription level created successfully");
-      } else {
-        console.error(res.message);
-      }
+      if (!res.success)
+        return toast("Failed to create. Please try again later.");
+
+      toast("Subscription plan created successfully");
+      router.push("/subscription-plans");
     } catch (error) {
       console.error(error);
       toast("Something went wrong. Please try again later.");
@@ -73,21 +69,34 @@ export const SubscriptionLevelCreator = () => {
     }
   }, [isLoading, subscriptionLevelContent, imageFile, router]);
 
+  const onFilesChange = useCallback((files: File[]) => {
+    if (files[0]) return setImageFile(files[0]);
+    setImageFile(null);
+  }, []);
+
+  const isCreateDisabled =
+    isLoading || !subscriptionLevelContent.title || !imageFile;
+
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 p-4">
-      <h2 className="text-3xl">New Subscription Plan</h2>
+      <div className="flex items-center gap-2">
+        <Link
+          href="/subscription-plans"
+          className="block rounded border-2 border-transparent px-6 py-2 text-gray-300 hover:border-gray-700"
+        >
+          <ArrowLeftIcon className="h-6 w-6" />
+        </Link>
+        <h2 className="text-3xl">New Subscription Plan</h2>
+      </div>
       <div className="flex grid-cols-3 flex-col gap-4 lg:grid">
         <div className="col-span-1 flex flex-col gap-4">
           {isLoading && <ProgressBar progress={progress} />}
           <div className="flex-grow">
             <ImagePicker
-              maxFileSize={FIVE_MB}
+              maxFileSize={IMAGE_MAX_SIZE}
               label="Cover Image"
               files={imageFile ? [imageFile] : []}
-              onChange={(files) => {
-                if (files[0]) return setImageFile(files[0]);
-                setImageFile(null);
-              }}
+              onChange={onFilesChange}
             />
           </div>
         </div>
@@ -124,9 +133,7 @@ export const SubscriptionLevelCreator = () => {
         <Button
           onClick={onSubmit}
           loadingText="Creating..."
-          isDisabled={
-            isLoading || !subscriptionLevelContent.title || !imageFile
-          }
+          isDisabled={isCreateDisabled}
           isLoading={isLoading}
         >
           Create

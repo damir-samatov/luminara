@@ -102,7 +102,7 @@ export const onCreateSubscriptionLevel = async (
       userId: self.id,
     });
     if (!subscriptionLevel) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-    revalidatePath("/subscription-levels");
+    revalidatePath("/subscription-plans");
     return {
       success: true,
       data: {
@@ -138,7 +138,7 @@ export const onUpdateSubscriptionLevelContent = async ({
       subscriptionLevelUpdateContentDto,
     });
     if (!subscriptionLevel) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-    revalidatePath("/subscription-levels");
+    revalidatePath("/subscription-plans");
     return {
       success: true,
       data: {
@@ -193,7 +193,7 @@ export const onUpdateSubscriptionLevelImageKey = async ({
     );
 
     if (!imageUrl) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-    revalidatePath("/subscription-levels");
+    revalidatePath("/subscription-plans");
     return {
       success: true,
       data: {

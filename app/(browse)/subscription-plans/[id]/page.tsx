@@ -1,4 +1,4 @@
-import { SubscriptionLevelEditor } from "@/app/(browse)/subscription-levels/_components/SubscriptionLevelEditor";
+import { SubscriptionLevelEditor } from "../_components/SubscriptionLevelEditor";
 import { FC } from "react";
 import { onGetSubscriptionLevelById } from "@/actions/subscription-level.actions";
 import { notFound } from "next/navigation";
@@ -18,7 +18,7 @@ const SubscriptionLevelDetailsPage: FC<
 
   return (
     <>
-      <title>Subscription Editor</title>
+      <title>Subscription Plan Editor</title>
       <SubscriptionLevelEditor subscriptionLevel={res.data.subscriptionLevel} />
     </>
   );
