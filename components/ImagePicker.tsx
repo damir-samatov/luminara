@@ -8,12 +8,14 @@ type ImagePickerProps = {
   label?: string;
   files: File[];
   onChange: (files: File[]) => void;
+  maxFileSize?: number;
 };
 
 export const ImagePicker: FC<ImagePickerProps> = ({
   files,
   onChange,
   label = "Drop the images here",
+  maxFileSize,
 }) => {
   const hasFiles = files.length > 0;
   return (
@@ -36,6 +38,7 @@ export const ImagePicker: FC<ImagePickerProps> = ({
           label={label}
           onChange={onChange}
           eligibleFileTypes={ELIGIBLE_IMAGE_TYPES}
+          maxFileSize={maxFileSize}
         />
       </div>
     </div>

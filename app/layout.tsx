@@ -5,6 +5,8 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { classNames } from "@/utils/style.utils";
 import "@/public/global.css";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const dynamic = "force-dynamic";
 
@@ -49,6 +51,15 @@ const RootLayout: FC<BrowseLayoutProps> = ({ children }) => {
           )}
         >
           {children}
+          <ToastContainer
+            position="top-center"
+            autoClose={2000}
+            theme="dark"
+            hideProgressBar
+            newestOnTop
+            closeOnClick
+            draggable
+          />
         </body>
       </html>
     </ClerkProvider>

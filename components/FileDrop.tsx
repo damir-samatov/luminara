@@ -1,5 +1,6 @@
 import { ChangeEvent, FC, DragEvent, useCallback, useRef } from "react";
 import { MAX_FILE_SIZE } from "@/configs/file.config";
+import { readableFileSize } from "@/utils/string.utils";
 
 type FileDropProps = {
   onChange: (files: File[]) => void;
@@ -20,28 +21,33 @@ export const FileDrop: FC<FileDropProps> = ({
     fileInputRef.current?.click();
   }, []);
 
+  const onFilesChanged = useCallback(
+    (newFiles: File[]) => {
+      const filteredFiles = newFiles.filter((file) => file.size < maxFileSize);
+      onChange(filteredFiles);
+      if (filteredFiles < newFiles) {
+        alert("File size too large");
+      }
+      fileInputRef.current!.value = "";
+    },
+    [maxFileSize, onChange]
+  );
+
   const onFilesSelected = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       const selectedFiles = Array.from(event.target.files || []);
-      const filteredFiles = selectedFiles.filter(
-        (file) => file.size < MAX_FILE_SIZE
-      );
-      onChange(filteredFiles);
-      fileInputRef.current!.value = "";
+      onFilesChanged(selectedFiles);
     },
-    [onChange]
+    [onFilesChanged]
   );
 
-  const onDrop = useCallback(
+  const onFilesDrop = useCallback(
     (event: DragEvent<HTMLDivElement>) => {
       event.preventDefault();
-      const selectedFiles = Array.from(event.dataTransfer.files || []);
-      const filteredFiles = selectedFiles.filter(
-        (file) => file.size < maxFileSize
-      );
-      onChange(filteredFiles);
+      const droppedFiles = Array.from(event.dataTransfer.files || []);
+      onFilesChanged(droppedFiles);
     },
-    [onChange, maxFileSize]
+    [onFilesChanged]
   );
 
   const onDragOver = useCallback((event: DragEvent<HTMLInputElement>) => {
@@ -56,11 +62,12 @@ export const FileDrop: FC<FileDropProps> = ({
     <div
       className="flex h-full cursor-pointer flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed border-gray-500 p-6 font-bold text-gray-500"
       onClick={onClick}
-      onDrop={onDrop}
+      onDrop={onFilesDrop}
       onDragLeave={onDragLeave}
       onDragOver={onDragOver}
     >
       <p>{label}</p>
+      <p className="text-xs">Max file size: {readableFileSize(maxFileSize)}</p>
       <p className="text-xs">
         {"Accepts: " +
           eligibleFileTypes
