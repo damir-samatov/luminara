@@ -41,7 +41,9 @@ export const createImagePost = async (
   imageFiles: File[]
 ) => {
   try {
-    const imageUploads = await Promise.all(imageFiles.map(uploadFile));
+    const imageUploads = await Promise.all(
+      imageFiles.map((file) => uploadFile(file))
+    );
 
     return await onCreateImagePost({
       title: postContent.title,
