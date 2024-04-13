@@ -20,8 +20,8 @@ export const SubscriptionLevelCard: FC<SubscriptionLevelCardProps> = ({
           <Image
             src={subscriptionLevel.imageUrl}
             alt={subscriptionLevel.title}
-            width={1080}
-            height={1080}
+            width={720}
+            height={480}
           />
         </div>
       )}

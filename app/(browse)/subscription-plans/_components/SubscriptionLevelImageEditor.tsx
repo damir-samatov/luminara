@@ -100,8 +100,8 @@ export const SubscriptionLevelImageEditor: FC<
           <Image
             src={imageUrl}
             alt="Subscription Level Image"
-            width={1920}
-            height={1080}
+            width={720}
+            height={480}
           />
         )}
       </div>
