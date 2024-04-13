@@ -3,11 +3,16 @@ import { FC, useCallback, useState } from "react";
 import { uploadFile } from "@/helpers/client/file.helpers";
 import { onUpdateSubscriptionLevelImageKey } from "@/actions/subscription-level.actions";
 import Image from "next/image";
-import { ImagePicker } from "@/components/ImagePicker";
 import { Button } from "@/components/Button";
-import { SUBSCRIPTION_PLAN_IMAGE_MAX_SIZE } from "@/configs/file.config";
+import {
+  ELIGIBLE_IMAGE_TYPES,
+  SUBSCRIPTION_PLAN_IMAGE_MAX_SIZE,
+} from "@/configs/file.config";
 import { toast } from "react-toastify";
 import { ProgressBar } from "@/components/ProgressBar";
+import { FilePreview } from "@/components/FilePreview";
+import { TrashIcon } from "@heroicons/react/24/outline";
+import { FileDrop } from "@/components/FileDrop";
 
 type SubscriptionLevelImageEditorProps = {
   initialImageUrl: string | null;
@@ -39,8 +44,7 @@ export const SubscriptionLevelImageEditor: FC<
       });
       if (!updateRes.success)
         return toast(updateRes.message, { type: "error" });
-      const imageUrl = updateRes.data.imageUrl;
-      setImageUrl(imageUrl);
+      setImageUrl(URL.createObjectURL(imageFile));
       setImageFile(null);
       toast("Successfully updated image.", { type: "success" });
     } catch (error) {
@@ -52,8 +56,46 @@ export const SubscriptionLevelImageEditor: FC<
   }, [imageFile, subscriptionLevelId]);
 
   return (
-    <div className="grid grid-cols-2 gap-4 rounded-lg border-2 border-gray-700 p-4">
-      <div className="aspect-video w-full overflow-hidden rounded-md bg-gray-800">
+    <div className="grid grid-cols-3 gap-4 rounded-lg border-2 border-gray-700 p-4">
+      <div className="col-span-1 flex flex-col gap-4">
+        {imageFile ? (
+          <>
+            <FilePreview file={imageFile} />
+            <div className="mt-auto">
+              {isLoading ? (
+                <ProgressBar progress={progress} />
+              ) : (
+                <div className="flex gap-2">
+                  <Button
+                    className="flex items-center justify-center gap-2"
+                    onClick={() => setImageFile(null)}
+                    type="secondary"
+                  >
+                    <TrashIcon className="h-4 w-4" />
+                    <span>Remove</span>
+                  </Button>
+                  <Button
+                    onClick={onImageUploadClick}
+                    loadingText="Uploading..."
+                    isLoading={isLoading}
+                    isDisabled={isLoading || !imageFile}
+                  >
+                    Upload
+                  </Button>
+                </div>
+              )}
+            </div>
+          </>
+        ) : (
+          <FileDrop
+            label="New Cover Image"
+            onChange={onFilesChange}
+            eligibleFileTypes={ELIGIBLE_IMAGE_TYPES}
+            maxFileSize={SUBSCRIPTION_PLAN_IMAGE_MAX_SIZE}
+          />
+        )}
+      </div>
+      <div className="col-span-2 aspect-video w-full overflow-hidden rounded-md bg-gray-800">
         {imageUrl && (
           <Image
             src={imageUrl}
@@ -61,25 +103,6 @@ export const SubscriptionLevelImageEditor: FC<
             width={1920}
             height={1080}
           />
-        )}
-      </div>
-      <div className="flex flex-col gap-4">
-        <ImagePicker
-          label="Drop the image here"
-          maxFileSize={SUBSCRIPTION_PLAN_IMAGE_MAX_SIZE}
-          files={imageFile ? [imageFile] : []}
-          onChange={onFilesChange}
-        />
-        {isLoading && <ProgressBar progress={progress} />}
-        {imageFile && (
-          <Button
-            onClick={onImageUploadClick}
-            loadingText="Uploading..."
-            isLoading={isLoading}
-            isDisabled={isLoading || !imageFile}
-          >
-            Upload
-          </Button>
         )}
       </div>
     </div>

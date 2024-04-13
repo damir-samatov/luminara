@@ -1,6 +1,5 @@
 "use client";
 import { useCallback, useState } from "react";
-import { ImagePicker } from "@/components/ImagePicker";
 import { TextInput } from "@/components/TextInput";
 import { TextEditor } from "@/components/TextEditor";
 import { Button } from "@/components/Button";
@@ -11,8 +10,13 @@ import { onCreateSubscriptionLevel } from "@/actions/subscription-level.actions"
 import { ProgressBar } from "@/components/ProgressBar";
 import { toast } from "react-toastify";
 import Link from "next/link";
-import { ArrowLeftIcon } from "@heroicons/react/24/outline";
-import { SUBSCRIPTION_PLAN_IMAGE_MAX_SIZE } from "@/configs/file.config";
+import { ArrowLeftIcon, TrashIcon } from "@heroicons/react/24/outline";
+import {
+  ELIGIBLE_IMAGE_TYPES,
+  SUBSCRIPTION_PLAN_IMAGE_MAX_SIZE,
+} from "@/configs/file.config";
+import { FileDrop } from "@/components/FileDrop";
+import { FilePreview } from "@/components/FilePreview";
 
 export const SubscriptionLevelCreator = () => {
   const router = useRouter();
@@ -95,15 +99,32 @@ export const SubscriptionLevelCreator = () => {
       </div>
       <div className="flex grid-cols-3 flex-col gap-4 lg:grid">
         <div className="col-span-1 flex flex-col gap-4">
-          {isLoading && <ProgressBar progress={progress} />}
-          <div className="flex-grow">
-            <ImagePicker
-              maxFileSize={SUBSCRIPTION_PLAN_IMAGE_MAX_SIZE}
+          {imageFile ? (
+            <>
+              <FilePreview file={imageFile} />
+              <div className="mt-auto">
+                {isLoading ? (
+                  <ProgressBar progress={progress} />
+                ) : (
+                  <Button
+                    className="flex items-center justify-center gap-2"
+                    onClick={() => setImageFile(null)}
+                    type="secondary"
+                  >
+                    <TrashIcon className="h-4 w-4" />
+                    <span>Remove</span>
+                  </Button>
+                )}
+              </div>
+            </>
+          ) : (
+            <FileDrop
               label="Cover Image"
-              files={imageFile ? [imageFile] : []}
               onChange={onFilesChange}
+              eligibleFileTypes={ELIGIBLE_IMAGE_TYPES}
+              maxFileSize={SUBSCRIPTION_PLAN_IMAGE_MAX_SIZE}
             />
-          </div>
+          )}
         </div>
         <div className="col-span-2 flex flex-col gap-4 rounded-lg border-2 border-gray-700 p-4">
           <div>
