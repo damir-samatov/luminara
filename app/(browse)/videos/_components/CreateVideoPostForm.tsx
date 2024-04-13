@@ -67,7 +67,6 @@ export const CreateVideoPostForm = () => {
         onChange={(value) => onPostContentChange("body", value)}
       />
       <Button
-        size="max-content"
         onClick={onCreateVideoPostClick}
         loadingText="Creating Post..."
         isLoading={isLoading}

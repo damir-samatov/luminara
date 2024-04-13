@@ -47,7 +47,6 @@ export const CreateImagePostForm = () => {
         onChange={(value) => onPostContentChange("body", value)}
       />
       <Button
-        size="max-content"
         onClick={onCreatePostClick}
         loadingText="Creating Post..."
         isLoading={isLoading}

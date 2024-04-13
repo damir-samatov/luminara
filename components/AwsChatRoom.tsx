@@ -125,7 +125,7 @@ export const AwsChatRoom: FC<AwsChatRoomProps> = ({
           placeholder="Type your message..."
           onEnter={onSendMessage}
         />
-        <Button size="max-content" onClick={onSendMessage}>
+        <Button onClick={onSendMessage}>
           <PaperAirplaneIcon className="h-6 w-6" />
         </Button>
       </div>

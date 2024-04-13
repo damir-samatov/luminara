@@ -41,12 +41,7 @@ export const SubscriptionLevelDeleterModal: FC<
 
   return (
     <div>
-      <Button
-        className="px-6"
-        size="max-content"
-        type="secondary"
-        onClick={onDeleteClick}
-      >
+      <Button className="px-6" type="danger" onClick={onDeleteClick}>
         Delete
       </Button>
       {isModalOpen && (
@@ -66,6 +61,7 @@ export const SubscriptionLevelDeleterModal: FC<
               <Button
                 isLoading={isLoading}
                 isDisabled={isLoading}
+                type="danger"
                 loadingText="Deleting..."
                 onClick={onDeleteConfirmClick}
               >

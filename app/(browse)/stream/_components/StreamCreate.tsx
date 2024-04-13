@@ -48,7 +48,6 @@ export const StreamCreate = () => {
               </p>
             </div>
             <Button
-              size="max-content"
               isLoading={isLoading && !isStreamCreated}
               isDisabled={isLoading || isStreamCreated}
               loadingText="Creating the stream dashboard..."
