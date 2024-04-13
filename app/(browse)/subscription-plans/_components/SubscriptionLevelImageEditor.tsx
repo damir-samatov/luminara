@@ -46,7 +46,7 @@ export const SubscriptionLevelImageEditor: FC<
         return toast(updateRes.message, { type: "error" });
       setImageUrl(URL.createObjectURL(imageFile));
       setImageFile(null);
-      toast("Successfully updated image.", { type: "success" });
+      toast(updateRes.message, { type: "success" });
     } catch (error) {
       toast("Something went wrong", { type: "error" });
     } finally {

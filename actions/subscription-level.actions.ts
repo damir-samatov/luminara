@@ -167,14 +167,10 @@ type OnUpdateSubscriptionLevelImageKeyProps = {
   imageKey: string;
 };
 
-type OnUpdateSubscriptionLevelImageKeyResponse = ActionDataResponse<{
-  imageUrl: string;
-}>;
-
 export const onUpdateSubscriptionLevelImageKey = async ({
   subscriptionLevelId,
   imageKey,
-}: OnUpdateSubscriptionLevelImageKeyProps): Promise<OnUpdateSubscriptionLevelImageKeyResponse> => {
+}: OnUpdateSubscriptionLevelImageKeyProps): Promise<ActionCombinedResponse> => {
   try {
     const [self, subscriptionLevel] = await Promise.all([
       getSelf(),
@@ -198,17 +194,10 @@ export const onUpdateSubscriptionLevelImageKey = async ({
 
     if (!updatedSubscriptionLevel) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
-    const imageUrl = await getSignedFileReadUrl(
-      updatedSubscriptionLevel.imageKey
-    );
-
-    if (!imageUrl) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
     revalidatePath("/subscription-plans");
     return {
       success: true,
-      data: {
-        imageUrl,
-      },
+      message: "Cover image updated successfully.",
     };
   } catch (error) {
     console.error("onUpdateSubscriptionLevelImageKey", error);
