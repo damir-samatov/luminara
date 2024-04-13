@@ -68,11 +68,17 @@ export const onGetSubscriptionLevelById = async (
   id: string
 ): Promise<OnGetSubscriptionLevelByIdResponse> => {
   try {
-    const self = await getSelf();
+    const [self, subscriptionLevel] = await Promise.all([
+      getSelf(),
+      getSubscriptionLevelById(id),
+    ]);
+
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
 
-    const subscriptionLevel = await getSubscriptionLevelById(id);
     if (!subscriptionLevel) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    if (subscriptionLevel.userId !== self.id)
+      return ERROR_RESPONSES.UNAUTHORIZED;
 
     const imageUrl = await getSignedFileReadUrl(subscriptionLevel.imageKey);
 
@@ -170,12 +176,12 @@ export const onUpdateSubscriptionLevelImageKey = async ({
   imageKey,
 }: OnUpdateSubscriptionLevelImageKeyProps): Promise<OnUpdateSubscriptionLevelImageKeyResponse> => {
   try {
-    const self = await getSelf();
+    const [self, subscriptionLevel] = await Promise.all([
+      getSelf(),
+      getSubscriptionLevelById(subscriptionLevelId),
+    ]);
 
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
-
-    const subscriptionLevel =
-      await getSubscriptionLevelById(subscriptionLevelId);
 
     if (!subscriptionLevel) return ERROR_RESPONSES.NOT_FOUND;
 
