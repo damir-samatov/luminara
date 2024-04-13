@@ -1,6 +1,6 @@
 import { FC } from "react";
 import Image from "next/image";
-import { ProfileActions } from "@/app/(browse)/users/[slug]/_components/ProfileActions";
+import { ProfileActions } from "../_components/ProfileActions";
 import { classNames, stringToColor } from "@/utils/style.utils";
 import Link from "next/link";
 import { Subscription, SubscriptionLevel } from "@prisma/client";

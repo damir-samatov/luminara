@@ -1,11 +1,11 @@
 "use client";
 import { FC } from "react";
+import Link from "next/link";
 import { SubscriptionLevel } from "@prisma/client";
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { SubscriptionLevelImageEditor } from "../_components/SubscriptionLevelImageEditor";
 import { SubscriptionLevelContentEditor } from "../_components/SubscriptionLevelContentEditor";
-import Link from "next/link";
-import { ArrowLeftIcon } from "@heroicons/react/24/outline";
-import { SubscriptionLevelDeleterModal } from "@/app/(browse)/subscription-plans/_components/SubscriptionLevelDeleterModal";
+import { SubscriptionLevelDeleterModal } from "../_components/SubscriptionLevelDeleterModal";
 
 type SubscriptionLevelEditorProps = {
   subscriptionLevel: SubscriptionLevel & {

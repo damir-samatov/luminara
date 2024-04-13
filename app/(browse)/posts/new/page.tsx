@@ -1,4 +1,4 @@
-import { CreateImagePostForm } from "../new/_components/CreateImagePostForm";
+import { CreateImagePostForm } from "./_components/CreateImagePostForm";
 
 const PostCreatePage = async () => {
   return (

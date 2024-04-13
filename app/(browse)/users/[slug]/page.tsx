@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { onGetProfileData } from "@/actions/profile.actions";
 import { notFound } from "next/navigation";
-import { ProfileHead } from "@/app/(browse)/users/[slug]/_components/ProfileHead";
+import { ProfileHead } from "./_components/ProfileHead";
 
 type ProfilePageProps = {
   params: {
