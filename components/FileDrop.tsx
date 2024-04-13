@@ -63,13 +63,13 @@ export const FileDrop: FC<FileDropProps> = ({
 
   return (
     <div
-      className="flex h-full cursor-pointer flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed border-gray-500 p-6 font-bold text-gray-500"
+      className="flex h-full cursor-pointer flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed border-gray-400 p-2 font-bold text-gray-400"
       onClick={onClick}
       onDrop={onFilesDrop}
       onDragLeave={onDragLeave}
       onDragOver={onDragOver}
     >
-      <p>{label}</p>
+      <p className="text-sm">{label}</p>
       <p className="text-xs">Max file size: {readableFileSize(maxFileSize)}</p>
       <p className="text-xs">
         {"Accepts: " +
