@@ -1,6 +1,7 @@
 import { ChangeEvent, FC, DragEvent, useCallback, useRef } from "react";
 import { MAX_FILE_SIZE } from "@/configs/file.config";
 import { readableFileSize } from "@/utils/string.utils";
+import { toast } from "react-toastify";
 
 type FileDropProps = {
   onChange: (files: File[]) => void;
@@ -23,11 +24,13 @@ export const FileDrop: FC<FileDropProps> = ({
 
   const onFilesChanged = useCallback(
     (newFiles: File[]) => {
-      const filteredFiles = newFiles.filter((file) => file.size < maxFileSize);
+      const filteredFiles = newFiles.filter((file) => {
+        const isEligible = file.size < maxFileSize;
+        if (!isEligible)
+          toast(`${file.name} - file size too large`, { type: "error" });
+        return isEligible;
+      });
       onChange(filteredFiles);
-      if (filteredFiles < newFiles) {
-        alert("File size too large");
-      }
       fileInputRef.current!.value = "";
     },
     [maxFileSize, onChange]

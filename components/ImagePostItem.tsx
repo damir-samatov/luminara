@@ -14,8 +14,6 @@ export const ImagePostItem: FC<PostItemProps> = async ({ post }) => {
     post.images.map(async (image) => onGetSignedFileReadUrl({ key: image.key }))
   );
 
-  console.log("ImagePostItem");
-
   return (
     <div className="mx-auto w-full max-w-4xl overflow-hidden rounded bg-gray-800">
       <div className="grid grid-cols-2">

@@ -25,7 +25,9 @@ export const SubscriptionLevelEditor: FC<SubscriptionLevelEditorProps> = ({
         >
           <ArrowLeftIcon className="h-6 w-6" />
         </Link>
-        <h2 className="text-3xl">Subscription Plan Editor</h2>
+        <h2 className="text-3xl">
+          Subscription Plan Editor - {subscriptionLevel.price}$
+        </h2>
         <div className="ml-auto">
           <SubscriptionLevelDeleterModal
             subscriptionLevelId={subscriptionLevel.id}

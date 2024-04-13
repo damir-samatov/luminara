@@ -12,8 +12,7 @@ import { ProgressBar } from "@/components/ProgressBar";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
-
-const IMAGE_MAX_SIZE = 5 * 1024 * 1024;
+import { SUBSCRIPTION_PLAN_IMAGE_MAX_SIZE } from "@/configs/file.config";
 
 export const SubscriptionLevelCreator = () => {
   const router = useRouter();
@@ -46,7 +45,9 @@ export const SubscriptionLevelCreator = () => {
       const imageUpload = await uploadFile(imageFile, setProgress);
 
       if (!imageUpload)
-        return toast("Failed to upload. Please try again later.");
+        return toast("Failed to upload. Please try again later.", {
+          type: "error",
+        });
 
       const res = await onCreateSubscriptionLevel({
         title: subscriptionLevelContent.title,
@@ -56,13 +57,17 @@ export const SubscriptionLevelCreator = () => {
       });
 
       if (!res.success)
-        return toast("Failed to create. Please try again later.");
+        return toast("Failed to create. Please try again later.", {
+          type: "error",
+        });
 
-      toast("Subscription plan created successfully");
+      toast("Subscription plan created successfully", { type: "success" });
       router.push("/subscription-plans");
     } catch (error) {
       console.error(error);
-      toast("Something went wrong. Please try again later.");
+      toast("Something went wrong. Please try again later.", {
+        type: "error",
+      });
     } finally {
       setIsLoading(false);
       setProgress(1);
@@ -93,7 +98,7 @@ export const SubscriptionLevelCreator = () => {
           {isLoading && <ProgressBar progress={progress} />}
           <div className="flex-grow">
             <ImagePicker
-              maxFileSize={IMAGE_MAX_SIZE}
+              maxFileSize={SUBSCRIPTION_PLAN_IMAGE_MAX_SIZE}
               label="Cover Image"
               files={imageFile ? [imageFile] : []}
               onChange={onFilesChange}

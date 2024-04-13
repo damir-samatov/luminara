@@ -5,6 +5,7 @@ import { Button } from "@/components/Button";
 import { FC, useState } from "react";
 import { useObjectShadow } from "@/hooks/useObjectShadow";
 import { onUpdateSubscriptionLevelContent } from "@/actions/subscription-level.actions";
+import { toast } from "react-toastify";
 
 type SubscriptionLevelContentEditorProps = {
   subscriptionLevelId: string;
@@ -32,26 +33,29 @@ export const SubscriptionLevelContentEditor: FC<
     setContent((prev) => ({ ...prev, [key]: value }));
   };
 
+  const isSaveDisabled =
+    isLoading || !changeDetected || content.title.length < 1;
+
   const onSaveClick = async () => {
-    setIsLoading(true);
-
-    const res = await onUpdateSubscriptionLevelContent({
-      subscriptionLevelId: subscriptionLevelId,
-      subscriptionLevelUpdateContentDto: content,
-    });
-
-    if (res.success) {
+    try {
+      setIsLoading(true);
+      const res = await onUpdateSubscriptionLevelContent({
+        subscriptionLevelId: subscriptionLevelId,
+        subscriptionLevelUpdateContentDto: content,
+      });
+      if (!res.success) return toast(res.message, { type: "error" });
       const newContent = {
         title: res.data.title,
         description: res.data.description,
       };
       setContent(newContent);
       updatePrevState(newContent);
-    } else {
-      console.error("onSaveClick");
+      toast("Subscription level content updated.", { type: "success" });
+    } catch (error) {
+      toast("Something went wrong.", { type: "error" });
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   const onDiscardClick = () => {
@@ -79,7 +83,7 @@ export const SubscriptionLevelContentEditor: FC<
         />
       </div>
       {changeDetected && (
-        <div className="grid max-w-96 grid-cols-2 gap-4">
+        <div className="ml-auto grid w-full max-w-96 grid-cols-2 gap-2">
           <Button
             type="secondary"
             onClick={onDiscardClick}
@@ -91,7 +95,7 @@ export const SubscriptionLevelContentEditor: FC<
             onClick={onSaveClick}
             loadingText="Saving..."
             isLoading={isLoading}
-            isDisabled={isLoading || !changeDetected}
+            isDisabled={isSaveDisabled}
           >
             Save
           </Button>

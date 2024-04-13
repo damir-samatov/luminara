@@ -163,3 +163,18 @@ export const hasRequiredSubscriptionLevel = async ({
     return false;
   }
 };
+
+export const deleteSubscriptionLevelById = async (
+  subscriptionLevelId: string
+) => {
+  try {
+    return await db.subscriptionLevel.delete({
+      where: {
+        id: subscriptionLevelId,
+      },
+    });
+  } catch (error) {
+    console.error("deleteSubscriptionLevelById", error);
+    return null;
+  }
+};

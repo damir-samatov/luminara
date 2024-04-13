@@ -1,10 +1,14 @@
 "use server";
-import { ActionDataResponse } from "@/types/action.types";
+import {
+  ActionCombinedResponse,
+  ActionDataResponse,
+} from "@/types/action.types";
 import { SubscriptionLevel } from "@prisma/client";
 import { getSelf } from "@/services/auth.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import {
   createSubscriptionLevel,
+  deleteSubscriptionLevelById,
   getSubscriptionLevelById,
   getSubscriptionLevelsByUserId,
   updateSubscriptionLevelContent,
@@ -202,6 +206,40 @@ export const onUpdateSubscriptionLevelImageKey = async ({
     };
   } catch (error) {
     console.error("onUpdateSubscriptionLevelImageKey", error);
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+  }
+};
+
+export const onDeleteSubscriptionLevelById = async (
+  subscriptionLevelId: string
+): Promise<ActionCombinedResponse> => {
+  try {
+    const [self, subscriptionLevel] = await Promise.all([
+      getSelf(),
+      getSubscriptionLevelById(subscriptionLevelId),
+    ]);
+
+    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+
+    if (!subscriptionLevel) return ERROR_RESPONSES.NOT_FOUND;
+
+    if (subscriptionLevel.userId !== self.id)
+      return ERROR_RESPONSES.UNAUTHORIZED;
+
+    deleteFile(subscriptionLevel.imageKey);
+
+    const res = await deleteSubscriptionLevelById(subscriptionLevelId);
+
+    if (!res) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    revalidatePath("/subscription-plans");
+
+    return {
+      success: true,
+      message: `Subscription plan - ${res.price}$, deleted successfully.`,
+    };
+  } catch (error) {
+    console.error("onDeleteSubscriptionLevelById", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };
