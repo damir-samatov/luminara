@@ -9,6 +9,7 @@ type ButtonProps = {
   isDisabled?: boolean;
   isLoading?: boolean;
   loadingText?: string;
+  className?: string;
 };
 
 export const Button: FC<ButtonProps> = ({
@@ -19,6 +20,7 @@ export const Button: FC<ButtonProps> = ({
   type = "primary",
   loadingText = "Loading...",
   isLoading,
+  className,
 }) => {
   return (
     <button
@@ -28,7 +30,8 @@ export const Button: FC<ButtonProps> = ({
         type === "primary" ? "bg-gray-800" : "bg-transparent",
         isDisabled
           ? "cursor-not-allowed text-gray-500"
-          : "cursor-pointer text-gray-300 hover:border-gray-700 hover:bg-gray-700"
+          : "cursor-pointer text-gray-300 hover:border-gray-700 hover:bg-gray-700",
+        className
       )}
       disabled={isDisabled}
       onClick={() => !isDisabled && onClick()}

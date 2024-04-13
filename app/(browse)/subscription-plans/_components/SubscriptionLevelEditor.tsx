@@ -5,6 +5,7 @@ import { SubscriptionLevelImageEditor } from "../_components/SubscriptionLevelIm
 import { SubscriptionLevelContentEditor } from "../_components/SubscriptionLevelContentEditor";
 import Link from "next/link";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { SubscriptionLevelDeleterModal } from "@/app/(browse)/subscription-plans/_components/SubscriptionLevelDeleterModal";
 
 type SubscriptionLevelEditorProps = {
   subscriptionLevel: SubscriptionLevel & {
@@ -25,6 +26,11 @@ export const SubscriptionLevelEditor: FC<SubscriptionLevelEditorProps> = ({
           <ArrowLeftIcon className="h-6 w-6" />
         </Link>
         <h2 className="text-3xl">Subscription Plan Editor</h2>
+        <div className="ml-auto">
+          <SubscriptionLevelDeleterModal
+            subscriptionLevelId={subscriptionLevel.id}
+          />
+        </div>
       </div>
       <SubscriptionLevelImageEditor
         subscriptionLevelId={subscriptionLevel.id}
