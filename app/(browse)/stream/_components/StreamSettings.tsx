@@ -38,34 +38,41 @@ export const StreamSettings: FC<StreamSettingsProps> = ({
         value={streamSettings.isChatEnabled}
         onChange={(value) => onChange("isChatEnabled", value)}
       />
-      <TextInput
-        className="bg-gray-800 py-2"
-        value={streamSettings.title}
-        onChange={(value) => onChange("title", value)}
-        placeholder="Title..."
-      />
-      <TextEditor
-        onChange={(value) => onChange("description", value)}
-        value={streamSettings.description}
-        placeholder="Description..."
-      />
-      <div className="flex gap-2 sm:max-w-80">
-        <Button
-          isDisabled={isLoading || !changeDetected}
-          isLoading={isLoading}
-          loadingText="Saving..."
-          onClick={onSaveClick}
-        >
-          Save
-        </Button>
-        <Button
-          type="secondary"
-          isDisabled={isLoading || !changeDetected}
-          onClick={onDiscardSettings}
-        >
-          Discard
-        </Button>
+      <div>
+        <p>Title</p>
+        <TextInput
+          value={streamSettings.title}
+          onChange={(value) => onChange("title", value)}
+          placeholder="Title..."
+        />
       </div>
+      <div>
+        <p>Description</p>
+        <TextEditor
+          onChange={(value) => onChange("description", value)}
+          value={streamSettings.description}
+          placeholder="Description..."
+        />
+      </div>
+      {changeDetected && (
+        <div className="flex gap-2 sm:max-w-80">
+          <Button
+            isDisabled={isLoading || !changeDetected}
+            isLoading={isLoading}
+            loadingText="Saving..."
+            onClick={onSaveClick}
+          >
+            Save
+          </Button>
+          <Button
+            type="secondary"
+            isDisabled={isLoading || !changeDetected}
+            onClick={onDiscardSettings}
+          >
+            Discard
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

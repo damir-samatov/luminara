@@ -68,7 +68,6 @@ export const SubscriptionLevelContentEditor: FC<
       <div>
         <p>Title</p>
         <TextInput
-          className="h-auto rounded border-2 border-gray-700 bg-transparent p-2"
           value={content.title}
           onChange={(value) => onChange("title", value)}
         />

@@ -109,7 +109,6 @@ export const SubscriptionLevelCreator = () => {
           <div>
             <p>Title</p>
             <TextInput
-              className="h-auto rounded-md border-2 border-gray-700 bg-transparent p-2"
               value={subscriptionLevelContent.title}
               onChange={(value) => onChange("title", value)}
             />

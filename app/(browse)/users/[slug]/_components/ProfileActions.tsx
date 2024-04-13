@@ -8,7 +8,7 @@ import {
 import { useServerAction } from "@/hooks/useServerAction";
 import { useBrowseNavigationContext } from "@/contexts/BrowseNavigationContext";
 import { Subscription, SubscriptionLevel } from "@prisma/client";
-import { classNames } from "@/utils/style.utils";
+import { Button } from "@/components/Button";
 
 type ProfileProps = {
   subscription: Subscription | null;
@@ -53,44 +53,37 @@ export const ProfileActions: FC<ProfileProps> = ({
     <>
       <div>
         {!hasSubscribed ? (
-          <button
-            className={classNames(
-              "w-full rounded-lg border-2 border-gray-700 p-2 text-center text-gray-300 transition-colors duration-200 hover:bg-gray-700"
-            )}
-            disabled={isSubscribePending}
+          <Button
+            isDisabled={isSubscribePending}
             onClick={() => subscribe(userId)}
           >
             Subscribe
-          </button>
+          </Button>
         ) : (
-          <button
-            className={classNames(
-              "w-full rounded-lg border-2 border-gray-700 p-2 text-center text-gray-300 transition-colors duration-200 hover:bg-gray-700"
-            )}
-            disabled={isUnsubscribePending}
+          <Button
+            type="secondary"
+            isDisabled={isUnsubscribePending}
             onClick={() => unsubscribe(userId)}
           >
             Unsubscribe
-          </button>
+          </Button>
         )}
       </div>
       {hasSubscribed && (
         <div>
-          <>
-            {subscriptionLevels.map((subscriptionLevel) => (
-              <button
-                className={classNames(
-                  "w-full rounded-lg border-2 border-gray-700 p-2 text-gray-300 transition-colors duration-200 hover:bg-gray-700",
-                  subscriptionLevel.id === subscription?.subscriptionLevelId &&
-                    "bg-gray-700"
-                )}
-                key={subscriptionLevel.id}
-                onClick={() => onSubscriptionLevelClick(subscriptionLevel.id)}
-              >
-                {subscriptionLevel.title} {subscriptionLevel.price}$
-              </button>
-            ))}
-          </>
+          {subscriptionLevels.map((subscriptionLevel) => (
+            <Button
+              type={
+                subscriptionLevel.id === subscription?.subscriptionLevelId
+                  ? "primary"
+                  : "secondary"
+              }
+              key={subscriptionLevel.id}
+              onClick={() => onSubscriptionLevelClick(subscriptionLevel.id)}
+            >
+              {subscriptionLevel.title} {subscriptionLevel.price}$
+            </Button>
+          ))}
         </div>
       )}
     </>

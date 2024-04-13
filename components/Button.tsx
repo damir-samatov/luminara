@@ -4,11 +4,20 @@ import { classNames } from "@/utils/style.utils";
 type ButtonProps = {
   onClick: () => void;
   children: ReactNode;
-  type?: "primary" | "secondary" | "danger";
+  type?: "primary" | "secondary" | "danger" | "success";
   isDisabled?: boolean;
   isLoading?: boolean;
   loadingText?: string;
   className?: string;
+};
+
+const CLASSNAME_MAP = {
+  primary:
+    "border-gray-700 bg-gray-700 hover:border-gray-600 hover:bg-gray-600",
+  secondary:
+    "border-gray-700 bg-transparent hover:border-gray-600 hover:bg-gray-600",
+  danger: "border-red-700 bg-transparent hover:bg-red-700",
+  success: "border-green-700 bg-transparent hover:bg-green-700",
 };
 
 export const Button: FC<ButtonProps> = ({
@@ -25,11 +34,7 @@ export const Button: FC<ButtonProps> = ({
       className={classNames(
         "block w-full rounded border-2 px-4 py-2 text-center text-sm font-semibold text-gray-100",
         isDisabled && "cursor-not-allowed text-gray-500",
-        type === "primary" &&
-          "border-gray-700 bg-gray-700 hover:border-gray-600 hover:bg-gray-600",
-        type === "secondary" &&
-          "border-gray-700 bg-transparent hover:border-gray-600 hover:bg-gray-600",
-        type === "danger" && "border-red-700 bg-transparent hover:bg-red-700",
+        CLASSNAME_MAP[type],
         className
       )}
       disabled={isDisabled}

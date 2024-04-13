@@ -31,15 +31,14 @@ export const StreamCredentials: FC<StreamCredentialsProps> = ({
         />
         <SensitiveText value={streamKey} label="Stream Key" />
       </div>
-      <div className="sm:max-w-80">
-        <Button
-          isLoading={isLoading}
-          isDisabled={isLoading}
-          onClick={onRefreshStreamKeyPress}
-        >
-          Refresh Stream Key
-        </Button>
-      </div>
+      <Button
+        className="ml-auto sm:max-w-80"
+        isLoading={isLoading}
+        isDisabled={isLoading}
+        onClick={onRefreshStreamKeyPress}
+      >
+        Refresh Stream Key
+      </Button>
     </div>
   );
 };

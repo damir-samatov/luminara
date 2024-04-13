@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, KeyboardEventHandler, useCallback } from "react";
 import { classNames } from "@/utils/style.utils";
 
 type TextInputProps = {
@@ -18,18 +18,23 @@ export const TextInput: FC<TextInputProps> = ({
   className = "",
   onEnter,
 }) => {
+  const onKeyDown: KeyboardEventHandler<HTMLInputElement> = useCallback(
+    (e) => {
+      if (e.key === "Enter" && onEnter) {
+        e.preventDefault();
+        onEnter();
+      }
+    },
+    [onEnter]
+  );
+
   return (
     <input
-      onKeyDown={(e) => {
-        if (e.key === "Enter" && onEnter) {
-          e.preventDefault();
-          onEnter();
-        }
-      }}
+      onKeyDown={onKeyDown}
       autoComplete="off"
       type="text"
       className={classNames(
-        "block w-full rounded-md bg-gray-700 px-2 py-1 text-gray-300 placeholder-gray-400 outline-0",
+        "block h-auto w-full rounded border-2 border-gray-700 bg-transparent px-2 py-1 text-gray-300 placeholder-gray-400 outline-0",
         className
       )}
       value={value}

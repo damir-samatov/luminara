@@ -37,7 +37,6 @@ export const CreateImagePostForm = () => {
       <ImagePicker files={imageFiles} onChange={setImageFiles} />
       <TextInput
         placeholder="Enter your post title"
-        className="h-auto rounded-md border-2 border-gray-500 bg-transparent p-2"
         value={postContent.title}
         onChange={(value) => onPostContentChange("title", value)}
       />

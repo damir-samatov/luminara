@@ -16,6 +16,7 @@ import {
 import { StreamSettingsUpdateDto } from "@/types/stream.types";
 import { useObjectShadow } from "@/hooks/useObjectShadow";
 import { classNames } from "@/utils/style.utils";
+import { Button } from "@/components/Button";
 
 type StreamEditorProps = {
   stream: Stream;
@@ -233,16 +234,13 @@ export const StreamEditor: FC<StreamEditorProps> = ({
       <div className="flex h-full flex-grow flex-col gap-4 lg:col-span-4">
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {tabs.map((tab, i) => (
-            <button
-              className={classNames(
-                "w-full rounded-lg border-2 border-gray-700 p-2 text-gray-300 transition-colors duration-200 hover:bg-gray-700",
-                activeTab === i && "bg-gray-700"
-              )}
+            <Button
+              type={activeTab === i ? "primary" : "secondary"}
               onClick={() => setActiveTab(i)}
               key={tab.label}
             >
               {tab.label}
-            </button>
+            </Button>
           ))}
         </div>
         <div className="flex flex-grow flex-col">
@@ -269,29 +267,26 @@ export const StreamEditor: FC<StreamEditorProps> = ({
 
         {!stream.isLive && (
           <>
-            <p className="text-sm">Required level:</p>
-            <button
-              className={classNames(
-                "w-full rounded-lg border-2 border-gray-700 p-2 text-gray-300 transition-colors duration-200 hover:bg-gray-700",
-                !stream.subscriptionLevelId && "bg-gray-700"
-              )}
+            <p className="text-sm">Required plan:</p>
+            <Button
+              type={!stream.subscriptionLevelId ? "primary" : "secondary"}
               onClick={onRemoveSubscriptionLevelClick}
             >
               Follower
-            </button>
+            </Button>
             {subscriptionLevels.map((subscriptionLevel) => {
               return (
-                <button
-                  className={classNames(
-                    "w-full rounded-lg border-2 border-gray-700 p-2 text-gray-300 transition-colors duration-200 hover:bg-gray-700",
-                    subscriptionLevel.id === stream.subscriptionLevelId &&
-                      "bg-gray-700"
-                  )}
+                <Button
+                  type={
+                    subscriptionLevel.id === stream.subscriptionLevelId
+                      ? "primary"
+                      : "secondary"
+                  }
                   key={subscriptionLevel.id}
                   onClick={() => onSubscriptionLevelClick(subscriptionLevel.id)}
                 >
                   {subscriptionLevel.title} {subscriptionLevel.price}$
-                </button>
+                </Button>
               );
             })}
           </>
@@ -299,27 +294,17 @@ export const StreamEditor: FC<StreamEditorProps> = ({
 
         <div className="flex flex-col gap-2">
           {stream.isLive && (
-            <button
-              className={classNames(
-                "flex w-full items-center justify-center gap-2 rounded-lg border-2 border-gray-700 p-2 font-bold text-gray-300 hover:bg-gray-700"
-              )}
-              onClick={onOpenModerationPage}
-            >
-              <span>Moderation Tab</span>
-            </button>
+            <Button type="secondary" onClick={onOpenModerationPage}>
+              Moderation Tab
+            </Button>
           )}
-          <button
-            disabled={isLoading}
-            className={classNames(
-              "w-full rounded-lg border-2 p-2 font-bold transition-colors duration-200 hover:text-gray-200",
-              stream.isLive
-                ? "border-red-600 text-red-600 hover:bg-red-600"
-                : "border-green-600 text-green-600 hover:bg-green-600"
-            )}
+          <Button
+            isDisabled={isLoading}
+            type={stream.isLive ? "danger" : "success"}
             onClick={stream.isLive ? onGoOfflineClick : onGoLiveClick}
           >
             {isLoading ? "Loading..." : stream.isLive ? "Stop" : "Start"}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

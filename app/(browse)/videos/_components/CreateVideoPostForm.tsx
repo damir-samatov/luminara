@@ -7,22 +7,21 @@ import { useRouter } from "next/navigation";
 import { TextEditor } from "@/components/TextEditor";
 import { VideoPicker } from "@/components/VideoPicker";
 import { publishVideoPost } from "@/helpers/client/post.helpers";
-import { PostContent } from "@/types/post.types";
 
 export const CreateVideoPostForm = () => {
   const router = useRouter();
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
 
-  const [postContent, setPostContent] = useState<PostContent>({
+  const [postContent, setPostContent] = useState({
     title: "",
     body: "",
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  const onPostContentChange = <T extends keyof PostContent>(
+  const onPostContentChange = <T extends keyof typeof postContent>(
     key: T,
-    value: PostContent[T]
+    value: (typeof postContent)[T]
   ) => {
     setPostContent((prev) => ({ ...prev, [key]: value }));
   };
@@ -37,7 +36,7 @@ export const CreateVideoPostForm = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="mx-auto flex w-full max-w-4xl flex-col gap-6">
       <div className="grid grid-cols-2 gap-6">
         <ImagePicker
           files={thumbnailFile ? [thumbnailFile] : []}
@@ -56,13 +55,10 @@ export const CreateVideoPostForm = () => {
         />
       </div>
       <TextInput
-        placeholder="Enter your post title"
-        className="h-auto rounded-md border-2 border-gray-500 bg-transparent p-2"
         value={postContent.title}
         onChange={(value) => onPostContentChange("title", value)}
       />
       <TextEditor
-        placeholder="Start writing your post"
         value={postContent.body}
         onChange={(value) => onPostContentChange("body", value)}
       />

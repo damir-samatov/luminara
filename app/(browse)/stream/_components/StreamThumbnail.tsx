@@ -6,6 +6,8 @@ import { classNames } from "@/utils/style.utils";
 import { uploadFile } from "@/helpers/client/file.helpers";
 import { onUpdateSelfStreamThumbnailKey } from "@/actions/stream-owner.actions";
 import { onGetSignedFileReadUrl } from "@/actions/file.actions";
+import { STREAM_THUMBNAIL_IMAGE_MAX_SIZE } from "@/configs/file.config";
+import { ProgressBar } from "@/components/ProgressBar";
 
 type StreamThumbnailProps = {
   thumbnailUrl: string;
@@ -86,21 +88,18 @@ export const StreamThumbnail: FC<StreamThumbnailProps> = ({
         <div className="flex flex-col gap-4">
           <div className="flex-grow">
             <ImagePicker
+              maxFileSize={STREAM_THUMBNAIL_IMAGE_MAX_SIZE}
               label="Drop the thumbnail here"
-              files={!!file ? [file] : []}
+              files={file ? [file] : []}
               onChange={onThumbnailChange}
             />
           </div>
-          <div className="sm:max-w-80">
-            <Button
-              isDisabled={isLoading || !file}
-              isLoading={isLoading}
-              loadingText={`Progress: ${(progress * 100).toFixed(2)}%`}
-              onClick={onUpdateStreamThumbnailClick}
-            >
+          {isLoading && <ProgressBar progress={progress} />}
+          {file && !isLoading && (
+            <Button onClick={onUpdateStreamThumbnailClick}>
               Upload Thumbnail
             </Button>
-          </div>
+          )}
         </div>
       </div>
     </div>
