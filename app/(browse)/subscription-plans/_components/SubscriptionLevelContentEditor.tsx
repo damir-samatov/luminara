@@ -82,7 +82,7 @@ export const SubscriptionLevelContentEditor: FC<
         />
       </div>
       {changeDetected && (
-        <div className="ml-auto grid w-full max-w-96 grid-cols-2 gap-2">
+        <div className="ml-auto grid w-full grid-cols-2 gap-2">
           <Button
             type="secondary"
             onClick={onDiscardClick}

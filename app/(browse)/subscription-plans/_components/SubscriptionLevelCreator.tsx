@@ -9,14 +9,14 @@ import { uploadFile } from "@/helpers/client/file.helpers";
 import { onCreateSubscriptionLevel } from "@/actions/subscription-level.actions";
 import { ProgressBar } from "@/components/ProgressBar";
 import { toast } from "react-toastify";
-import Link from "next/link";
-import { ArrowLeftIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { TrashIcon } from "@heroicons/react/24/outline";
 import {
   ELIGIBLE_IMAGE_TYPES,
   SUBSCRIPTION_PLAN_IMAGE_MAX_SIZE,
 } from "@/configs/file.config";
 import { FileDrop } from "@/components/FileDrop";
 import { FilePreview } from "@/components/FilePreview";
+import { BackButton } from "@/components/BackButton";
 
 export const SubscriptionLevelCreator = () => {
   const router = useRouter();
@@ -89,13 +89,10 @@ export const SubscriptionLevelCreator = () => {
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 p-4">
       <div className="flex items-center gap-2">
-        <Link
-          href="/subscription-plans"
-          className="block rounded border-2 border-transparent px-6 py-2 text-gray-300 hover:border-gray-700"
-        >
-          <ArrowLeftIcon className="h-6 w-6" />
-        </Link>
-        <h2 className="text-3xl">New Subscription Plan</h2>
+        <BackButton href="/subscription-plans" />
+        <h2 className="text-sm md:text-xl lg:text-3xl">
+          New Subscription Plan
+        </h2>
       </div>
       <div className="flex grid-cols-3 flex-col gap-4 lg:grid">
         <div className="col-span-1 flex flex-col gap-4">
@@ -111,7 +108,7 @@ export const SubscriptionLevelCreator = () => {
                     onClick={() => setImageFile(null)}
                     type="secondary"
                   >
-                    <TrashIcon className="h-4 w-4" />
+                    <TrashIcon className="h-3 w-3" />
                     <span>Remove</span>
                   </Button>
                 )}

@@ -56,8 +56,8 @@ export const SubscriptionLevelImageEditor: FC<
   }, [imageFile, subscriptionLevelId]);
 
   return (
-    <div className="grid grid-cols-3 gap-4 rounded-lg border-2 border-gray-700 p-4">
-      <div className="col-span-1 flex flex-col gap-4">
+    <div className="flex flex-col-reverse gap-4 rounded-lg border-2 border-gray-700 p-4 md:grid md:grid-cols-3">
+      <div className="flex flex-col gap-4 md:col-span-1">
         {imageFile ? (
           <>
             <FilePreview file={imageFile} />
@@ -71,7 +71,7 @@ export const SubscriptionLevelImageEditor: FC<
                     onClick={() => setImageFile(null)}
                     type="secondary"
                   >
-                    <TrashIcon className="h-4 w-4" />
+                    <TrashIcon className="h-3 w-3" />
                     <span>Remove</span>
                   </Button>
                   <Button
@@ -95,7 +95,7 @@ export const SubscriptionLevelImageEditor: FC<
           />
         )}
       </div>
-      <div className="col-span-2 aspect-video w-full overflow-hidden rounded-md bg-gray-800">
+      <div className="aspect-video w-full overflow-hidden rounded-md bg-gray-800 md:col-span-2">
         {imageUrl && (
           <Image
             src={imageUrl}

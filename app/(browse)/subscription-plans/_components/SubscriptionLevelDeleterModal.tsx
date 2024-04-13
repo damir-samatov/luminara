@@ -4,6 +4,7 @@ import { Button } from "@/components/Button";
 import { onDeleteSubscriptionLevelById } from "@/actions/subscription-level.actions";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { TrashIcon } from "@heroicons/react/24/outline";
 
 type SubscriptionLevelDeleterModalProps = {
   subscriptionLevelId: string;
@@ -41,8 +42,13 @@ export const SubscriptionLevelDeleterModal: FC<
 
   return (
     <div>
-      <Button className="px-6" type="danger" onClick={onDeleteClick}>
-        Delete
+      <Button
+        onClick={onDeleteClick}
+        className="flex items-center justify-center gap-2"
+        type="danger"
+      >
+        <TrashIcon className="h-3 w-3" />
+        <span>Delete</span>
       </Button>
       {isModalOpen && (
         <Modal onClose={onCancelClick}>
@@ -61,11 +67,13 @@ export const SubscriptionLevelDeleterModal: FC<
               <Button
                 isLoading={isLoading}
                 isDisabled={isLoading}
+                className="flex items-center justify-center gap-2"
                 type="danger"
                 loadingText="Deleting..."
                 onClick={onDeleteConfirmClick}
               >
-                Delete
+                <TrashIcon className="h-3 w-3" />
+                <span>Delete</span>
               </Button>
             </div>
           </div>

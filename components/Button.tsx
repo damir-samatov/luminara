@@ -32,7 +32,7 @@ export const Button: FC<ButtonProps> = ({
   return (
     <button
       className={classNames(
-        "block w-full rounded border-2 px-4 py-2 text-center text-sm font-semibold text-gray-100",
+        "block w-full rounded border-2 px-2 py-2 text-center text-xs font-semibold text-gray-100 md:px-4 md:text-sm",
         isDisabled && "cursor-not-allowed text-gray-500",
         CLASSNAME_MAP[type],
         className
