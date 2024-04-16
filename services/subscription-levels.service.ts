@@ -25,7 +25,7 @@ export const getSubscriptionLevelsByUserId = async (userId: string) => {
         userId,
       },
       orderBy: {
-        price: "asc",
+        price: "desc",
       },
     });
   } catch (error) {

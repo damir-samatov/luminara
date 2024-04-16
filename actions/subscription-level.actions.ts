@@ -4,7 +4,7 @@ import {
   ActionDataResponse,
 } from "@/types/action.types";
 import { SubscriptionLevel } from "@prisma/client";
-import { getSelf } from "@/services/auth.service";
+import { authSelf } from "@/services/auth.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import {
   createSubscriptionLevel,
@@ -30,7 +30,7 @@ type OnGetSelfSubscriptionLevelsResponse = ActionDataResponse<{
 export const onGetSelfSubscriptionLevels =
   async (): Promise<OnGetSelfSubscriptionLevelsResponse> => {
     try {
-      const self = await getSelf();
+      const self = await authSelf();
       if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
       const subscriptionLevels = await getSubscriptionLevelsByUserId(self.id);
       if (!subscriptionLevels) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
@@ -69,7 +69,7 @@ export const onGetSubscriptionLevelById = async (
 ): Promise<OnGetSubscriptionLevelByIdResponse> => {
   try {
     const [self, subscriptionLevel] = await Promise.all([
-      getSelf(),
+      authSelf(),
       getSubscriptionLevelById(id),
     ]);
 
@@ -105,7 +105,7 @@ export const onCreateSubscriptionLevel = async (
   subscriptionLevelCreateDto: SubscriptionLevelCreateDto
 ): Promise<OnCreateSubscriptionLevelResponse> => {
   try {
-    const self = await getSelf();
+    const self = await authSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
     const subscriptionLevel = await createSubscriptionLevel({
       subscriptionLevelCreateDto,
@@ -140,7 +140,7 @@ export const onUpdateSubscriptionLevelContent = async ({
   subscriptionLevelUpdateContentDto,
 }: OnUpdateSubscriptionLevelProps): Promise<OnUpdateSubscriptionLevelResponse> => {
   try {
-    const self = await getSelf();
+    const self = await authSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
     const subscriptionLevel = await updateSubscriptionLevelContent({
       userId: self.id,
@@ -173,7 +173,7 @@ export const onUpdateSubscriptionLevelImageKey = async ({
 }: OnUpdateSubscriptionLevelImageKeyProps): Promise<ActionCombinedResponse> => {
   try {
     const [self, subscriptionLevel] = await Promise.all([
-      getSelf(),
+      authSelf(),
       getSubscriptionLevelById(subscriptionLevelId),
     ]);
 
@@ -210,7 +210,7 @@ export const onDeleteSubscriptionLevelById = async (
 ): Promise<ActionCombinedResponse> => {
   try {
     const [self, subscriptionLevel] = await Promise.all([
-      getSelf(),
+      authSelf(),
       getSubscriptionLevelById(subscriptionLevelId),
     ]);
 

@@ -17,7 +17,7 @@ export const FilePreview: FC<FilePreviewProps> = ({ file }) => {
       return (
         <Image
           src={src}
-          className="cursor-pointer rounded-lg"
+          className="cursor-pointer rounded-lg object-contain"
           alt={file.name}
           width={1920}
           height={1080}
@@ -29,7 +29,7 @@ export const FilePreview: FC<FilePreviewProps> = ({ file }) => {
       return (
         <video
           src={src}
-          className="cursor-pointer rounded-lg"
+          className="cursor-pointer rounded-lg object-contain"
           onClick={() => setIsModalOpen(true)}
         />
       );

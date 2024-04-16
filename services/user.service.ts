@@ -29,6 +29,22 @@ export const getUserByExternalUserId = async (externalUserId: string) => {
   }
 };
 
+export const getUserIdByExternalUserId = async (externalUserId: string) => {
+  try {
+    return await db.user.findUnique({
+      where: {
+        externalUserId,
+      },
+      select: {
+        id: true,
+      },
+    });
+  } catch (error) {
+    console.error("getUserIdByExternalUserId", error);
+    return null;
+  }
+};
+
 export const getUserByUsername = async (
   username: string,
   include?: Prisma.UserInclude

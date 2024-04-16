@@ -56,8 +56,8 @@ export const SubscriptionLevelImageEditor: FC<
   }, [imageFile, subscriptionLevelId]);
 
   return (
-    <div className="flex flex-col-reverse gap-4 rounded-lg border-2 border-gray-700 p-4 md:grid md:grid-cols-3">
-      <div className="flex flex-col gap-4 md:col-span-1">
+    <div className="flex flex-col-reverse gap-4 rounded-lg border-2 border-gray-700 p-4 md:grid md:grid-cols-2">
+      <div className="flex flex-col gap-4">
         {imageFile ? (
           <>
             <FilePreview file={imageFile} />
@@ -95,13 +95,15 @@ export const SubscriptionLevelImageEditor: FC<
           />
         )}
       </div>
-      <div className="aspect-video w-full overflow-hidden rounded-md bg-gray-800 md:col-span-2">
+      <div className="aspect-square w-full overflow-hidden rounded">
         {imageUrl && (
           <Image
             src={imageUrl}
             alt="Subscription Level Image"
-            width={720}
-            height={480}
+            width={640}
+            height={360}
+            className="object-contain"
+            loading="eager"
           />
         )}
       </div>

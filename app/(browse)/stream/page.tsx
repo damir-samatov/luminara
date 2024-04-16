@@ -14,24 +14,28 @@ const StreamPage = async () => {
     const { subscriptionLevels } = subscriptionLevelsRes.data;
 
     return (
-      <StreamEditor
-        subscriptionLevels={subscriptionLevels}
-        stream={stream}
-        user={user}
-        playbackUrl={playbackUrl}
-        appliedThumbnailUrl={appliedThumbnailUrl}
-      />
+      <>
+        <title>Stream Dashboard</title>
+        <StreamEditor
+          subscriptionLevels={subscriptionLevels}
+          stream={stream}
+          user={user}
+          playbackUrl={playbackUrl}
+          appliedThumbnailUrl={appliedThumbnailUrl}
+        />
+      </>
     );
   }
 
   if (!streamRes.success && streamRes.type === ErrorResponseType.NOT_FOUND)
-    return <StreamCreate />;
+    return (
+      <>
+        <title>Stream Create</title>
+        <StreamCreate />;
+      </>
+    );
 
   return notFound();
 };
 
 export default StreamPage;
-
-export const metadata = {
-  title: "Stream Dashboard",
-};

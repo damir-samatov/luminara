@@ -1,10 +1,11 @@
 import { FC, useEffect } from "react";
-import { classNames } from "@/utils/style.utils";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import { Underline } from "@tiptap/extension-underline";
 import { Link } from "@tiptap/extension-link";
 import { TextStyle } from "@tiptap/extension-text-style";
+import { Loader } from "@/components/Loader";
+import { Button } from "@/components/Button";
 
 type TextEditorProps = {
   onChange: (value: string) => void;
@@ -12,11 +13,6 @@ type TextEditorProps = {
   placeholder?: string;
   forceUpdate?: unknown;
 };
-
-const BUTTON_CLASSNAMES =
-  "w-16 rounded-md border-2 border-gray-700 px-2 text-gray-300";
-
-const BUTTON_ACTIVE_CLASSNAMES = "bg-gray-700";
 
 export const TextEditor: FC<TextEditorProps> = ({
   value,
@@ -35,58 +31,50 @@ export const TextEditor: FC<TextEditorProps> = ({
 
   useEffect(() => {
     if (editor) editor.commands.setContent(value);
-    console.log("forceUpdate", forceUpdate);
   }, [forceUpdate]);
 
-  if (!editor) return null;
+  if (!editor)
+    return (
+      <div className="flex h-[190px] flex-col rounded border-2 border-gray-700 bg-gray-950">
+        <Loader />
+      </div>
+    );
 
   return (
     <div className="rounded border-2 border-gray-700 bg-gray-950">
       <div className="flex gap-2 border-0 border-b-2 border-gray-700 p-2 text-xl">
-        <button
+        <Button
+          type={editor.isActive("underline") ? "primary" : "secondary"}
           onClick={() => editor.chain().focus().toggleUnderline().run()}
-          disabled={!editor.can().chain().focus().toggleUnderline().run()}
-          className={classNames(
-            " underline",
-            BUTTON_CLASSNAMES,
-            editor.isActive("underline") && BUTTON_ACTIVE_CLASSNAMES
-          )}
+          isDisabled={!editor.can().chain().focus().toggleUnderline().run()}
+          className="max-w-16 underline"
         >
           U
-        </button>
-        <button
+        </Button>
+        <Button
+          type={editor.isActive("bold") ? "primary" : "secondary"}
           onClick={() => editor.chain().focus().toggleBold().run()}
-          disabled={!editor.can().chain().focus().toggleBold().run()}
-          className={classNames(
-            "font-bold",
-            BUTTON_CLASSNAMES,
-            editor.isActive("bold") && BUTTON_ACTIVE_CLASSNAMES
-          )}
+          isDisabled={!editor.can().chain().focus().toggleBold().run()}
+          className="max-w-16 font-bold"
         >
           B
-        </button>
-        <button
+        </Button>
+        <Button
+          type={editor.isActive("italic") ? "primary" : "secondary"}
           onClick={() => editor.chain().focus().toggleItalic().run()}
-          disabled={!editor.can().chain().focus().toggleItalic().run()}
-          className={classNames(
-            "italic",
-            BUTTON_CLASSNAMES,
-            editor.isActive("italic") && BUTTON_ACTIVE_CLASSNAMES
-          )}
+          isDisabled={!editor.can().chain().focus().toggleItalic().run()}
+          className="max-w-16 italic"
         >
           I
-        </button>
-        <button
+        </Button>
+        <Button
+          type={editor.isActive("strike") ? "primary" : "secondary"}
           onClick={() => editor.chain().focus().toggleStrike().run()}
-          disabled={!editor.can().chain().focus().toggleStrike().run()}
-          className={classNames(
-            "line-through",
-            BUTTON_CLASSNAMES,
-            editor.isActive("strike") && BUTTON_ACTIVE_CLASSNAMES
-          )}
+          isDisabled={!editor.can().chain().focus().toggleStrike().run()}
+          className="max-w-16 line-through"
         >
           S
-        </button>
+        </Button>
       </div>
       <div>
         <EditorContent

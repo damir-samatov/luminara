@@ -49,11 +49,11 @@ export const SubscriptionLevelEditor: FC<SubscriptionLevelEditorProps> = ({
   );
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 p-2 lg:p-6">
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 p-2 lg:p-6">
       <div className="flex items-center gap-2">
         <BackButton href="/subscription-plans" />
         <h2 className="text-sm md:text-xl lg:text-3xl">
-          Subscription Plan Editor - {subscriptionLevel.price}$
+          Subscription Plan - {subscriptionLevel.price}$
         </h2>
         <div className="ml-auto">
           <SubscriptionLevelDeleterModal
