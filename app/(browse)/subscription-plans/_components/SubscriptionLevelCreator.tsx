@@ -5,7 +5,7 @@ import { TextEditor } from "@/components/TextEditor";
 import { Button } from "@/components/Button";
 import { SliderInput } from "@/components/SliderInput";
 import { useRouter } from "next/navigation";
-import { uploadFile } from "@/helpers/client/file.helpers";
+import { uploadFileToS3 } from "@/helpers/client/file.helpers";
 import { onCreateSubscriptionLevel } from "@/actions/subscription-level.actions";
 import { ProgressBar } from "@/components/ProgressBar";
 import { toast } from "react-toastify";
@@ -34,37 +34,39 @@ export const SubscriptionLevelCreator = () => {
       key: T,
       value: (typeof subscriptionLevelContent)[T]
     ) => {
+      if (isLoading) return;
       setSubscriptionLevelContent((prev) => ({ ...prev, [key]: value }));
     },
-    []
+    [isLoading]
   );
 
   const onSubmit = useCallback(async () => {
     try {
       if (!subscriptionLevelContent.title || !imageFile || isLoading) return;
-
       setIsLoading(true);
       setProgress(0);
-
-      const imageUpload = await uploadFile(imageFile, setProgress);
-
-      if (!imageUpload)
-        return toast("Failed to upload. Please try again later.", {
-          type: "error",
-        });
-
       const res = await onCreateSubscriptionLevel({
         title: subscriptionLevelContent.title,
         description: subscriptionLevelContent.description,
         price: subscriptionLevelContent.price,
-        imageKey: imageUpload.key,
+        image: {
+          size: imageFile.size,
+          type: imageFile.type,
+        },
       });
-
       if (!res.success)
         return toast("Failed to create. Please try again later.", {
           type: "error",
         });
-
+      const uploadRes = await uploadFileToS3({
+        file: imageFile,
+        url: res.data.imageUploadUrl,
+        onProgress: setProgress,
+      });
+      if (!uploadRes)
+        return toast("Failed to create. Please try again later.", {
+          type: "error",
+        });
       toast("Subscription plan created successfully", { type: "success" });
       router.push("/subscription-plans");
     } catch (error) {

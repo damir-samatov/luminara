@@ -1,9 +1,6 @@
 "use server";
 import { db } from "@/lib/db";
-import {
-  SubscriptionLevelCreateDto,
-  SubscriptionLevelUpdateContentDto,
-} from "@/types/subscription-levels.types";
+import { SubscriptionLevelUpdateContentDto } from "@/types/subscription-levels.types";
 
 export const getSubscriptionLevelById = async (id: string) => {
   try {
@@ -36,15 +33,20 @@ export const getSubscriptionLevelsByUserId = async (userId: string) => {
 
 type CreateSubscriptionLevelProps = {
   userId: string;
-  subscriptionLevelCreateDto: SubscriptionLevelCreateDto;
+  title: string;
+  description: string;
+  price: number;
+  imageKey: string;
 };
 
 export const createSubscriptionLevel = async ({
   userId,
-  subscriptionLevelCreateDto,
+  price,
+  title,
+  description,
+  imageKey,
 }: CreateSubscriptionLevelProps) => {
   try {
-    const { title, description, price, imageKey } = subscriptionLevelCreateDto;
     return await db.subscriptionLevel.create({
       data: {
         userId,
@@ -88,33 +90,6 @@ export const updateSubscriptionLevelContent = async ({
     });
   } catch (error) {
     console.error("updateSubscriptionLevel", error);
-    return null;
-  }
-};
-
-type UpdateSubscriptionLevelImageKeyProps = {
-  userId: string;
-  subscriptionLevelId: string;
-  imageKey: string;
-};
-
-export const updateSubscriptionLevelImageKey = async ({
-  subscriptionLevelId,
-  imageKey,
-  userId,
-}: UpdateSubscriptionLevelImageKeyProps) => {
-  try {
-    return await db.subscriptionLevel.update({
-      where: {
-        id: subscriptionLevelId,
-        userId,
-      },
-      data: {
-        imageKey,
-      },
-    });
-  } catch (error) {
-    console.error("updateSubscriptionLevelImageKey", error);
     return null;
   }
 };

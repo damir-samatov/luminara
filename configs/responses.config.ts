@@ -9,6 +9,11 @@ export const ERROR_RESPONSES = {
     message: "Forbidden resource",
     type: ErrorResponseType.FORBIDDEN,
   },
+  [ErrorResponseType.BAD_REQUEST]: {
+    success: false,
+    message: "Bad request",
+    type: ErrorResponseType.BAD_REQUEST,
+  },
   [ErrorResponseType.UNAUTHORIZED]: {
     success: false,
     message: "Client is unauthorized",

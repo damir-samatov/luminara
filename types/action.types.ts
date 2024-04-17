@@ -4,6 +4,7 @@ export enum ErrorResponseType {
   STREAM_EXISTS = "STREAM_EXISTS",
   NOT_FOUND = "NOT_FOUND",
   FORBIDDEN = "FORBIDDEN",
+  BAD_REQUEST = "BAD_REQUEST",
 }
 
 export type ActionErrorResponse = {

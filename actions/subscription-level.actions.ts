@@ -12,14 +12,22 @@ import {
   getSubscriptionLevelById,
   getSubscriptionLevelsByUserId,
   updateSubscriptionLevelContent,
-  updateSubscriptionLevelImageKey,
 } from "@/services/subscription-levels.service";
 import {
   SubscriptionLevelCreateDto,
   SubscriptionLevelUpdateContentDto,
 } from "@/types/subscription-levels.types";
-import { deleteFile, getSignedFileReadUrl } from "@/services/s3.service";
+import {
+  deleteFile,
+  getSignedFileReadUrl,
+  getSignedFileUploadUrl,
+} from "@/services/s3.service";
 import { revalidatePath } from "next/cache";
+import { generateFileKey } from "@/helpers/server/s3.helpers";
+import {
+  ELIGIBLE_IMAGE_TYPES,
+  SUBSCRIPTION_PLAN_IMAGE_MAX_SIZE,
+} from "@/configs/file.config";
 
 type OnGetSelfSubscriptionLevelsResponse = ActionDataResponse<{
   subscriptionLevels: (SubscriptionLevel & {
@@ -73,11 +81,8 @@ export const onGetSubscriptionLevelById = async (
       getSubscriptionLevelById(id),
     ]);
 
-    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
-
-    if (!subscriptionLevel) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-
-    if (subscriptionLevel.userId !== self.id)
+    if (!subscriptionLevel) return ERROR_RESPONSES.NOT_FOUND;
+    if (!self || subscriptionLevel.userId !== self.id)
       return ERROR_RESPONSES.UNAUTHORIZED;
 
     const imageUrl = await getSignedFileReadUrl(subscriptionLevel.imageKey);
@@ -99,6 +104,7 @@ export const onGetSubscriptionLevelById = async (
 
 type OnCreateSubscriptionLevelResponse = ActionDataResponse<{
   subscriptionLevel: SubscriptionLevel;
+  imageUploadUrl: string;
 }>;
 
 export const onCreateSubscriptionLevel = async (
@@ -106,17 +112,37 @@ export const onCreateSubscriptionLevel = async (
 ): Promise<OnCreateSubscriptionLevelResponse> => {
   try {
     const self = await authSelf();
+
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+
+    const imageKey = generateFileKey(self.id);
+
+    const { title, description, price } = subscriptionLevelCreateDto;
+
     const subscriptionLevel = await createSubscriptionLevel({
-      subscriptionLevelCreateDto,
       userId: self.id,
+      title,
+      description,
+      price,
+      imageKey,
     });
+
     if (!subscriptionLevel) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    const imageUploadUrl = await getSignedFileUploadUrl({
+      key: subscriptionLevel.imageKey,
+      size: subscriptionLevelCreateDto.image.size,
+      type: subscriptionLevelCreateDto.image.type,
+    });
+
+    if (!imageUploadUrl) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
     revalidatePath("/subscription-plans");
     return {
       success: true,
       data: {
         subscriptionLevel,
+        imageUploadUrl: imageUploadUrl.signedUrl,
       },
     };
   } catch (error) {
@@ -162,49 +188,6 @@ export const onUpdateSubscriptionLevelContent = async ({
   }
 };
 
-type OnUpdateSubscriptionLevelImageKeyProps = {
-  subscriptionLevelId: string;
-  imageKey: string;
-};
-
-export const onUpdateSubscriptionLevelImageKey = async ({
-  subscriptionLevelId,
-  imageKey,
-}: OnUpdateSubscriptionLevelImageKeyProps): Promise<ActionCombinedResponse> => {
-  try {
-    const [self, subscriptionLevel] = await Promise.all([
-      authSelf(),
-      getSubscriptionLevelById(subscriptionLevelId),
-    ]);
-
-    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
-
-    if (!subscriptionLevel) return ERROR_RESPONSES.NOT_FOUND;
-
-    if (subscriptionLevel.userId !== self.id)
-      return ERROR_RESPONSES.UNAUTHORIZED;
-
-    deleteFile(subscriptionLevel.imageKey);
-
-    const updatedSubscriptionLevel = await updateSubscriptionLevelImageKey({
-      userId: self.id,
-      subscriptionLevelId,
-      imageKey,
-    });
-
-    if (!updatedSubscriptionLevel) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-
-    revalidatePath("/subscription-plans");
-    return {
-      success: true,
-      message: "Cover image updated successfully.",
-    };
-  } catch (error) {
-    console.error("onUpdateSubscriptionLevelImageKey", error);
-    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-  }
-};
-
 export const onDeleteSubscriptionLevelById = async (
   subscriptionLevelId: string
 ): Promise<ActionCombinedResponse> => {
@@ -214,11 +197,8 @@ export const onDeleteSubscriptionLevelById = async (
       getSubscriptionLevelById(subscriptionLevelId),
     ]);
 
-    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
-
     if (!subscriptionLevel) return ERROR_RESPONSES.NOT_FOUND;
-
-    if (subscriptionLevel.userId !== self.id)
+    if (!self || subscriptionLevel.userId !== self.id)
       return ERROR_RESPONSES.UNAUTHORIZED;
 
     deleteFile(subscriptionLevel.imageKey);
@@ -235,6 +215,56 @@ export const onDeleteSubscriptionLevelById = async (
     };
   } catch (error) {
     console.error("onDeleteSubscriptionLevelById", error);
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+  }
+};
+
+type OnGetSubscriptionLevelImageUploadUrlProps = {
+  subscriptionLevelId: string;
+  image: {
+    size: number;
+    type: string;
+  };
+};
+type OnGetSubscriptionLevelImageUploadUrlResponse = ActionDataResponse<{
+  imageUploadUrl: string;
+}>;
+
+export const onGetSubscriptionLevelImageUploadUrl = async ({
+  subscriptionLevelId,
+  image,
+}: OnGetSubscriptionLevelImageUploadUrlProps): Promise<OnGetSubscriptionLevelImageUploadUrlResponse> => {
+  try {
+    if (image.size > SUBSCRIPTION_PLAN_IMAGE_MAX_SIZE)
+      return ERROR_RESPONSES.BAD_REQUEST;
+    if (!ELIGIBLE_IMAGE_TYPES.includes(image.type))
+      return ERROR_RESPONSES.BAD_REQUEST;
+
+    const [self, subscriptionLevel] = await Promise.all([
+      authSelf(),
+      getSubscriptionLevelById(subscriptionLevelId),
+    ]);
+
+    if (!subscriptionLevel) return ERROR_RESPONSES.NOT_FOUND;
+    if (!self || subscriptionLevel.userId !== self.id)
+      return ERROR_RESPONSES.UNAUTHORIZED;
+
+    const imageUploadUrl = await getSignedFileUploadUrl({
+      key: subscriptionLevel.imageKey,
+      size: image.size,
+      type: image.type,
+    });
+
+    if (!imageUploadUrl) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    return {
+      success: true,
+      data: {
+        imageUploadUrl: imageUploadUrl.signedUrl,
+      },
+    };
+  } catch (error) {
+    console.error("onGetSubscriptionImageUploadUrlById", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };

@@ -1,7 +1,7 @@
 "use client";
 import { FC, useCallback, useState } from "react";
-import { uploadFile } from "@/helpers/client/file.helpers";
-import { onUpdateSubscriptionLevelImageKey } from "@/actions/subscription-level.actions";
+import { uploadFileToS3 } from "@/helpers/client/file.helpers";
+import { onGetSubscriptionLevelImageUploadUrl } from "@/actions/subscription-level.actions";
 import { Button } from "@/components/Button";
 import {
   ELIGIBLE_IMAGE_TYPES,
@@ -34,18 +34,30 @@ export const SubscriptionLevelImageEditor: FC<
   const onImageUploadClick = useCallback(async () => {
     try {
       if (!imageFile) return;
+
       setIsLoading(true);
-      const uploadRes = await uploadFile(imageFile, setProgress);
-      if (!uploadRes) return toast("Failed to upload image", { type: "error" });
-      const updateRes = await onUpdateSubscriptionLevelImageKey({
+
+      const res = await onGetSubscriptionLevelImageUploadUrl({
         subscriptionLevelId,
-        imageKey: uploadRes.key,
+        image: {
+          type: imageFile.type,
+          size: imageFile.size,
+        },
       });
-      if (!updateRes.success)
-        return toast(updateRes.message, { type: "error" });
+
+      if (!res.success) return toast(res.message, { type: "error" });
+
+      const uploadRes = await uploadFileToS3({
+        file: imageFile,
+        url: res.data.imageUploadUrl,
+        onProgress: setProgress,
+      });
+
+      if (!uploadRes) return toast("Failed to upload image", { type: "error" });
+
       setImageUrl(URL.createObjectURL(imageFile));
       setImageFile(null);
-      toast(updateRes.message, { type: "success" });
+      toast("Image uploaded successfully", { type: "success" });
     } catch (error) {
       toast("Something went wrong", { type: "error" });
     } finally {
