@@ -1,6 +1,5 @@
 import { FC, useMemo } from "react";
 import { readableFileSize } from "@/utils/string.utils";
-import Image from "next/image";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
 type ImagePickerPreviewProps = {
@@ -18,12 +17,13 @@ export const ImagePickerPreview: FC<ImagePickerPreviewProps> = ({
   return (
     <div key={file.name} className="flex items-start gap-2">
       <div className="aspect-video w-32 flex-shrink-0">
-        <Image
+        <img
           src={src}
           className="rounded-md"
           alt={file.name}
           width={640}
           height={360}
+          loading="eager"
         />
       </div>
       <div className="flex flex-col gap-2 overflow-hidden p-4 text-gray-400">

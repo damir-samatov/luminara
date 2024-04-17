@@ -20,12 +20,10 @@ type GetSignedFileUploadUrlParams = {
   key: string;
   size: number;
   type: string;
-  userId: string;
 };
 
 export const getSignedFileUploadUrl = async ({
   key,
-  userId,
   size,
   type,
 }: GetSignedFileUploadUrlParams) => {
@@ -37,9 +35,6 @@ export const getSignedFileUploadUrl = async ({
       Key: key,
       ContentType: type,
       ContentLength: size,
-      Metadata: {
-        userId,
-      },
     });
 
     const signedUrl = await getSignedUrl(s3, putObjectCommand, {

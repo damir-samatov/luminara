@@ -1,7 +1,6 @@
 "use client";
 import { FC } from "react";
 import { SignalIcon } from "@heroicons/react/24/outline";
-import Image from "next/image";
 
 type VideoPlaceholderProps = {
   text: string;
@@ -15,7 +14,7 @@ export const VideoPlaceholder: FC<VideoPlaceholderProps> = ({
   return (
     <div className="relative aspect-video w-full rounded">
       <div className="absolute bottom-0 left-0 right-0 top-0">
-        <Image
+        <img
           className="absolute rounded"
           src={placeholderUrl}
           alt={text}

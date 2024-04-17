@@ -1,6 +1,5 @@
 import { SubscriptionLevel } from "@prisma/client";
 import { FC } from "react";
-import Image from "next/image";
 import Link from "next/link";
 
 type SubscriptionLevelCardProps = {
@@ -16,7 +15,7 @@ export const SubscriptionLevelCard: FC<SubscriptionLevelCardProps> = ({
     <div className="grid grid-cols-4 gap-4 rounded-lg bg-gray-900 p-4">
       {subscriptionLevel.imageUrl && (
         <div className="col-span-1 aspect-square overflow-hidden rounded">
-          <Image
+          <img
             src={subscriptionLevel.imageUrl}
             alt={subscriptionLevel.title}
             width={640}

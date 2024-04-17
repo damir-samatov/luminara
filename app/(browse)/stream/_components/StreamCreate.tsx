@@ -2,7 +2,6 @@
 import { Button } from "@/components/Button";
 import { onCreateSelfStream } from "@/actions/stream-owner.actions";
 import { useState } from "react";
-import Image from "next/image";
 import streamerImg from "@/public/images/streamer.webp";
 import { redirect } from "next/navigation";
 
@@ -28,9 +27,9 @@ export const StreamCreate = () => {
   return (
     <div className="relative flex-grow">
       <div className="absolute inset-0 h-full w-full">
-        <Image
+        <img
           className="rounded-md"
-          src={streamerImg}
+          src={streamerImg.src}
           alt="Streamer"
           loading="eager"
           width={1920}

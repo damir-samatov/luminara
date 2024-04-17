@@ -1,5 +1,4 @@
 import { FC } from "react";
-import Image from "next/image";
 import { ProfileActions } from "../_components/ProfileActions";
 import { classNames, stringToColor } from "@/utils/style.utils";
 import Link from "next/link";
@@ -27,7 +26,7 @@ export const ProfileHead: FC<ProfileHeadProps> = ({
   return (
     <div className="p-4">
       <div className="aspect-[6/1] w-full">
-        <Image
+        <img
           width={1800}
           height={300}
           src={imageUrl}
@@ -37,7 +36,7 @@ export const ProfileHead: FC<ProfileHeadProps> = ({
       </div>
       <div className="mt-4 flex items-end gap-4">
         <div className="h-32 w-32 overflow-hidden">
-          <Image
+          <img
             width={200}
             height={200}
             src={imageUrl}

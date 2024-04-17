@@ -2,7 +2,6 @@
 import { FC } from "react";
 import { AwsStreamPlayer } from "@/components/AwsStreamPlayer";
 import { AwsChatRoom } from "@/components/AwsChatRoom";
-import Image from "next/image";
 import Link from "next/link";
 import { classNames, stringToColor } from "@/utils/style.utils";
 import { StreamUserRoles } from "@/types/stream.types";
@@ -48,11 +47,12 @@ export const AwsStream: FC<AwsStreamProps> = ({
             href={`/users/${streamerUsername}`}
           >
             <div className="h-10 w-10 overflow-hidden rounded-full">
-              <Image
+              <img
                 src={streamerImageUrl}
                 alt={streamerUsername}
                 height={120}
                 width={120}
+                loading="eager"
               />
             </div>
             <p className="text-lg">

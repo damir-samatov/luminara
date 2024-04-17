@@ -70,7 +70,6 @@ export const onGetSignedFileUploadUrl = async ({
 
     const res = await getSignedFileUploadUrl({
       key,
-      userId: self.id,
       size,
       type,
     });
@@ -120,7 +119,6 @@ export const onGetSignedFileUpdateUrl = async ({
 
     const res = await getSignedFileUploadUrl({
       key,
-      userId: self.id,
       size,
       type,
     });

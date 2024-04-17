@@ -1,6 +1,5 @@
 import { ImagePicker } from "@/components/ImagePicker";
 import { FC, useCallback, useState } from "react";
-import Image from "next/image";
 import { Button } from "@/components/Button";
 import { classNames } from "@/utils/style.utils";
 import { uploadFile } from "@/helpers/client/file.helpers";
@@ -77,11 +76,12 @@ export const StreamThumbnail: FC<StreamThumbnailProps> = ({
       >
         {thumbnailUrl && (
           <div className="aspect-video w-full overflow-hidden rounded-md bg-gray-800">
-            <Image
+            <img
               src={thumbnailUrl}
               alt="Stream Thumbnail"
               width={1920}
               height={1080}
+              loading="eager"
             />
           </div>
         )}

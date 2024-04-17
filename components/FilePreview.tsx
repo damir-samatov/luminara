@@ -1,6 +1,5 @@
 import { FC, useMemo, useState } from "react";
 import { readableFileSize } from "@/utils/string.utils";
-import Image from "next/image";
 import { Modal } from "@/components/Modal";
 
 type FilePreviewProps = {
@@ -15,7 +14,7 @@ export const FilePreview: FC<FilePreviewProps> = ({ file }) => {
   const media = useMemo(() => {
     if (file.type.includes("image")) {
       return (
-        <Image
+        <img
           src={src}
           className="cursor-pointer rounded-lg object-contain"
           alt={file.name}

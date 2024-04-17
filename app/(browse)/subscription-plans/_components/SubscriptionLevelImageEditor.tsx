@@ -2,7 +2,6 @@
 import { FC, useCallback, useState } from "react";
 import { uploadFile } from "@/helpers/client/file.helpers";
 import { onUpdateSubscriptionLevelImageKey } from "@/actions/subscription-level.actions";
-import Image from "next/image";
 import { Button } from "@/components/Button";
 import {
   ELIGIBLE_IMAGE_TYPES,
@@ -97,13 +96,13 @@ export const SubscriptionLevelImageEditor: FC<
       </div>
       <div className="aspect-square w-full overflow-hidden rounded">
         {imageUrl && (
-          <Image
+          <img
             src={imageUrl}
-            alt="Subscription Level Image"
             width={640}
             height={360}
             className="object-contain"
             loading="eager"
+            alt="Subscription Level Image"
           />
         )}
       </div>
