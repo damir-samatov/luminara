@@ -4,14 +4,14 @@ import { AwsStream } from "@/components/AwsStream";
 import { StreamCredentials } from "../_components/StreamCredentials";
 import { StreamSettings } from "../_components/StreamSettings";
 import { StreamThumbnail } from "../_components/StreamThumbnail";
-import { User, Stream, SubscriptionLevel } from "@prisma/client";
+import { User, Stream, SubscriptionPlan } from "@prisma/client";
 import {
   onGoLive,
   onGoOffline,
   onRefreshSelfStreamKey,
-  onRemoveSelfStreamSubscriptionLevel,
+  onRemoveSelfStreamSubscriptionPlan,
   onUpdateSelfStreamSettings,
-  onUpdateSelfStreamSubscriptionLevel,
+  onUpdateSelfStreamSubscriptionPlan,
 } from "@/actions/stream-owner.actions";
 import { StreamSettingsUpdateDto } from "@/types/stream.types";
 import { useObjectShadow } from "@/hooks/useObjectShadow";
@@ -21,13 +21,13 @@ import { Button } from "@/components/Button";
 type StreamEditorProps = {
   stream: Stream;
   user: User;
-  subscriptionLevels: SubscriptionLevel[];
+  subscriptionPlans: SubscriptionPlan[];
   playbackUrl: string;
   appliedThumbnailUrl: string;
 };
 
 export const StreamEditor: FC<StreamEditorProps> = ({
-  subscriptionLevels,
+  subscriptionPlans,
   stream: initialStream,
   appliedThumbnailUrl: initialAppliedThumbnailUrl,
   user,
@@ -141,10 +141,10 @@ export const StreamEditor: FC<StreamEditorProps> = ({
     setStreamSettings(settingsPrevState);
   }, [settingsPrevState]);
 
-  const onSubscriptionLevelClick = useCallback(async (id: string) => {
+  const onSubscriptionPlanClick = useCallback(async (id: string) => {
     setIsLoading(true);
     try {
-      const res = await onUpdateSelfStreamSubscriptionLevel(id);
+      const res = await onUpdateSelfStreamSubscriptionPlan(id);
       if (res.success) setStream(res.data.stream);
     } catch (error) {
       console.log(error);
@@ -152,10 +152,10 @@ export const StreamEditor: FC<StreamEditorProps> = ({
     setIsLoading(false);
   }, []);
 
-  const onRemoveSubscriptionLevelClick = useCallback(async () => {
+  const onRemoveSubscriptionPlanClick = useCallback(async () => {
     setIsLoading(true);
     try {
-      const res = await onRemoveSelfStreamSubscriptionLevel();
+      const res = await onRemoveSelfStreamSubscriptionPlan();
       if (res.success) setStream(res.data.stream);
     } catch (error) {
       console.log(error);
@@ -269,23 +269,23 @@ export const StreamEditor: FC<StreamEditorProps> = ({
           <>
             <p className="text-sm">Required plan:</p>
             <Button
-              type={!stream.subscriptionLevelId ? "primary" : "secondary"}
-              onClick={onRemoveSubscriptionLevelClick}
+              type={!stream.subscriptionPlanId ? "primary" : "secondary"}
+              onClick={onRemoveSubscriptionPlanClick}
             >
               Follower
             </Button>
-            {subscriptionLevels.map((subscriptionLevel) => {
+            {subscriptionPlans.map((subscriptionPlan) => {
               return (
                 <Button
                   type={
-                    subscriptionLevel.id === stream.subscriptionLevelId
+                    subscriptionPlan.id === stream.subscriptionPlanId
                       ? "primary"
                       : "secondary"
                   }
-                  key={subscriptionLevel.id}
-                  onClick={() => onSubscriptionLevelClick(subscriptionLevel.id)}
+                  key={subscriptionPlan.id}
+                  onClick={() => onSubscriptionPlanClick(subscriptionPlan.id)}
                 >
-                  {subscriptionLevel.title} {subscriptionLevel.price}$
+                  {subscriptionPlan.title} {subscriptionPlan.price}$
                 </Button>
               );
             })}

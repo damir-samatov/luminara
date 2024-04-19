@@ -1,20 +1,20 @@
 "use client";
 import { FC, useMemo, useState } from "react";
-import { SubscriptionLevel } from "@prisma/client";
-import { SubscriptionLevelImageEditor } from "../_components/SubscriptionLevelImageEditor";
-import { SubscriptionLevelContentEditor } from "../_components/SubscriptionLevelContentEditor";
-import { SubscriptionLevelDeleterModal } from "../_components/SubscriptionLevelDeleterModal";
+import { SubscriptionPlan } from "@prisma/client";
+import { SubscriptionPlanImageEditor } from "../_components/SubscriptionPlanImageEditor";
+import { SubscriptionPlanContentEditor } from "../_components/SubscriptionPlanContentEditor";
+import { SubscriptionPlanDeleterModal } from "../_components/SubscriptionPlanDeleterModal";
 import { Button } from "@/components/Button";
 import { BackButton } from "@/components/BackButton";
 
-type SubscriptionLevelEditorProps = {
-  subscriptionLevel: SubscriptionLevel & {
+type SubscriptionPlanEditorProps = {
+  subscriptionPlan: SubscriptionPlan & {
     imageUrl: string | null;
   };
 };
 
-export const SubscriptionLevelEditor: FC<SubscriptionLevelEditorProps> = ({
-  subscriptionLevel,
+export const SubscriptionPlanEditor: FC<SubscriptionPlanEditorProps> = ({
+  subscriptionPlan,
 }) => {
   const [activeTab, setActiveTab] = useState(0);
 
@@ -22,29 +22,29 @@ export const SubscriptionLevelEditor: FC<SubscriptionLevelEditorProps> = ({
     () => [
       {
         component: (
-          <SubscriptionLevelContentEditor
-            subscriptionLevelId={subscriptionLevel.id}
-            initialDescription={subscriptionLevel.description}
-            initialTitle={subscriptionLevel.title}
+          <SubscriptionPlanContentEditor
+            subscriptionPlanId={subscriptionPlan.id}
+            initialDescription={subscriptionPlan.description}
+            initialTitle={subscriptionPlan.title}
           />
         ),
         label: "Content",
       },
       {
         component: (
-          <SubscriptionLevelImageEditor
-            subscriptionLevelId={subscriptionLevel.id}
-            initialImageUrl={subscriptionLevel.imageUrl}
+          <SubscriptionPlanImageEditor
+            subscriptionPlanId={subscriptionPlan.id}
+            initialImageUrl={subscriptionPlan.imageUrl}
           />
         ),
         label: "Cover Image",
       },
     ],
     [
-      subscriptionLevel.id,
-      subscriptionLevel.imageUrl,
-      subscriptionLevel.description,
-      subscriptionLevel.title,
+      subscriptionPlan.id,
+      subscriptionPlan.imageUrl,
+      subscriptionPlan.description,
+      subscriptionPlan.title,
     ]
   );
 
@@ -53,11 +53,11 @@ export const SubscriptionLevelEditor: FC<SubscriptionLevelEditorProps> = ({
       <div className="flex items-center gap-2">
         <BackButton href="/subscription-plans" />
         <h2 className="text-sm md:text-xl lg:text-3xl">
-          Subscription Plan - {subscriptionLevel.price}$
+          Subscription Plan - {subscriptionPlan.price}$
         </h2>
         <div className="ml-auto">
-          <SubscriptionLevelDeleterModal
-            subscriptionLevelId={subscriptionLevel.id}
+          <SubscriptionPlanDeleterModal
+            subscriptionPlanId={subscriptionPlan.id}
           />
         </div>
       </div>

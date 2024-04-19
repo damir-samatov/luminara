@@ -1,12 +1,12 @@
-import { SubscriptionLevelCreator } from "../_components/SubscriptionLevelCreator";
+import { SubscriptionPlanCreator } from "../_components/SubscriptionPlanCreator";
 
-const SubscriptionLevelCreatePage = () => {
+const SubscriptionPlanCreatePage = () => {
   return (
     <>
       <title>New Subscription Plan</title>
-      <SubscriptionLevelCreator />
+      <SubscriptionPlanCreator />
     </>
   );
 };
 
-export default SubscriptionLevelCreatePage;
+export default SubscriptionPlanCreatePage;

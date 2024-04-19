@@ -3,11 +3,11 @@ import { getSelf } from "@/services/auth.service";
 import {
   createStream,
   getStreamByUserId,
-  removeStreamSubscriptionLevelByUserId,
+  removeStreamSubscriptionPlanByUserId,
   updateStreamKeyByUserId,
   updateStreamSettingsByUserId,
   updateStreamStatusByUserId,
-  updateStreamSubscriptionLevelByUserId,
+  updateStreamSubscriptionPlanByUserId,
   updateStreamThumbnailByUserId,
 } from "@/services/stream.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
@@ -44,17 +44,17 @@ export const onGetSelfStream = async (): Promise<StreamActionsResponse> => {
   }
 };
 
-export const onUpdateSelfStreamSubscriptionLevel = async (
-  subscriptionLevelId: string
+export const onUpdateSelfStreamSubscriptionPlan = async (
+  subscriptionPlanId: string
 ): Promise<StreamActionsResponse> => {
   try {
     const self = await getSelf();
 
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
 
-    const stream = await updateStreamSubscriptionLevelByUserId(
+    const stream = await updateStreamSubscriptionPlanByUserId(
       self.id,
-      subscriptionLevelId
+      subscriptionPlanId
     );
 
     if (!stream) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
@@ -66,19 +66,19 @@ export const onUpdateSelfStreamSubscriptionLevel = async (
       },
     };
   } catch (error) {
-    console.error("onUpdateSelfStreamSubscriptionLevel", error);
+    console.error("onUpdateSelfStreamSubscriptionPlan", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };
 
-export const onRemoveSelfStreamSubscriptionLevel =
+export const onRemoveSelfStreamSubscriptionPlan =
   async (): Promise<StreamActionsResponse> => {
     try {
       const self = await getSelf();
 
       if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
 
-      const stream = await removeStreamSubscriptionLevelByUserId(self.id);
+      const stream = await removeStreamSubscriptionPlanByUserId(self.id);
 
       if (!stream) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
@@ -89,7 +89,7 @@ export const onRemoveSelfStreamSubscriptionLevel =
         },
       };
     } catch (error) {
-      console.error("onRemoveSelfStreamSubscriptionLevel", error);
+      console.error("onRemoveSelfStreamSubscriptionPlan", error);
       return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
     }
   };

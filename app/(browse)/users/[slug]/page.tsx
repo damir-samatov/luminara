@@ -14,7 +14,7 @@ const ProfilePage: FC<ProfilePageProps> = async ({ params }) => {
 
   if (!res.success) return notFound();
 
-  const { user, subscriptionLevels, subscription } = res.data;
+  const { user, subscriptionPlans, subscription } = res.data;
 
   return (
     <div>
@@ -27,7 +27,7 @@ const ProfilePage: FC<ProfilePageProps> = async ({ params }) => {
           imageUrl: user.imageUrl,
         }}
         subscription={subscription}
-        subscriptionLevels={subscriptionLevels}
+        subscriptionPlans={subscriptionPlans}
       />
     </div>
   );

@@ -1,7 +1,7 @@
 "use client";
 import { FC, useCallback, useState } from "react";
 import { uploadFileToS3 } from "@/helpers/client/file.helpers";
-import { onGetSubscriptionLevelImageUploadUrl } from "@/actions/subscription-level.actions";
+import { onGetSubscriptionPlanImageUploadUrl } from "@/actions/subscription-plan.actions";
 import { Button } from "@/components/Button";
 import {
   ELIGIBLE_IMAGE_TYPES,
@@ -13,14 +13,14 @@ import { FilePreview } from "@/components/FilePreview";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { FileDrop } from "@/components/FileDrop";
 
-type SubscriptionLevelImageEditorProps = {
+type SubscriptionPlanImageEditorProps = {
   initialImageUrl: string | null;
-  subscriptionLevelId: string;
+  subscriptionPlanId: string;
 };
 
-export const SubscriptionLevelImageEditor: FC<
-  SubscriptionLevelImageEditorProps
-> = ({ initialImageUrl, subscriptionLevelId }) => {
+export const SubscriptionPlanImageEditor: FC<
+  SubscriptionPlanImageEditorProps
+> = ({ initialImageUrl, subscriptionPlanId }) => {
   const [imageUrl, setImageUrl] = useState(initialImageUrl);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -37,8 +37,8 @@ export const SubscriptionLevelImageEditor: FC<
 
       setIsLoading(true);
 
-      const res = await onGetSubscriptionLevelImageUploadUrl({
-        subscriptionLevelId,
+      const res = await onGetSubscriptionPlanImageUploadUrl({
+        subscriptionPlanId,
         image: {
           type: imageFile.type,
           size: imageFile.size,
@@ -64,7 +64,7 @@ export const SubscriptionLevelImageEditor: FC<
       setIsLoading(false);
       setProgress(0);
     }
-  }, [imageFile, subscriptionLevelId]);
+  }, [imageFile, subscriptionPlanId]);
 
   return (
     <div className="flex flex-col-reverse gap-4 rounded-lg border-2 border-gray-700 p-4 md:grid md:grid-cols-2">
@@ -114,7 +114,7 @@ export const SubscriptionLevelImageEditor: FC<
             height={360}
             className="object-contain"
             loading="eager"
-            alt="Subscription Level Image"
+            alt="Subscription Plan Image"
           />
         )}
       </div>

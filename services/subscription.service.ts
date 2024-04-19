@@ -49,22 +49,22 @@ export const deleteSubscription = async (
   });
 };
 
-type UpdateSubscriptionActiveLevelProps = {
+type UpdateSubscriptionActivePlanProps = {
   subscriptionId: string;
-  subscriptionLevelId: string;
+  subscriptionPlanId: string;
 };
 
-export const updateSubscriptionActiveLevel = async ({
+export const updateSubscriptionActivePlan = async ({
   subscriptionId,
-  subscriptionLevelId,
-}: UpdateSubscriptionActiveLevelProps) => {
+  subscriptionPlanId,
+}: UpdateSubscriptionActivePlanProps) => {
   try {
     return await db.subscription.update({
       where: {
         id: subscriptionId,
       },
       data: {
-        subscriptionLevelId,
+        subscriptionPlanId,
       },
     });
   } catch (error) {

@@ -5,7 +5,7 @@ import {
   deleteSubscription,
   getSubscription,
   getSubscriptionsByUserId,
-  updateSubscriptionActiveLevel,
+  updateSubscriptionActivePlan,
 } from "@/services/subscription.service";
 import { SubscriptionWithUser } from "@/types/subscription.types";
 import { ERROR_RESPONSES, SUCCESS_RESPONSES } from "@/configs/responses.config";
@@ -14,36 +14,35 @@ import {
   ActionDataResponse,
 } from "@/types/action.types";
 import { revalidatePath } from "next/cache";
-import { getSubscriptionLevelById } from "@/services/subscription-levels.service";
+import { getSubscriptionPlanById } from "@/services/subscription-plan.service";
 import { Subscription } from "@prisma/client";
 
 type OnChangeSubscriptionResponse = ActionDataResponse<{
   subscription: Subscription;
 }>;
 
-export const onChangeSubscriptionLevel = async (
-  subscriptionLevelId: string
+export const onChangeSubscriptionPlan = async (
+  subscriptionPlanId: string
 ): Promise<OnChangeSubscriptionResponse> => {
   try {
     const self = await getSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
 
-    const subscriptionLevel =
-      await getSubscriptionLevelById(subscriptionLevelId);
+    const subscriptionPlan = await getSubscriptionPlanById(subscriptionPlanId);
 
-    if (!subscriptionLevel || self.id === subscriptionLevel.userId)
+    if (!subscriptionPlan || self.id === subscriptionPlan.userId)
       return ERROR_RESPONSES.NOT_FOUND;
 
     const existingSubscription = await getSubscription(
       self.id,
-      subscriptionLevel.userId
+      subscriptionPlan.userId
     );
 
     if (!existingSubscription) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
-    const subscription = await updateSubscriptionActiveLevel({
+    const subscription = await updateSubscriptionActivePlan({
       subscriptionId: existingSubscription.id,
-      subscriptionLevelId,
+      subscriptionPlanId,
     });
 
     if (!subscription) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
@@ -57,7 +56,7 @@ export const onChangeSubscriptionLevel = async (
       },
     };
   } catch (error) {
-    console.error("onChangeSubscriptionLevel", error);
+    console.error("onChangeSubscriptionPlan", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };

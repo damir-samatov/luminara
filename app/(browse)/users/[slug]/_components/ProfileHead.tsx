@@ -2,7 +2,7 @@ import { FC } from "react";
 import { ProfileActions } from "../_components/ProfileActions";
 import { classNames, stringToColor } from "@/utils/style.utils";
 import Link from "next/link";
-import { Subscription, SubscriptionLevel } from "@prisma/client";
+import { Subscription, SubscriptionPlan } from "@prisma/client";
 
 type ProfileHeadProps = {
   user: {
@@ -13,12 +13,12 @@ type ProfileHeadProps = {
     imageUrl: string;
   };
   subscription: Subscription | null;
-  subscriptionLevels: SubscriptionLevel[];
+  subscriptionPlans: SubscriptionPlan[];
 };
 
 export const ProfileHead: FC<ProfileHeadProps> = ({
   user,
-  subscriptionLevels,
+  subscriptionPlans,
   subscription,
 }) => {
   const { id, username, firstName, lastName, imageUrl } = user;
@@ -69,7 +69,7 @@ export const ProfileHead: FC<ProfileHeadProps> = ({
           <ProfileActions
             subscription={subscription}
             userId={id}
-            subscriptionLevels={subscriptionLevels}
+            subscriptionPlans={subscriptionPlans}
           />
         </div>
       </div>

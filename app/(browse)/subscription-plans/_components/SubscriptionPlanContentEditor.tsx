@@ -4,18 +4,18 @@ import { TextEditor } from "@/components/TextEditor";
 import { Button } from "@/components/Button";
 import { FC, useState } from "react";
 import { useObjectShadow } from "@/hooks/useObjectShadow";
-import { onUpdateSubscriptionLevelContent } from "@/actions/subscription-level.actions";
+import { onUpdateSubscriptionPlanContent } from "@/actions/subscription-plan.actions";
 import { toast } from "react-toastify";
 
-type SubscriptionLevelContentEditorProps = {
-  subscriptionLevelId: string;
+type SubscriptionPlanContentEditorProps = {
+  subscriptionPlanId: string;
   initialTitle: string;
   initialDescription: string;
 };
 
-export const SubscriptionLevelContentEditor: FC<
-  SubscriptionLevelContentEditorProps
-> = ({ subscriptionLevelId, initialDescription, initialTitle }) => {
+export const SubscriptionPlanContentEditor: FC<
+  SubscriptionPlanContentEditorProps
+> = ({ subscriptionPlanId, initialDescription, initialTitle }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [forceUpdate, setForceUpdate] = useState(0);
   const [content, setContent] = useState({
@@ -39,9 +39,9 @@ export const SubscriptionLevelContentEditor: FC<
   const onSaveClick = async () => {
     try {
       setIsLoading(true);
-      const res = await onUpdateSubscriptionLevelContent({
-        subscriptionLevelId: subscriptionLevelId,
-        subscriptionLevelUpdateContentDto: content,
+      const res = await onUpdateSubscriptionPlanContent({
+        subscriptionPlanId: subscriptionPlanId,
+        subscriptionPlanUpdateContentDto: content,
       });
       if (!res.success) return toast(res.message, { type: "error" });
       const newContent = {
@@ -50,7 +50,7 @@ export const SubscriptionLevelContentEditor: FC<
       };
       setContent(newContent);
       updatePrevState(newContent);
-      toast("Subscription level content updated.", { type: "success" });
+      toast("Subscription plan content updated.", { type: "success" });
     } catch (error) {
       toast("Something went wrong.", { type: "error" });
     } finally {
@@ -75,7 +75,7 @@ export const SubscriptionLevelContentEditor: FC<
       <div>
         <p>Description</p>
         <TextEditor
-          placeholder="Subscription level description"
+          placeholder="Subscription plan description"
           value={content.description}
           forceUpdate={forceUpdate}
           onChange={(value) => onChange("description", value)}

@@ -122,33 +122,33 @@ export const updateStreamStatusByUserId = (userId: string, isLive: boolean) => {
   }
 };
 
-export const updateStreamSubscriptionLevelByUserId = (
+export const updateStreamSubscriptionPlanByUserId = (
   userId: string,
-  subscriptionLevelId: string
+  subscriptionPlanId: string
 ) => {
   try {
     return db.stream.update({
       where: {
         userId,
       },
-      data: { subscriptionLevelId },
+      data: { subscriptionPlanId },
     });
   } catch (error) {
-    console.error("updateStreamSubscriptionLevelByUserId", error);
+    console.error("updateStreamSubscriptionPlanByUserId", error);
     return null;
   }
 };
 
-export const removeStreamSubscriptionLevelByUserId = (userId: string) => {
+export const removeStreamSubscriptionPlanByUserId = (userId: string) => {
   try {
     return db.stream.update({
       where: {
         userId,
       },
-      data: { subscriptionLevelId: null },
+      data: { subscriptionPlanId: null },
     });
   } catch (error) {
-    console.error("removeStreamSubscriptionLevelByUserId", error);
+    console.error("removeStreamSubscriptionPlanByUserId", error);
     return null;
   }
 };

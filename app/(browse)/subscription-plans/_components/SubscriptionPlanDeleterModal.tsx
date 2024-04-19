@@ -1,18 +1,18 @@
 import { FC, useCallback, useState } from "react";
 import { Modal } from "@/components/Modal";
 import { Button } from "@/components/Button";
-import { onDeleteSubscriptionLevelById } from "@/actions/subscription-level.actions";
+import { onDeleteSubscriptionPlanById } from "@/actions/subscription-plan.actions";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { TrashIcon } from "@heroicons/react/24/outline";
 
-type SubscriptionLevelDeleterModalProps = {
-  subscriptionLevelId: string;
+type SubscriptionPlanDeleterModalProps = {
+  subscriptionPlanId: string;
 };
 
-export const SubscriptionLevelDeleterModal: FC<
-  SubscriptionLevelDeleterModalProps
-> = ({ subscriptionLevelId }) => {
+export const SubscriptionPlanDeleterModal: FC<
+  SubscriptionPlanDeleterModalProps
+> = ({ subscriptionPlanId }) => {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +28,7 @@ export const SubscriptionLevelDeleterModal: FC<
   const onDeleteConfirmClick = useCallback(async () => {
     try {
       setIsLoading(true);
-      const res = await onDeleteSubscriptionLevelById(subscriptionLevelId);
+      const res = await onDeleteSubscriptionPlanById(subscriptionPlanId);
       if (!res.success) return toast(res.message, { type: "error" });
       toast(res.message, { type: "success" });
       router.push("/subscription-plans");
@@ -38,7 +38,7 @@ export const SubscriptionLevelDeleterModal: FC<
     } finally {
       setIsLoading(false);
     }
-  }, [subscriptionLevelId, setIsLoading, setIsModalOpen, router]);
+  }, [subscriptionPlanId, setIsLoading, setIsModalOpen, router]);
 
   return (
     <div>

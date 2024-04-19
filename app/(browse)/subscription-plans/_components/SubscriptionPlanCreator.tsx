@@ -6,7 +6,7 @@ import { Button } from "@/components/Button";
 import { SliderInput } from "@/components/SliderInput";
 import { useRouter } from "next/navigation";
 import { uploadFileToS3 } from "@/helpers/client/file.helpers";
-import { onCreateSubscriptionLevel } from "@/actions/subscription-level.actions";
+import { onCreateSubscriptionPlan } from "@/actions/subscription-plan.actions";
 import { ProgressBar } from "@/components/ProgressBar";
 import { toast } from "react-toastify";
 import { TrashIcon } from "@heroicons/react/24/outline";
@@ -18,37 +18,37 @@ import { FileDrop } from "@/components/FileDrop";
 import { FilePreview } from "@/components/FilePreview";
 import { BackButton } from "@/components/BackButton";
 
-export const SubscriptionLevelCreator = () => {
+export const SubscriptionPlanCreator = () => {
   const router = useRouter();
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [progress, setProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [subscriptionLevelContent, setSubscriptionLevelContent] = useState({
+  const [subscriptionPlanContent, setSubscriptionPlanContent] = useState({
     title: "",
     description: "",
     price: 0.1,
   });
 
   const onChange = useCallback(
-    <T extends keyof typeof subscriptionLevelContent>(
+    <T extends keyof typeof subscriptionPlanContent>(
       key: T,
-      value: (typeof subscriptionLevelContent)[T]
+      value: (typeof subscriptionPlanContent)[T]
     ) => {
       if (isLoading) return;
-      setSubscriptionLevelContent((prev) => ({ ...prev, [key]: value }));
+      setSubscriptionPlanContent((prev) => ({ ...prev, [key]: value }));
     },
     [isLoading]
   );
 
   const onSubmit = useCallback(async () => {
     try {
-      if (!subscriptionLevelContent.title || !imageFile || isLoading) return;
+      if (!subscriptionPlanContent.title || !imageFile || isLoading) return;
       setIsLoading(true);
       setProgress(0);
-      const res = await onCreateSubscriptionLevel({
-        title: subscriptionLevelContent.title,
-        description: subscriptionLevelContent.description,
-        price: subscriptionLevelContent.price,
+      const res = await onCreateSubscriptionPlan({
+        title: subscriptionPlanContent.title,
+        description: subscriptionPlanContent.description,
+        price: subscriptionPlanContent.price,
         image: {
           size: imageFile.size,
           type: imageFile.type,
@@ -78,7 +78,7 @@ export const SubscriptionLevelCreator = () => {
       setIsLoading(false);
       setProgress(1);
     }
-  }, [isLoading, subscriptionLevelContent, imageFile, router]);
+  }, [isLoading, subscriptionPlanContent, imageFile, router]);
 
   const onFilesChange = useCallback((files: File[]) => {
     if (files[0]) return setImageFile(files[0]);
@@ -86,7 +86,7 @@ export const SubscriptionLevelCreator = () => {
   }, []);
 
   const isCreateDisabled =
-    isLoading || !subscriptionLevelContent.title || !imageFile;
+    isLoading || !subscriptionPlanContent.title || !imageFile;
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 p-4">
@@ -129,22 +129,22 @@ export const SubscriptionLevelCreator = () => {
           <div>
             <p>Title</p>
             <TextInput
-              value={subscriptionLevelContent.title}
+              value={subscriptionPlanContent.title}
               onChange={(value) => onChange("title", value)}
             />
           </div>
           <div>
             <p>Description</p>
             <TextEditor
-              placeholder="Subscription level description"
-              value={subscriptionLevelContent.description}
+              placeholder="Subscription plan description"
+              value={subscriptionPlanContent.description}
               onChange={(value) => onChange("description", value)}
             />
           </div>
           <div>
-            <p>Price {subscriptionLevelContent.price}$</p>
+            <p>Price {subscriptionPlanContent.price}$</p>
             <SliderInput
-              value={subscriptionLevelContent.price}
+              value={subscriptionPlanContent.price}
               onChange={(value) => onChange("price", value)}
               max={100}
               min={0.1}

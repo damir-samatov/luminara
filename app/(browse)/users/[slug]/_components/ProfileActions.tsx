@@ -1,25 +1,25 @@
 "use client";
 import { FC, useState } from "react";
 import {
-  onChangeSubscriptionLevel,
+  onChangeSubscriptionPlan,
   onSubscribe,
   onUnsubscribe,
 } from "@/actions/subscription.actions";
 import { useServerAction } from "@/hooks/useServerAction";
 import { useBrowseNavigationContext } from "@/contexts/BrowseNavigationContext";
-import { Subscription, SubscriptionLevel } from "@prisma/client";
+import { Subscription, SubscriptionPlan } from "@prisma/client";
 import { Button } from "@/components/Button";
 
 type ProfileProps = {
   subscription: Subscription | null;
   userId: string;
-  subscriptionLevels: SubscriptionLevel[];
+  subscriptionPlans: SubscriptionPlan[];
 };
 
 export const ProfileActions: FC<ProfileProps> = ({
   subscription,
   userId,
-  subscriptionLevels,
+  subscriptionPlans,
 }) => {
   const { refresh } = useBrowseNavigationContext();
   const [hasSubscribed, setHasSubscribed] = useState<boolean>(!!subscription);
@@ -44,8 +44,8 @@ export const ProfileActions: FC<ProfileProps> = ({
     console.log
   );
 
-  const onSubscriptionLevelClick = async (subscriptionLevelId: string) => {
-    const res = await onChangeSubscriptionLevel(subscriptionLevelId);
+  const onSubscriptionPlanClick = async (subscriptionPlanId: string) => {
+    const res = await onChangeSubscriptionPlan(subscriptionPlanId);
     console.log({ res });
   };
 
@@ -71,17 +71,17 @@ export const ProfileActions: FC<ProfileProps> = ({
       </div>
       {hasSubscribed && (
         <div>
-          {subscriptionLevels.map((subscriptionLevel) => (
+          {subscriptionPlans.map((subscriptionPlan) => (
             <Button
               type={
-                subscriptionLevel.id === subscription?.subscriptionLevelId
+                subscriptionPlan.id === subscription?.subscriptionPlanId
                   ? "primary"
                   : "secondary"
               }
-              key={subscriptionLevel.id}
-              onClick={() => onSubscriptionLevelClick(subscriptionLevel.id)}
+              key={subscriptionPlan.id}
+              onClick={() => onSubscriptionPlanClick(subscriptionPlan.id)}
             >
-              {subscriptionLevel.title} {subscriptionLevel.price}$
+              {subscriptionPlan.title} {subscriptionPlan.price}$
             </Button>
           ))}
         </div>

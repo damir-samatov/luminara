@@ -18,12 +18,12 @@ model User {
   lastName  String @default("")
   imageUrl  String
 
-  comments           Comment[]
-  posts              Post[]
-  likes              Like[]
-  subscriptionLevels SubscriptionLevel[]
-  profile            Profile?
-  stream             Stream?
+  comments          Comment[]
+  posts             Post[]
+  likes             Like[]
+  subscriptionPlans SubscriptionPlan[]
+  profile           Profile?
+  stream            Stream?
 
   subscribedBy Subscription[] @relation("SubscribedTo")
   subscribedTo Subscription[] @relation("SubscribedBy")
@@ -43,8 +43,8 @@ model Subscription {
   user       User @relation(name: "SubscribedTo", fields: [userId], references: [id], onDelete: Cascade)
   subscriber User @relation(name: "SubscribedBy", fields: [subscriberId], references: [id], onDelete: Cascade)
 
-  subscriptionLevelId String?            @db.ObjectId
-  subscriptionLevel   SubscriptionLevel? @relation(fields: [subscriptionLevelId], references: [id])
+  subscriptionPlanId String?           @db.ObjectId
+  subscriptionPlan   SubscriptionPlan? @relation(fields: [subscriptionPlanId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -81,17 +81,17 @@ model Profile {
 }
 
 model Stream {
-  id                  String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId              String  @unique @db.ObjectId
-  title               String
-  description         String
-  thumbnailKey        String
-  isLive              Boolean @default(false)
-  isChatEnabled       Boolean @default(true)
-  subscriptionLevelId String? @db.ObjectId
+  id                 String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String  @unique @db.ObjectId
+  title              String
+  description        String
+  thumbnailKey       String
+  isLive             Boolean @default(false)
+  isChatEnabled      Boolean @default(true)
+  subscriptionPlanId String? @db.ObjectId
 
-  subscriptionLevel SubscriptionLevel? @relation(fields: [subscriptionLevelId], references: [id])
-  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subscriptionPlan SubscriptionPlan? @relation(fields: [subscriptionPlanId], references: [id])
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   serverUrl    String
   playbackUrl  String
@@ -115,12 +115,12 @@ model Post {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  images              Image[]
-  videos              Video[]
-  comments            Comment[]
-  likes               Like[]
-  subscriptionLevelId String?            @db.ObjectId
-  subscriptionLevel   SubscriptionLevel? @relation(fields: [subscriptionLevelId], references: [id])
+  images             Image[]
+  videos             Video[]
+  comments           Comment[]
+  likes              Like[]
+  subscriptionPlanId String?           @db.ObjectId
+  subscriptionPlan   SubscriptionPlan? @relation(fields: [subscriptionPlanId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -187,7 +187,7 @@ model Like {
   updatedAt DateTime @updatedAt
 }
 
-model SubscriptionLevel {
+model SubscriptionPlan {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
   userId String @db.ObjectId
 

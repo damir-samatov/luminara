@@ -3,21 +3,21 @@ import { notFound } from "next/navigation";
 import { ErrorResponseType } from "@/types/action.types";
 import { StreamCreate } from "./_components/StreamCreate";
 import { StreamEditor } from "./_components/StreamEditor";
-import { onGetSelfSubscriptionLevels } from "@/actions/subscription-level.actions";
+import { onGetSelfSubscriptionPlans } from "@/actions/subscription-plan.actions";
 
 const StreamPage = async () => {
   const streamRes = await onGetStreamDataAsOwner();
-  const subscriptionLevelsRes = await onGetSelfSubscriptionLevels();
+  const subscriptionPlansRes = await onGetSelfSubscriptionPlans();
 
-  if (streamRes.success && subscriptionLevelsRes.success) {
+  if (streamRes.success && subscriptionPlansRes.success) {
     const { stream, user, playbackUrl, appliedThumbnailUrl } = streamRes.data;
-    const { subscriptionLevels } = subscriptionLevelsRes.data;
+    const { subscriptionPlans } = subscriptionPlansRes.data;
 
     return (
       <>
         <title>Stream Dashboard</title>
         <StreamEditor
-          subscriptionLevels={subscriptionLevels}
+          subscriptionPlans={subscriptionPlans}
           stream={stream}
           user={user}
           playbackUrl={playbackUrl}

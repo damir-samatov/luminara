@@ -1,4 +1,4 @@
-export type SubscriptionLevelCreateDto = {
+export type SubscriptionPlanCreateDto = {
   price: number;
   title: string;
   description: string;
@@ -8,7 +8,7 @@ export type SubscriptionLevelCreateDto = {
   };
 };
 
-export type SubscriptionLevelUpdateContentDto = {
+export type SubscriptionPlanUpdateContentDto = {
   title: string;
   description: string;
 };

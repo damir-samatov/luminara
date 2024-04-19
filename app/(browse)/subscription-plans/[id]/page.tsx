@@ -1,27 +1,27 @@
-import { SubscriptionLevelEditor } from "../_components/SubscriptionLevelEditor";
+import { SubscriptionPlanEditor } from "../_components/SubscriptionPlanEditor";
 import { FC } from "react";
-import { onGetSubscriptionLevelById } from "@/actions/subscription-level.actions";
+import { onGetSubscriptionPlanById } from "@/actions/subscription-plan.actions";
 import { notFound } from "next/navigation";
 
-type SubscriptionLevelDetailsPageProps = {
+type SubscriptionPlanDetailsPageProps = {
   params: {
     id: string;
   };
 };
 
-const SubscriptionLevelDetailsPage: FC<
-  SubscriptionLevelDetailsPageProps
+const SubscriptionPlanDetailsPage: FC<
+  SubscriptionPlanDetailsPageProps
 > = async ({ params }) => {
-  const res = await onGetSubscriptionLevelById(params.id);
+  const res = await onGetSubscriptionPlanById(params.id);
 
   if (!res.success) return notFound();
 
   return (
     <>
       <title>Subscription Plan Editor</title>
-      <SubscriptionLevelEditor subscriptionLevel={res.data.subscriptionLevel} />
+      <SubscriptionPlanEditor subscriptionPlan={res.data.subscriptionPlan} />
     </>
   );
 };
 
-export default SubscriptionLevelDetailsPage;
+export default SubscriptionPlanDetailsPage;

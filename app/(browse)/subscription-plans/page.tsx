@@ -1,11 +1,11 @@
-import { onGetSelfSubscriptionLevels } from "@/actions/subscription-level.actions";
+import { onGetSelfSubscriptionPlans } from "@/actions/subscription-plan.actions";
 import { notFound } from "next/navigation";
-import { SubscriptionLevelCard } from "./_components/SubscriptionLevelCard";
+import { SubscriptionPlanCard } from "./_components/SubscriptionPlanCard";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
-const SubscriptionLevelsPage = async () => {
-  const res = await onGetSelfSubscriptionLevels();
+const SubscriptionPlansPage = async () => {
+  const res = await onGetSelfSubscriptionPlans();
   if (!res.success) return notFound();
   return (
     <>
@@ -22,10 +22,10 @@ const SubscriptionLevelsPage = async () => {
           </Link>
         </div>
         <div className="flex flex-col gap-4">
-          {res.data.subscriptionLevels.map((subscriptionLevel) => (
-            <SubscriptionLevelCard
-              key={subscriptionLevel.id}
-              subscriptionLevel={subscriptionLevel}
+          {res.data.subscriptionPlans.map((subscriptionPlan) => (
+            <SubscriptionPlanCard
+              key={subscriptionPlan.id}
+              subscriptionPlan={subscriptionPlan}
             />
           ))}
         </div>
@@ -34,4 +34,4 @@ const SubscriptionLevelsPage = async () => {
   );
 };
 
-export default SubscriptionLevelsPage;
+export default SubscriptionPlansPage;
