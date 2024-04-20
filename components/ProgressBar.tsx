@@ -7,7 +7,7 @@ export const ProgressBar: FC<ProgressBarProps> = ({ progress }) => {
   progress = Math.max(0, Math.min(1, progress));
   const progressPercentage = (progress * 100).toFixed();
   return (
-    <div className="relative h-3.5 w-full overflow-hidden rounded-full bg-gray-600">
+    <div className="relative h-3.5 w-full overflow-hidden rounded-full bg-gray-700">
       <div
         className="h-3.5 w-full origin-left rounded-full bg-green-600 transition-transform"
         style={{ transform: `scale(${progressPercentage}%, 100%)` }}

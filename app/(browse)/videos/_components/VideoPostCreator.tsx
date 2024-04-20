@@ -22,7 +22,9 @@ import { SubscriptionPlan } from "@prisma/client";
 import { Dropdown } from "@/components/Dropdown";
 
 type VideoPostCreatorProps = {
-  subscriptionPlans: SubscriptionPlan[];
+  subscriptionPlans: (SubscriptionPlan & {
+    imageUrl: string | null;
+  })[];
 };
 
 export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
@@ -119,97 +121,164 @@ export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
         .sort((a, b) => a.price - b.price)
         .map((s) => ({
           value: s.id,
-          label: `${s.title} - ${s.price}`,
+          label: `${s.title} - ${s.price}$`,
         })),
     ];
   }, [subscriptionPlans]);
 
+  const selectedPlan = useMemo(() => {
+    return subscriptionPlans.find((plan) => plan.id === activeOption.value);
+  }, [subscriptionPlans, activeOption]);
+
+  const [activeTab, setActiveTab] = useState(0);
+
+  const tabs = [
+    {
+      component: (
+        <div className="flex flex-col gap-4 rounded-lg border-2 border-gray-700 p-4">
+          <div className="grid grid-cols-3 gap-4">
+            <div className="flex flex-col gap-4">
+              <div>
+                <p>Subscription Plan</p>
+                <div className="aspect-square overflow-hidden rounded-lg bg-black">
+                  {selectedPlan?.imageUrl && (
+                    <img
+                      width={640}
+                      height={640}
+                      src={selectedPlan.imageUrl}
+                      alt={selectedPlan.title}
+                      className="object-cover"
+                    />
+                  )}
+                </div>
+              </div>
+
+              <div className="mt-auto">
+                <Dropdown
+                  options={options}
+                  active={activeOption}
+                  onChange={setActiveOption}
+                />
+              </div>
+            </div>
+            <div className="col-span-2 flex flex-col gap-4">
+              <div>
+                <p>Title</p>
+                <TextInput
+                  isDisabled={isLoading}
+                  value={content.title}
+                  onChange={(value) => onPostContentChange("title", value)}
+                />
+              </div>
+              <div>
+                <p>Description</p>
+                <TextEditor
+                  isDisabled={isLoading}
+                  value={content.body}
+                  onChange={(value) => onPostContentChange("body", value)}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      ),
+      label: "Settings",
+      progress: content.title.length > 0 ? 1 : 0,
+    },
+    {
+      component: (
+        <div className="grid min-h-96 grid-cols-2 gap-4 rounded-lg border-2 border-gray-700 p-4">
+          {videoFile ? (
+            <div className="flex flex-col gap-2">
+              <p>Video</p>
+              <FilePreview file={videoFile} />
+              <div className="mt-auto">
+                {isLoading ? (
+                  <ProgressBar progress={videoProgress} />
+                ) : (
+                  <Button
+                    className="flex items-center justify-center gap-1"
+                    onClick={() => setVideoFile(null)}
+                    type="secondary"
+                  >
+                    <TrashIcon className="h-2.5 w-2.5" />
+                    <span className="text-xs">Remove</span>
+                  </Button>
+                )}
+              </div>
+            </div>
+          ) : (
+            <FileDrop
+              label="Video"
+              onChange={onVideoFilesChange}
+              eligibleFileTypes={ELIGIBLE_VIDEO_TYPES}
+              maxFileSize={VIDEO_MAX_SIZE}
+            />
+          )}
+          {thumbnailFile ? (
+            <div className="flex flex-col gap-2">
+              <p>Thumbnail</p>
+              <FilePreview file={thumbnailFile} />
+              <div className="mt-auto">
+                {isLoading ? (
+                  <ProgressBar progress={thumbnailProgress} />
+                ) : (
+                  <Button
+                    className="flex items-center justify-center gap-1"
+                    onClick={() => setThumbnailFile(null)}
+                    type="secondary"
+                  >
+                    <TrashIcon className="h-2.5 w-2.5" />
+                    <span className="text-xs">Remove</span>
+                  </Button>
+                )}
+              </div>
+            </div>
+          ) : (
+            <FileDrop
+              label="Thumbnail"
+              onChange={onThumbnailFilesChange}
+              eligibleFileTypes={ELIGIBLE_IMAGE_TYPES}
+              maxFileSize={VIDEO_THUMBNAIL_IMAGE_MAX_SIZE}
+            />
+          )}
+        </div>
+      ),
+      label: "Files",
+      progress: (videoFile ? 0.5 : 0) + (thumbnailFile ? 0.5 : 0),
+    },
+  ];
+
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 rounded-lg p-4">
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 rounded-lg p-4">
       <div className="flex items-center gap-2">
         <BackButton href="/videos" />
         <h2 className="text-sm md:text-xl lg:text-3xl">New Video</h2>
       </div>
-
-      <div className="grid min-h-72 grid-cols-3 gap-4">
-        {videoFile ? (
-          <div className="flex flex-col gap-2">
-            <FilePreview file={videoFile} />
-            <div className="mt-auto">
-              {isLoading ? (
-                <ProgressBar progress={videoProgress} />
-              ) : (
-                <Button
-                  className="flex items-center justify-center gap-1"
-                  onClick={() => setVideoFile(null)}
-                  type="danger"
-                >
-                  <TrashIcon className="h-2.5 w-2.5" />
-                  <span className="text-xs">Remove</span>
-                </Button>
-              )}
+      <div className="grid grid-cols-2 gap-1">
+        {tabs.map((tab, i) => {
+          return (
+            <div className="flex flex-col gap-0.5" key={tab.label}>
+              <div className="relative h-0.5 w-full overflow-hidden rounded-full bg-gray-700">
+                <div
+                  className="h-0.5 w-full origin-left rounded-full bg-green-500 transition-transform"
+                  style={{ transform: `scale(${tab.progress * 100}%, 100%)` }}
+                />
+              </div>
+              <Button
+                type={activeTab === i ? "primary" : "transparent"}
+                onClick={() => setActiveTab(i)}
+              >
+                {tab.label}
+              </Button>
             </div>
-          </div>
-        ) : (
-          <FileDrop
-            label="Video File"
-            onChange={onVideoFilesChange}
-            eligibleFileTypes={ELIGIBLE_VIDEO_TYPES}
-            maxFileSize={VIDEO_MAX_SIZE}
-          />
-        )}
-        {thumbnailFile ? (
-          <div className="flex flex-col gap-2">
-            <FilePreview file={thumbnailFile} />
-            <div className="mt-auto">
-              {isLoading ? (
-                <ProgressBar progress={thumbnailProgress} />
-              ) : (
-                <Button
-                  className="flex items-center justify-center gap-1"
-                  onClick={() => setThumbnailFile(null)}
-                  type="danger"
-                >
-                  <TrashIcon className="h-2.5 w-2.5" />
-                  <span className="text-xs">Remove</span>
-                </Button>
-              )}
-            </div>
-          </div>
-        ) : (
-          <FileDrop
-            label="Thumbnail Image"
-            onChange={onThumbnailFilesChange}
-            eligibleFileTypes={ELIGIBLE_IMAGE_TYPES}
-            maxFileSize={VIDEO_THUMBNAIL_IMAGE_MAX_SIZE}
-          />
-        )}
-        <div className="flex flex-col justify-end">
-          <Dropdown
-            options={options}
-            active={activeOption}
-            onChange={setActiveOption}
-          />
-        </div>
+          );
+        })}
       </div>
-
-      <div className="flex flex-col gap-4 rounded-lg border-2 border-gray-700 p-4">
-        <div>
-          <p>Title</p>
-          <TextInput
-            isDisabled={isLoading}
-            value={content.title}
-            onChange={(value) => onPostContentChange("title", value)}
-          />
-        </div>
-        <div>
-          <p>Description</p>
-          <TextEditor
-            isDisabled={isLoading}
-            value={content.body}
-            onChange={(value) => onPostContentChange("body", value)}
-          />
-        </div>
+      {tabs[activeTab]?.component}
+      {isLoading ? (
+        <ProgressBar progress={(videoProgress + thumbnailProgress) / 2} />
+      ) : (
         <Button
           isLoading={isLoading}
           isDisabled={
@@ -217,10 +286,11 @@ export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
           }
           onClick={onSubmit}
           loadingText="Publishing..."
+          className="ml-auto mt-auto max-w-80"
         >
           Publish
         </Button>
-      </div>
+      )}
     </div>
   );
 };
