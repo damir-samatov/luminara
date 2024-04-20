@@ -112,32 +112,30 @@ export const onCreateSubscriptionPlan = async (
 ): Promise<OnCreateSubscriptionPlanResponse> => {
   try {
     const self = await authSelf();
-
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
 
     const imageKey = generateFileKey(self.id);
 
-    const { title, description, price } = subscriptionPlanCreateDto;
-
-    const subscriptionPlan = await createSubscriptionPlan({
-      userId: self.id,
-      title,
-      description,
-      price,
-      imageKey,
-    });
-
-    if (!subscriptionPlan) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-
     const imageUploadUrl = await getSignedFileUploadUrl({
-      key: subscriptionPlan.imageKey,
+      key: imageKey,
       size: subscriptionPlanCreateDto.image.size,
       type: subscriptionPlanCreateDto.image.type,
     });
 
     if (!imageUploadUrl) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
+    const subscriptionPlan = await createSubscriptionPlan({
+      userId: self.id,
+      title: subscriptionPlanCreateDto.title,
+      description: subscriptionPlanCreateDto.description,
+      price: subscriptionPlanCreateDto.price,
+      imageKey,
+    });
+
+    if (!subscriptionPlan) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
     revalidatePath("/subscription-plans");
+
     return {
       success: true,
       data: {

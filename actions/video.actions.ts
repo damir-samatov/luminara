@@ -1,7 +1,7 @@
 "use server";
 import { ActionDataResponse } from "@/types/action.types";
 import { Post, Video } from "@prisma/client";
-import { getSelf } from "@/services/auth.service";
+import { authSelf } from "@/services/auth.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import {
   createVideoPost,
@@ -14,6 +14,7 @@ import {
   VIDEO_MAX_SIZE,
   VIDEO_THUMBNAIL_IMAGE_MAX_SIZE,
 } from "@/configs/file.config";
+import { revalidatePath } from "next/cache";
 
 type OnGetSelfVideoPostsResponse = ActionDataResponse<{
   posts: (Post & {
@@ -24,7 +25,7 @@ type OnGetSelfVideoPostsResponse = ActionDataResponse<{
 export const onGetSelfVideoPosts =
   async (): Promise<OnGetSelfVideoPostsResponse> => {
     try {
-      const self = await getSelf();
+      const self = await authSelf();
       if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
       const posts = await getVideoPostsByUserId(self.id);
       return {
@@ -58,7 +59,7 @@ export const onCreateVideoPost = async ({
     )
       return ERROR_RESPONSES.BAD_REQUEST;
 
-    const self = await getSelf();
+    const self = await authSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
 
     const thumbnailKey = generateFileKey("images");
@@ -92,6 +93,8 @@ export const onCreateVideoPost = async ({
     });
 
     if (!post) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    revalidatePath("/videos");
 
     return {
       success: true,
