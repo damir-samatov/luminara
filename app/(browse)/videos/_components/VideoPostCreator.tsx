@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useState } from "react";
+import { FC, useCallback, useMemo, useState } from "react";
 import { Button } from "@/components/Button";
 import { TextInput } from "@/components/TextInput";
 import { useRouter } from "next/navigation";
@@ -18,8 +18,16 @@ import { BackButton } from "@/components/BackButton";
 import { toast } from "react-toastify";
 import { onCreateVideoPost } from "@/actions/video.actions";
 import { uploadFileToS3 } from "@/helpers/client/file.helpers";
+import { SubscriptionPlan } from "@prisma/client";
+import { Dropdown } from "@/components/Dropdown";
 
-export const VideoPostCreator = () => {
+type VideoPostCreatorProps = {
+  subscriptionPlans: SubscriptionPlan[];
+};
+
+export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
+  subscriptionPlans,
+}) => {
   const router = useRouter();
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [videoProgress, setVideoProgress] = useState(0);
@@ -96,13 +104,34 @@ export const VideoPostCreator = () => {
     }
   }, [isLoading, content, videoFile, thumbnailFile, router]);
 
+  const [activeOption, setActiveOption] = useState({
+    value: "follower",
+    label: "Follower",
+  });
+
+  const options = useMemo(() => {
+    return [
+      {
+        value: "follower",
+        label: "Follower - Free",
+      },
+      ...subscriptionPlans
+        .sort((a, b) => a.price - b.price)
+        .map((s) => ({
+          value: s.id,
+          label: `${s.title} - ${s.price}`,
+        })),
+    ];
+  }, [subscriptionPlans]);
+
   return (
-    <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 rounded-lg p-4">
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 rounded-lg p-4">
       <div className="flex items-center gap-2">
         <BackButton href="/videos" />
         <h2 className="text-sm md:text-xl lg:text-3xl">New Video</h2>
       </div>
-      <div className="grid min-h-80 grid-cols-2 gap-6">
+
+      <div className="grid min-h-72 grid-cols-3 gap-4">
         {videoFile ? (
           <div className="flex flex-col gap-2">
             <FilePreview file={videoFile} />
@@ -155,6 +184,13 @@ export const VideoPostCreator = () => {
             maxFileSize={VIDEO_THUMBNAIL_IMAGE_MAX_SIZE}
           />
         )}
+        <div className="flex flex-col justify-end">
+          <Dropdown
+            options={options}
+            active={activeOption}
+            onChange={setActiveOption}
+          />
+        </div>
       </div>
 
       <div className="flex flex-col gap-4 rounded-lg border-2 border-gray-700 p-4">
