@@ -107,10 +107,21 @@ type OnCreateSubscriptionPlanResponse = ActionDataResponse<{
   imageUploadUrl: string;
 }>;
 
-export const onCreateSubscriptionPlan = async (
-  subscriptionPlanCreateDto: SubscriptionPlanCreateDto
-): Promise<OnCreateSubscriptionPlanResponse> => {
+export const onCreateSubscriptionPlan = async ({
+  image,
+  title,
+  price,
+  description,
+}: SubscriptionPlanCreateDto): Promise<OnCreateSubscriptionPlanResponse> => {
   try {
+    if (
+      image.size > SUBSCRIPTION_PLAN_IMAGE_MAX_SIZE ||
+      !ELIGIBLE_IMAGE_TYPES.includes(image.type) ||
+      title.length < 1 ||
+      price < 0.1
+    )
+      return ERROR_RESPONSES.BAD_REQUEST;
+
     const self = await authSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
 
@@ -118,17 +129,17 @@ export const onCreateSubscriptionPlan = async (
 
     const imageUploadUrl = await getSignedFileUploadUrl({
       key: imageKey,
-      size: subscriptionPlanCreateDto.image.size,
-      type: subscriptionPlanCreateDto.image.type,
+      size: image.size,
+      type: image.type,
     });
 
     if (!imageUploadUrl) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
     const subscriptionPlan = await createSubscriptionPlan({
       userId: self.id,
-      title: subscriptionPlanCreateDto.title,
-      description: subscriptionPlanCreateDto.description,
-      price: subscriptionPlanCreateDto.price,
+      title,
+      description,
+      price,
       imageKey,
     });
 
@@ -233,9 +244,10 @@ export const onGetSubscriptionPlanImageUploadUrl = async ({
   image,
 }: OnGetSubscriptionPlanImageUploadUrlProps): Promise<OnGetSubscriptionPlanImageUploadUrlResponse> => {
   try {
-    if (image.size > SUBSCRIPTION_PLAN_IMAGE_MAX_SIZE)
-      return ERROR_RESPONSES.BAD_REQUEST;
-    if (!ELIGIBLE_IMAGE_TYPES.includes(image.type))
+    if (
+      image.size > SUBSCRIPTION_PLAN_IMAGE_MAX_SIZE ||
+      !ELIGIBLE_IMAGE_TYPES.includes(image.type)
+    )
       return ERROR_RESPONSES.BAD_REQUEST;
 
     const [self, subscriptionPlan] = await Promise.all([

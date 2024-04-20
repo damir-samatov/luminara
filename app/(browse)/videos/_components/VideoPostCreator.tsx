@@ -102,21 +102,21 @@ export const VideoPostCreator = () => {
         <BackButton href="/videos" />
         <h2 className="text-sm md:text-xl lg:text-3xl">New Video</h2>
       </div>
-      <div className="grid min-h-96 grid-cols-2 gap-6">
+      <div className="grid min-h-80 grid-cols-2 gap-6">
         {videoFile ? (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
             <FilePreview file={videoFile} />
             <div className="mt-auto">
               {isLoading ? (
                 <ProgressBar progress={videoProgress} />
               ) : (
                 <Button
-                  className="flex items-center justify-center gap-2"
+                  className="flex items-center justify-center gap-1"
                   onClick={() => setVideoFile(null)}
                   type="danger"
                 >
-                  <TrashIcon className="h-3 w-3" />
-                  <span>Remove</span>
+                  <TrashIcon className="h-2.5 w-2.5" />
+                  <span className="text-xs">Remove</span>
                 </Button>
               )}
             </div>
@@ -130,19 +130,19 @@ export const VideoPostCreator = () => {
           />
         )}
         {thumbnailFile ? (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
             <FilePreview file={thumbnailFile} />
             <div className="mt-auto">
               {isLoading ? (
                 <ProgressBar progress={thumbnailProgress} />
               ) : (
                 <Button
-                  className="flex items-center justify-center gap-2"
+                  className="flex items-center justify-center gap-1"
                   onClick={() => setThumbnailFile(null)}
                   type="danger"
                 >
-                  <TrashIcon className="h-3 w-3" />
-                  <span>Remove</span>
+                  <TrashIcon className="h-2.5 w-2.5" />
+                  <span className="text-xs">Remove</span>
                 </Button>
               )}
             </div>

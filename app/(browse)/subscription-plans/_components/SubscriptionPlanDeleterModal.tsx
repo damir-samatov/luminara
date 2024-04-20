@@ -52,11 +52,13 @@ export const SubscriptionPlanDeleterModal: FC<
       </Button>
       {isModalOpen && (
         <Modal onClose={onCancelClick}>
-          <div className="flex flex-col gap-2">
-            <p className="text-2xl">Confirm deletion!</p>
-            <p>Are you sure you want to delete this subscription plan?</p>
-            <p>All the subscriptions to this plan will be canceled</p>
-            <div className="mt-4 flex gap-4">
+          <div className="flex flex-col gap-4 rounded-lg border-2 border-gray-800 bg-gray-950 p-6">
+            <p className="text-3xl">Confirm deletion!</p>
+            <div>
+              <p>Are you sure you want to delete this subscription plan?</p>
+              <p>All the subscriptions to this plan will be canceled</p>
+            </div>
+            <div className="mt-4 flex gap-2">
               <Button
                 isDisabled={isLoading}
                 type="secondary"

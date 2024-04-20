@@ -1,48 +1,72 @@
-import { FC, useMemo } from "react";
+import { FC, useCallback, useMemo, useState } from "react";
 import { readableFileSize } from "@/utils/string.utils";
+import { Modal } from "@/components/Modal";
 
 type FilePreviewProps = {
   file: File;
 };
 
+enum FileType {
+  IMAGE = "image",
+  VIDEO = "video",
+}
+
 export const FilePreview: FC<FilePreviewProps> = ({ file }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const src = useMemo(() => URL.createObjectURL(file), [file]);
   const size = useMemo(() => readableFileSize(file.size), [file.size]);
 
-  const media = useMemo(() => {
-    if (file.type.includes("image")) {
-      return (
-        <img
-          src={src}
-          alt={file.name}
-          width={1920}
-          height={1080}
-          className="cursor-pointer rounded-lg object-contain"
-        />
-      );
-    }
-    if (file.type.includes("video")) {
+  const fileType = useMemo(() => {
+    if (file.type.includes("video")) return FileType.VIDEO;
+    return FileType.IMAGE;
+  }, [file.type]);
+
+  const onImageClick = useCallback(() => {
+    if (fileType === FileType.IMAGE) setIsModalOpen((prev) => !prev);
+  }, [fileType]);
+
+  const filePreview = useMemo(() => {
+    if (fileType === FileType.VIDEO)
       return (
         <video
           src={src}
           controls
           width={1920}
           height={1080}
-          className="cursor-pointer rounded-lg object-contain"
+          className="aspect-video object-contain"
         />
       );
-    }
-    return <p>{file.name}</p>;
-  }, [file.type, file.name, src]);
+
+    return (
+      <img
+        src={src}
+        alt={file.name}
+        width={1920}
+        height={1080}
+        className="aspect-video cursor-pointer  object-contain"
+        onClick={onImageClick}
+      />
+    );
+  }, [fileType, src, file.name, onImageClick]);
 
   return (
-    <div>
-      <div className="aspect-video h-auto w-full flex-grow-0">{media}</div>
-      <div className="relative mt-4 flex flex-col gap-2 overflow-hidden text-gray-400">
-        <p className="truncate text-xs">Name: {file.name}</p>
-        <p className="truncate text-xs">Type: {file.type}</p>
-        <p className="truncate text-xs">Size: {size}</p>
+    <div className="flex flex-col gap-2">
+      <div className="aspect-video w-full overflow-hidden rounded-lg bg-black">
+        {filePreview}
       </div>
+      <div className="text-xs text-gray-400">
+        <p className="truncate">{file.name}</p>
+        <p className="truncate">
+          {file.type} - {size}
+        </p>
+      </div>
+      {fileType === FileType.IMAGE && isModalOpen && (
+        <Modal onClose={() => setIsModalOpen(false)} maxWidth={1200}>
+          <div className="aspect-video w-full overflow-hidden rounded-lg bg-black">
+            {filePreview}
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

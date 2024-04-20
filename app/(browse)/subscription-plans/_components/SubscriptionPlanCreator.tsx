@@ -74,9 +74,7 @@ export const SubscriptionPlanCreator = () => {
       toast("Something went wrong. Please try again later.", {
         type: "error",
       });
-    } finally {
       setIsLoading(false);
-      setProgress(1);
     }
   }, [isLoading, subscriptionPlanContent, imageFile, router]);
 
@@ -84,9 +82,6 @@ export const SubscriptionPlanCreator = () => {
     if (files[0]) return setImageFile(files[0]);
     setImageFile(null);
   }, []);
-
-  const isCreateDisabled =
-    isLoading || !subscriptionPlanContent.title || !imageFile;
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 p-4">
@@ -129,6 +124,7 @@ export const SubscriptionPlanCreator = () => {
           <div>
             <p>Title</p>
             <TextInput
+              isDisabled={isLoading}
               value={subscriptionPlanContent.title}
               onChange={(value) => onChange("title", value)}
             />
@@ -136,6 +132,7 @@ export const SubscriptionPlanCreator = () => {
           <div>
             <p>Description</p>
             <TextEditor
+              isDisabled={isLoading}
               placeholder="Subscription plan description"
               value={subscriptionPlanContent.description}
               onChange={(value) => onChange("description", value)}
@@ -157,7 +154,9 @@ export const SubscriptionPlanCreator = () => {
         <Button
           onClick={onSubmit}
           loadingText="Creating..."
-          isDisabled={isCreateDisabled}
+          isDisabled={
+            isLoading || subscriptionPlanContent.title.length < 1 || !imageFile
+          }
           isLoading={isLoading}
         >
           Create

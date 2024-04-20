@@ -25,15 +25,22 @@ export const FileDrop: FC<FileDropProps> = ({
   const onFilesChanged = useCallback(
     (newFiles: File[]) => {
       const filteredFiles = newFiles.filter((file) => {
-        const isEligible = file.size < maxFileSize;
-        if (!isEligible)
+        if (!eligibleFileTypes.includes(file.type)) {
+          toast(`${file.name} - file type not supported`, { type: "error" });
+          return false;
+        }
+
+        if (file.size > maxFileSize) {
           toast(`${file.name} - file size too large`, { type: "error" });
-        return isEligible;
+          return false;
+        }
+
+        return true;
       });
       onChange(filteredFiles);
       fileInputRef.current!.value = "";
     },
-    [maxFileSize, onChange]
+    [maxFileSize, onChange, eligibleFileTypes]
   );
 
   const onFilesSelected = useCallback(

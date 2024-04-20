@@ -11,6 +11,8 @@ import { VideoPostCreateDto } from "@/types/post.types";
 import { generateFileKey } from "@/helpers/server/s3.helpers";
 import { getSignedFileUploadUrl } from "@/services/s3.service";
 import {
+  ELIGIBLE_IMAGE_TYPES,
+  ELIGIBLE_VIDEO_TYPES,
   VIDEO_MAX_SIZE,
   VIDEO_THUMBNAIL_IMAGE_MAX_SIZE,
 } from "@/configs/file.config";
@@ -54,7 +56,9 @@ export const onCreateVideoPost = async ({
   try {
     if (
       video.size > VIDEO_MAX_SIZE ||
+      !ELIGIBLE_VIDEO_TYPES.includes(video.type) ||
       thumbnail.size > VIDEO_THUMBNAIL_IMAGE_MAX_SIZE ||
+      !ELIGIBLE_IMAGE_TYPES.includes(thumbnail.type) ||
       title.length < 1
     )
       return ERROR_RESPONSES.BAD_REQUEST;
