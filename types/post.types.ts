@@ -9,14 +9,16 @@ export type ImagePostCreateDto = {
 };
 
 export type VideoPostCreateDto = {
-  userId: string;
   title: string;
   body: string;
-  videos: {
-    title: string;
-    key: string;
-    thumbnailKey: string;
-  }[];
+  video: {
+    type: string;
+    size: number;
+  };
+  thumbnail: {
+    type: string;
+    size: number;
+  };
 };
 
 export type PostContent = {

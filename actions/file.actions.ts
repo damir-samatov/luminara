@@ -50,8 +50,8 @@ type OnGetSignedFileUploadUrlParams = {
 };
 
 type OnGetSignedFileUploadUrlResponse = ActionDataResponse<{
-  key: string;
   signedUrl: string;
+  key: string;
 }>;
 
 export const onGetSignedFileUploadUrl = async ({
@@ -68,19 +68,19 @@ export const onGetSignedFileUploadUrl = async ({
 
     const key = generateFileKey(self.id);
 
-    const res = await getSignedFileUploadUrl({
+    const signedUrl = await getSignedFileUploadUrl({
       key,
       size,
       type,
     });
 
-    if (!res) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+    if (!signedUrl) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
     return {
       success: true,
       data: {
-        key: res.key,
-        signedUrl: res.signedUrl,
+        signedUrl,
+        key,
       },
     };
   } catch (error) {
@@ -96,7 +96,6 @@ type OnGetSignedFileUpdateUrlParams = {
 };
 
 type OnGetSignedFileUpdateUrlResponse = ActionDataResponse<{
-  key: string;
   signedUrl: string;
 }>;
 
@@ -117,19 +116,18 @@ export const onGetSignedFileUpdateUrl = async ({
 
     if (keyUserId !== self.id) return ERROR_RESPONSES.UNAUTHORIZED;
 
-    const res = await getSignedFileUploadUrl({
+    const signedUrl = await getSignedFileUploadUrl({
       key,
       size,
       type,
     });
 
-    if (!res) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+    if (!signedUrl) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
     return {
       success: true,
       data: {
-        key: res.key,
-        signedUrl: res.signedUrl,
+        signedUrl,
       },
     };
   } catch (error) {

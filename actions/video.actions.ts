@@ -8,6 +8,12 @@ import {
   getVideoPostsByUserId,
 } from "@/services/post.service";
 import { VideoPostCreateDto } from "@/types/post.types";
+import { generateFileKey } from "@/helpers/server/s3.helpers";
+import { getSignedFileUploadUrl } from "@/services/s3.service";
+import {
+  VIDEO_MAX_SIZE,
+  VIDEO_THUMBNAIL_IMAGE_MAX_SIZE,
+} from "@/configs/file.config";
 
 type OnGetSelfVideoPostsResponse = ActionDataResponse<{
   posts: (Post & {
@@ -34,28 +40,68 @@ export const onGetSelfVideoPosts =
   };
 
 type OnCreateVideoPostResponse = ActionDataResponse<{
-  post: Post;
+  videoUploadUrl: string;
+  thumbnailUploadUrl: string;
 }>;
 
-export const onCreateVideoPost = async (
-  videoPostCreateDto: Omit<VideoPostCreateDto, "userId">
-): Promise<OnCreateVideoPostResponse> => {
+export const onCreateVideoPost = async ({
+  title,
+  body,
+  video,
+  thumbnail,
+}: VideoPostCreateDto): Promise<OnCreateVideoPostResponse> => {
   try {
+    if (
+      video.size > VIDEO_MAX_SIZE ||
+      thumbnail.size > VIDEO_THUMBNAIL_IMAGE_MAX_SIZE ||
+      title.length < 1
+    )
+      return ERROR_RESPONSES.BAD_REQUEST;
+
     const self = await getSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+
+    const thumbnailKey = generateFileKey("images");
+    const videoKey = generateFileKey("videos");
+
+    const [thumbnailUploadUrl, videoUploadUrl] = await Promise.all([
+      getSignedFileUploadUrl({
+        key: thumbnailKey,
+        type: thumbnail.type,
+        size: thumbnail.size,
+      }),
+      getSignedFileUploadUrl({
+        key: videoKey,
+        type: video.type,
+        size: video.size,
+      }),
+    ]);
+
+    if (!thumbnailUploadUrl || !videoUploadUrl)
+      return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
     const post = await createVideoPost({
-      ...videoPostCreateDto,
       userId: self.id,
+      title,
+      body,
+      video: {
+        title,
+        key: videoKey,
+        thumbnailKey,
+      },
     });
+
     if (!post) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
     return {
       success: true,
       data: {
-        post,
+        videoUploadUrl,
+        thumbnailUploadUrl,
       },
     };
   } catch (error) {
-    console.error("onCreatePost", error);
+    console.error("onCreateVideoPost", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };

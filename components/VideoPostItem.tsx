@@ -40,7 +40,6 @@ type VideoPostItemProps = {
 
 export const VideoPostItem: FC<VideoPostItemProps> = async ({ post }) => {
   const videoUrls = await Promise.all([...post.videos.map(getVideoUrls)]);
-  console.log("VideoPostItem");
   return (
     <div className="mx-auto w-full max-w-4xl overflow-hidden rounded bg-gray-800">
       {videoUrls.map(

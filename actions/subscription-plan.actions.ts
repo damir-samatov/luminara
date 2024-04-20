@@ -142,7 +142,7 @@ export const onCreateSubscriptionPlan = async (
       success: true,
       data: {
         subscriptionPlan,
-        imageUploadUrl: imageUploadUrl.signedUrl,
+        imageUploadUrl,
       },
     };
   } catch (error) {
@@ -260,7 +260,7 @@ export const onGetSubscriptionPlanImageUploadUrl = async ({
     return {
       success: true,
       data: {
-        imageUploadUrl: imageUploadUrl.signedUrl,
+        imageUploadUrl,
       },
     };
   } catch (error) {

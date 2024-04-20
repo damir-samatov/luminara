@@ -8,6 +8,7 @@ type TextInputProps = {
   maxLength?: number;
   className?: string;
   onEnter?: () => void;
+  isDisabled?: boolean;
 };
 
 export const TextInput: FC<TextInputProps> = ({
@@ -17,6 +18,7 @@ export const TextInput: FC<TextInputProps> = ({
   maxLength = 255,
   className = "",
   onEnter,
+  isDisabled = false,
 }) => {
   const onKeyDown: KeyboardEventHandler<HTMLInputElement> = useCallback(
     (e) => {
@@ -35,8 +37,10 @@ export const TextInput: FC<TextInputProps> = ({
       type="text"
       className={classNames(
         "block h-auto w-full rounded border-2 border-gray-700 bg-transparent px-2 py-1 text-gray-300 placeholder-gray-400 outline-0",
+        isDisabled ? "cursor-not-allowed" : "",
         className
       )}
+      disabled={isDisabled}
       value={value}
       placeholder={placeholder}
       maxLength={maxLength}

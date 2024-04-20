@@ -13,11 +13,11 @@ type ButtonProps = {
 
 const CLASSNAME_MAP = {
   primary:
-    "border-gray-700 bg-gray-700 hover:border-gray-600 hover:bg-gray-600",
+    "border-gray-700 bg-gray-700 enabled:hover:border-gray-600 enabled:hover:bg-gray-600",
   secondary:
-    "border-gray-700 bg-transparent hover:border-gray-600 hover:bg-gray-600",
-  danger: "border-red-700 bg-transparent hover:bg-red-700",
-  success: "border-green-700 bg-transparent hover:bg-green-700",
+    "border-gray-700 bg-transparent enabled:hover:border-gray-600 enabled:hover:bg-gray-600",
+  danger: "border-red-700 bg-transparent enabled:hover:bg-red-700",
+  success: "border-green-700 bg-transparent enabled:hover:bg-green-700",
 };
 
 export const Button: FC<ButtonProps> = ({

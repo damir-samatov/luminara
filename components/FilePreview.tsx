@@ -1,13 +1,11 @@
-import { FC, useMemo, useState } from "react";
+import { FC, useMemo } from "react";
 import { readableFileSize } from "@/utils/string.utils";
-import { Modal } from "@/components/Modal";
 
 type FilePreviewProps = {
   file: File;
 };
 
 export const FilePreview: FC<FilePreviewProps> = ({ file }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const src = useMemo(() => URL.createObjectURL(file), [file]);
   const size = useMemo(() => readableFileSize(file.size), [file.size]);
 
@@ -16,11 +14,10 @@ export const FilePreview: FC<FilePreviewProps> = ({ file }) => {
       return (
         <img
           src={src}
-          className="cursor-pointer rounded-lg object-contain"
           alt={file.name}
           width={1920}
           height={1080}
-          onClick={() => setIsModalOpen(true)}
+          className="cursor-pointer rounded-lg object-contain"
         />
       );
     }
@@ -28,8 +25,10 @@ export const FilePreview: FC<FilePreviewProps> = ({ file }) => {
       return (
         <video
           src={src}
+          controls
+          width={1920}
+          height={1080}
           className="cursor-pointer rounded-lg object-contain"
-          onClick={() => setIsModalOpen(true)}
         />
       );
     }
@@ -43,9 +42,6 @@ export const FilePreview: FC<FilePreviewProps> = ({ file }) => {
         <p className="truncate text-xs">Name: {file.name}</p>
         <p className="truncate text-xs">Type: {file.type}</p>
         <p className="truncate text-xs">Size: {size}</p>
-        {isModalOpen && (
-          <Modal onClose={() => setIsModalOpen(false)}>{media}</Modal>
-        )}
       </div>
     </div>
   );

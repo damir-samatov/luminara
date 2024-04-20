@@ -1,11 +1,12 @@
-import { CreateVideoPostForm } from "../_components/CreateVideoPostForm";
+import { VideoPostCreator } from "../_components/VideoPostCreator";
 
-const VideoCreatePage = () => {
+const NewVideoPage = () => {
   return (
-    <div className="p-4">
-      <CreateVideoPostForm />
-    </div>
+    <>
+      <title>New Subscription Plan</title>
+      <VideoPostCreator />
+    </>
   );
 };
 
-export default VideoCreatePage;
+export default NewVideoPage;

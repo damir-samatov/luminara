@@ -29,22 +29,15 @@ export const getSignedFileUploadUrl = async ({
 }: GetSignedFileUploadUrlParams) => {
   try {
     if (key.length < 1) return null;
-
     const putObjectCommand = new PutObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET_NAME,
       Key: key,
       ContentType: type,
       ContentLength: size,
     });
-
-    const signedUrl = await getSignedUrl(s3, putObjectCommand, {
+    return await getSignedUrl(s3, putObjectCommand, {
       expiresIn: UPLOAD_FILE_EXPIRATION_TIME,
     });
-
-    return {
-      signedUrl,
-      key,
-    };
   } catch (error) {
     console.error("getSignedFileUploadUrl", error);
     return null;

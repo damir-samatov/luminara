@@ -1,6 +1,6 @@
 "use server";
 import { db } from "@/lib/db";
-import { ImagePostCreateDto, VideoPostCreateDto } from "@/types/post.types";
+import { ImagePostCreateDto } from "@/types/post.types";
 import { Post, Image, Video } from "@prisma/client";
 
 export const createImagePost = async (postCreateDto: ImagePostCreateDto) => {
@@ -74,11 +74,24 @@ export const getVideoPostsByUserId = async (
   }
 };
 
-export const createVideoPost = async (postCreateDto: VideoPostCreateDto) => {
-  const { userId, title, body, videos } = postCreateDto;
+type CreateVideoPostProps = {
+  userId: string;
+  title: string;
+  body: string;
+  video: {
+    title: string;
+    key: string;
+    thumbnailKey: string;
+  };
+};
 
-  const videoCreate =
-    videos.length < 1 ? undefined : { createMany: { data: videos } };
+export const createVideoPost = async ({
+  userId,
+  title,
+  body,
+  video,
+}: CreateVideoPostProps) => {
+  const videoCreate = { createMany: { data: [video] } };
 
   try {
     return await db.post.create({

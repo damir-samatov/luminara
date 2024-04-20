@@ -56,7 +56,7 @@ img {
 }
 
 .text-editor {
-  [contenteditable="true"] {
+  .tiptap {
     @apply outline-0;
     @apply min-h-32;
     @apply max-h-96;

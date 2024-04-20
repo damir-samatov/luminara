@@ -1,40 +1,8 @@
 "use client";
 import { uploadFile } from "@/helpers/client/file.helpers";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
-import { onCreateVideoPost } from "@/actions/video.actions";
 import { PostContent } from "@/types/post.types";
 import { onCreateImagePost } from "@/actions/post.actions";
-
-export const publishVideoPost = async (
-  postContent: PostContent,
-  videoFile: File,
-  thumbnailFile: File
-) => {
-  try {
-    const [videoUpload, thumbnailUpload] = await Promise.all([
-      uploadFile(videoFile),
-      uploadFile(thumbnailFile),
-    ]);
-
-    if (!videoUpload || !thumbnailUpload)
-      return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-
-    return await onCreateVideoPost({
-      title: postContent.title,
-      body: postContent.body,
-      videos: [
-        {
-          title: "video",
-          key: videoUpload.key,
-          thumbnailKey: thumbnailUpload.key,
-        },
-      ],
-    });
-  } catch (error) {
-    console.error(error);
-    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-  }
-};
 
 export const createImagePost = async (
   postContent: PostContent,
@@ -49,7 +17,8 @@ export const createImagePost = async (
       title: postContent.title,
       body: postContent.body,
       images: imageUploads.filter(Boolean).map((upload) => ({
-        key: upload.key,
+        //TODO FIX
+        key: upload.signedUrl,
         title: "image",
       })),
     });
