@@ -1,3 +1,4 @@
+"use client";
 import { FC, useCallback, useState } from "react";
 import { Modal } from "@/components/Modal";
 import { Button } from "@/components/Button";

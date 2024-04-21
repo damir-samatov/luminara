@@ -120,34 +120,28 @@ export const SubscriptionPlanCreator = () => {
             />
           )}
         </div>
-        <div className="col-span-2 flex flex-col gap-4 rounded-lg border-2 border-gray-700 p-4">
-          <div>
-            <p>Title</p>
-            <TextInput
-              isDisabled={isLoading}
-              value={subscriptionPlanContent.title}
-              onChange={(value) => onChange("title", value)}
-            />
-          </div>
-          <div>
-            <p>Description</p>
-            <TextEditor
-              isDisabled={isLoading}
-              placeholder="Subscription plan description"
-              value={subscriptionPlanContent.description}
-              onChange={(value) => onChange("description", value)}
-            />
-          </div>
-          <div>
-            <p>Price {subscriptionPlanContent.price}$</p>
-            <SliderInput
-              value={subscriptionPlanContent.price}
-              onChange={(value) => onChange("price", value)}
-              max={100}
-              min={0.1}
-              step={0.1}
-            />
-          </div>
+        <div className="col-span-2 flex flex-col gap-2 rounded-lg border-2 border-gray-700 p-4">
+          <p>Title</p>
+          <TextInput
+            isDisabled={isLoading}
+            value={subscriptionPlanContent.title}
+            onChange={(value) => onChange("title", value)}
+          />
+          <p>Description</p>
+          <TextEditor
+            isDisabled={isLoading}
+            placeholder="Subscription plan description"
+            value={subscriptionPlanContent.description}
+            onChange={(value) => onChange("description", value)}
+          />
+          <p>Price {subscriptionPlanContent.price}$</p>
+          <SliderInput
+            value={subscriptionPlanContent.price}
+            onChange={(value) => onChange("price", value)}
+            max={100}
+            min={0.1}
+            step={0.1}
+          />
         </div>
       </div>
       <div className="ml-auto w-full sm:max-w-80">

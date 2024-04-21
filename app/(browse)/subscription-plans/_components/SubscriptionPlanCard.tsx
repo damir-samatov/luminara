@@ -1,6 +1,8 @@
 import { SubscriptionPlan } from "@prisma/client";
 import { FC } from "react";
 import Link from "next/link";
+import { SubscriptionPlanDeleterModal } from "./SubscriptionPlanDeleterModal";
+import { PencilIcon } from "@heroicons/react/24/outline";
 
 type SubscriptionPlanCardProps = {
   subscriptionPlan: SubscriptionPlan & {
@@ -31,13 +33,17 @@ export const SubscriptionPlanCard: FC<SubscriptionPlanCardProps> = ({
         <div
           dangerouslySetInnerHTML={{ __html: subscriptionPlan.description }}
         />
-        <div className="mt-auto flex justify-end">
+        <div className="ml-auto mt-auto grid grid-cols-2 gap-2">
           <Link
             href={`/subscription-plans/${subscriptionPlan.id}`}
-            className="ml-auto w-full max-w-max rounded border-2 border-gray-700 bg-transparent px-2 py-2 text-center text-xs font-semibold text-gray-100 hover:border-gray-600 hover:bg-gray-600 md:px-4 md:text-sm"
+            className="ml-auto flex w-full items-center justify-center gap-2 rounded border-2 border-gray-700 bg-transparent px-2 py-2 text-center text-xs font-semibold text-gray-100 hover:border-gray-600 hover:bg-gray-600 md:px-4 md:text-sm"
           >
+            <PencilIcon className="h-3 w-3" />
             <span>Edit</span>
           </Link>
+          <SubscriptionPlanDeleterModal
+            subscriptionPlanId={subscriptionPlan.id}
+          />
         </div>
       </div>
     </div>

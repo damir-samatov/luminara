@@ -64,23 +64,19 @@ export const SubscriptionPlanContentEditor: FC<
   };
 
   return (
-    <div className="flex flex-col gap-4 rounded-lg border-2 border-gray-700 p-4 text-gray-300">
-      <div>
-        <p>Title</p>
-        <TextInput
-          value={content.title}
-          onChange={(value) => onChange("title", value)}
-        />
-      </div>
-      <div>
-        <p>Description</p>
-        <TextEditor
-          placeholder="Subscription plan description"
-          value={content.description}
-          forceUpdate={forceUpdate}
-          onChange={(value) => onChange("description", value)}
-        />
-      </div>
+    <div className="flex flex-col gap-2 rounded-lg border-2 border-gray-700 p-4 text-gray-300">
+      <p>Title</p>
+      <TextInput
+        value={content.title}
+        onChange={(value) => onChange("title", value)}
+      />
+      <p>Description</p>
+      <TextEditor
+        placeholder="Subscription plan description"
+        value={content.description}
+        forceUpdate={forceUpdate}
+        onChange={(value) => onChange("description", value)}
+      />
       {changeDetected && (
         <div className="ml-auto grid w-full grid-cols-2 gap-2">
           <Button

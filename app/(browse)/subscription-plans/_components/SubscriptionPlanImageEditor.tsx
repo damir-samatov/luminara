@@ -99,7 +99,7 @@ export const SubscriptionPlanImageEditor: FC<
           </>
         ) : (
           <FileDrop
-            label="New Cover Image"
+            label="Cover Image"
             onChange={onFilesChange}
             eligibleFileTypes={ELIGIBLE_IMAGE_TYPES}
             maxFileSize={SUBSCRIPTION_PLAN_IMAGE_MAX_SIZE}
