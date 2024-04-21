@@ -1,15 +1,17 @@
 "use server";
 import { ActionDataResponse } from "@/types/action.types";
-import { Post, Video } from "@prisma/client";
 import { authSelf } from "@/services/auth.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import {
   createVideoPost,
   getVideoPostsByUserId,
 } from "@/services/post.service";
-import { VideoPostCreateDto } from "@/types/post.types";
+import { VideoPostCreateDto, VideoPostDto } from "@/types/post.types";
 import { generateFileKey } from "@/helpers/server/s3.helpers";
-import { getSignedFileUploadUrl } from "@/services/s3.service";
+import {
+  getSignedFileReadUrl,
+  getSignedFileUploadUrl,
+} from "@/services/s3.service";
 import {
   ELIGIBLE_IMAGE_TYPES,
   ELIGIBLE_VIDEO_TYPES,
@@ -20,9 +22,7 @@ import { revalidatePath } from "next/cache";
 import { getSubscriptionPlanById } from "@/services/subscription-plan.service";
 
 type OnGetSelfVideoPostsResponse = ActionDataResponse<{
-  posts: (Post & {
-    videos: Video[];
-  })[];
+  videoPosts: VideoPostDto[];
 }>;
 
 export const onGetSelfVideoPosts =
@@ -31,10 +31,29 @@ export const onGetSelfVideoPosts =
       const self = await authSelf();
       if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
       const posts = await getVideoPostsByUserId(self.id);
+      const videoPosts = await Promise.all(
+        posts.map(async (post) => {
+          const video = post.videos[0]!;
+          const [videoUrl, thumbnailUrl] = await Promise.all([
+            getSignedFileReadUrl(video.key),
+            getSignedFileReadUrl(video.thumbnailKey),
+          ]);
+          return {
+            id: post.id,
+            title: post.title,
+            body: post.body,
+            videoUrl: videoUrl || "",
+            thumbnailUrl: thumbnailUrl || "",
+            subscriptionPlan: post.subscriptionPlan,
+            createdAt: post.createdAt,
+            updatedAt: post.updatedAt,
+          };
+        })
+      );
       return {
         success: true,
         data: {
-          posts,
+          videoPosts,
         },
       };
     } catch (error) {

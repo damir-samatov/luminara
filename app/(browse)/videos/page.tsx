@@ -6,9 +6,7 @@ import { VideoPostItem } from "@/components/VideoPostItem";
 
 const VideosPage = async () => {
   const res = await onGetSelfVideoPosts();
-
   if (!res.success) return notFound();
-
   return (
     <>
       <title>Videos</title>
@@ -24,8 +22,8 @@ const VideosPage = async () => {
           </Link>
         </div>
         <div className="flex flex-col gap-6">
-          {res.data.posts.map((post) => (
-            <VideoPostItem key={post.id} post={post} />
+          {res.data.videoPosts.map((videoPost) => (
+            <VideoPostItem key={videoPost.id} videoPost={videoPost} />
           ))}
         </div>
       </div>
