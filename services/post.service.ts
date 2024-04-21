@@ -64,6 +64,9 @@ export const getVideoPostsByUserId = async (
           some: {},
         },
       },
+      orderBy: {
+        createdAt: "desc",
+      },
       include: {
         videos: true,
       },

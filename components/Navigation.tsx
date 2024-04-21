@@ -41,13 +41,16 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
           />
         ))}
         <hr className="my-2 border-gray-600" />
-        {STUDIO_LINKS.map(({ href, label, icon }) => (
+        <p className="p-2 text-sm font-semibold leading-6 text-gray-400">
+          Studio:
+        </p>
+        {STUDIO_LINKS.map(({ href, label, icon, activeOn }) => (
           <SidebarLink
             key={href}
             href={href}
             label={label}
             icon={icon}
-            isActive={href === pathname}
+            isActive={activeOn.indexOf(pathname) !== -1}
           />
         ))}
         {subscriptions.length > 0 && (

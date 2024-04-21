@@ -45,7 +45,10 @@ export const VideoPostItem: FC<VideoPostItemProps> = async ({ post }) => {
       {videoUrls.map(
         (res) =>
           res.success && (
-            <div key={res.data.videoUrl} className="aspect-video w-full">
+            <div
+              key={res.data.videoUrl}
+              className="aspect-video w-full bg-black"
+            >
               <video
                 className="h-full w-full object-contain"
                 controls
