@@ -11,6 +11,7 @@ export type ImagePostCreateDto = {
 export type VideoPostCreateDto = {
   title: string;
   body: string;
+  subscriptionPlanId: string | null;
   video: {
     type: string;
     size: number;

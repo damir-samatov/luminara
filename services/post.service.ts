@@ -78,6 +78,7 @@ type CreateVideoPostProps = {
   userId: string;
   title: string;
   body: string;
+  subscriptionPlanId: string | null;
   video: {
     title: string;
     key: string;
@@ -89,10 +90,10 @@ export const createVideoPost = async ({
   userId,
   title,
   body,
+  subscriptionPlanId,
   video,
 }: CreateVideoPostProps) => {
   const videoCreate = { createMany: { data: [video] } };
-
   try {
     return await db.post.create({
       data: {
@@ -100,6 +101,7 @@ export const createVideoPost = async ({
         title,
         body,
         videos: videoCreate,
+        subscriptionPlanId,
       },
     });
   } catch (error) {

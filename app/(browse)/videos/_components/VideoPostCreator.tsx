@@ -59,6 +59,30 @@ export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
     setThumbnailFile(null);
   }, []);
 
+  const [activeOption, setActiveOption] = useState({
+    value: "follower",
+    label: "Follower",
+  });
+
+  const options = useMemo(() => {
+    return [
+      {
+        value: "follower",
+        label: "Follower - Free",
+      },
+      ...subscriptionPlans
+        .sort((a, b) => a.price - b.price)
+        .map((s) => ({
+          value: s.id,
+          label: `${s.title} - ${s.price}$`,
+        })),
+    ];
+  }, [subscriptionPlans]);
+
+  const selectedPlan = useMemo(() => {
+    return subscriptionPlans.find((plan) => plan.id === activeOption.value);
+  }, [subscriptionPlans, activeOption]);
+
   const onSubmit = useCallback(async () => {
     try {
       if (content.title.length < 1 || !videoFile || !thumbnailFile || isLoading)
@@ -68,6 +92,7 @@ export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
       const res = await onCreateVideoPost({
         title: content.title,
         body: content.body,
+        subscriptionPlanId: selectedPlan ? selectedPlan.id : null,
         video: {
           size: videoFile.size,
           type: videoFile.type,
@@ -104,43 +129,33 @@ export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
       console.error(error);
       setIsLoading(false);
     }
-  }, [isLoading, content, videoFile, thumbnailFile, router]);
-
-  const [activeOption, setActiveOption] = useState({
-    value: "follower",
-    label: "Follower",
-  });
-
-  const options = useMemo(() => {
-    return [
-      {
-        value: "follower",
-        label: "Follower - Free",
-      },
-      ...subscriptionPlans
-        .sort((a, b) => a.price - b.price)
-        .map((s) => ({
-          value: s.id,
-          label: `${s.title} - ${s.price}$`,
-        })),
-    ];
-  }, [subscriptionPlans]);
-
-  const selectedPlan = useMemo(() => {
-    return subscriptionPlans.find((plan) => plan.id === activeOption.value);
-  }, [subscriptionPlans, activeOption]);
+  }, [isLoading, content, videoFile, thumbnailFile, router, selectedPlan]);
 
   const [activeTab, setActiveTab] = useState(0);
 
   const tabs = [
     {
       component: (
-        <div className="flex flex-col gap-4 rounded-lg border-2 border-gray-700 p-4">
-          <div className="grid grid-cols-3 gap-4">
-            <div className="flex flex-col gap-4">
-              <div>
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 rounded-lg border-2 border-gray-700 p-4 sm:flex-row">
+              <div className="flex flex-grow flex-col gap-2">
+                <p>Title</p>
+                <TextInput
+                  isDisabled={isLoading}
+                  value={content.title}
+                  onChange={(value) => onPostContentChange("title", value)}
+                />
+                <p>Description</p>
+                <TextEditor
+                  isDisabled={isLoading}
+                  value={content.body}
+                  onChange={(value) => onPostContentChange("body", value)}
+                />
+              </div>
+              <div className="flex w-full max-w-48 flex-col gap-2">
                 <p>Subscription Plan</p>
-                <div className="aspect-square overflow-hidden rounded-lg bg-black">
+                <div className="aspect-square w-full overflow-hidden rounded-lg bg-black">
                   {selectedPlan?.imageUrl && (
                     <img
                       width={640}
@@ -151,32 +166,13 @@ export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
                     />
                   )}
                 </div>
-              </div>
-
-              <div className="mt-auto">
-                <Dropdown
-                  options={options}
-                  active={activeOption}
-                  onChange={setActiveOption}
-                />
-              </div>
-            </div>
-            <div className="col-span-2 flex flex-col gap-4">
-              <div>
-                <p>Title</p>
-                <TextInput
-                  isDisabled={isLoading}
-                  value={content.title}
-                  onChange={(value) => onPostContentChange("title", value)}
-                />
-              </div>
-              <div>
-                <p>Description</p>
-                <TextEditor
-                  isDisabled={isLoading}
-                  value={content.body}
-                  onChange={(value) => onPostContentChange("body", value)}
-                />
+                <div className="mt-auto">
+                  <Dropdown
+                    options={options}
+                    active={activeOption}
+                    onChange={setActiveOption}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -187,7 +183,7 @@ export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
     },
     {
       component: (
-        <div className="grid min-h-96 grid-cols-2 gap-4 rounded-lg border-2 border-gray-700 p-4">
+        <div className="grid min-h-96 gap-4 rounded-lg border-2 border-gray-700 p-4 md:grid-cols-2">
           {videoFile ? (
             <div className="flex flex-col gap-2">
               <p>Video</p>
@@ -250,35 +246,33 @@ export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
   ];
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 rounded-lg p-4">
+    <div className="mx-auto flex w-full max-w-4xl flex-col gap-4 rounded-lg p-4">
       <div className="flex items-center gap-2">
         <BackButton href="/videos" />
         <h2 className="text-sm md:text-xl lg:text-3xl">New Video</h2>
       </div>
-      <div className="grid grid-cols-2 gap-1">
+      {isLoading && (
+        <ProgressBar progress={(videoProgress + thumbnailProgress) / 2} />
+      )}
+      <div className="grid grid-cols-3 items-start gap-2">
         {tabs.map((tab, i) => {
           return (
             <div className="flex flex-col gap-0.5" key={tab.label}>
+              <Button
+                type={activeTab === i ? "secondary" : "transparent"}
+                onClick={() => setActiveTab(i)}
+              >
+                {tab.label}
+              </Button>
               <div className="relative h-0.5 w-full overflow-hidden rounded-full bg-gray-700">
                 <div
                   className="h-0.5 w-full origin-left rounded-full bg-green-500 transition-transform"
                   style={{ transform: `scale(${tab.progress * 100}%, 100%)` }}
                 />
               </div>
-              <Button
-                type={activeTab === i ? "primary" : "transparent"}
-                onClick={() => setActiveTab(i)}
-              >
-                {tab.label}
-              </Button>
             </div>
           );
         })}
-      </div>
-      {tabs[activeTab]?.component}
-      {isLoading ? (
-        <ProgressBar progress={(videoProgress + thumbnailProgress) / 2} />
-      ) : (
         <Button
           isLoading={isLoading}
           isDisabled={
@@ -286,11 +280,11 @@ export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
           }
           onClick={onSubmit}
           loadingText="Publishing..."
-          className="ml-auto mt-auto max-w-80"
         >
           Publish
         </Button>
-      )}
+      </div>
+      {tabs[activeTab]?.component}
     </div>
   );
 };

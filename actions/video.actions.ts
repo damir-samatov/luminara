@@ -17,6 +17,7 @@ import {
   VIDEO_THUMBNAIL_IMAGE_MAX_SIZE,
 } from "@/configs/file.config";
 import { revalidatePath } from "next/cache";
+import { getSubscriptionPlanById } from "@/services/subscription-plan.service";
 
 type OnGetSelfVideoPostsResponse = ActionDataResponse<{
   posts: (Post & {
@@ -50,6 +51,7 @@ type OnCreateVideoPostResponse = ActionDataResponse<{
 export const onCreateVideoPost = async ({
   title,
   body,
+  subscriptionPlanId,
   video,
   thumbnail,
 }: VideoPostCreateDto): Promise<OnCreateVideoPostResponse> => {
@@ -65,6 +67,14 @@ export const onCreateVideoPost = async ({
 
     const self = await authSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+
+    if (subscriptionPlanId !== null) {
+      const subscriptionPlan =
+        await getSubscriptionPlanById(subscriptionPlanId);
+      if (!subscriptionPlan) return ERROR_RESPONSES.NOT_FOUND;
+      if (subscriptionPlan.userId !== self.id)
+        return ERROR_RESPONSES.UNAUTHORIZED;
+    }
 
     const thumbnailKey = generateFileKey("images");
     const videoKey = generateFileKey("videos");
@@ -89,6 +99,7 @@ export const onCreateVideoPost = async ({
       userId: self.id,
       title,
       body,
+      subscriptionPlanId,
       video: {
         title,
         key: videoKey,
