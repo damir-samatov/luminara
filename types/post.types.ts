@@ -10,6 +10,16 @@ export type BlogPostCreateDto = {
   };
 };
 
+export type BlogPostDto = {
+  id: string;
+  title: string;
+  body: string;
+  imageUrl: string;
+  subscriptionPlan: SubscriptionPlan | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export type VideoPostCreateDto = {
   title: string;
   body: string;
@@ -33,9 +43,4 @@ export type VideoPostDto = {
   subscriptionPlan: SubscriptionPlan | null;
   createdAt: Date;
   updatedAt: Date;
-};
-
-export type PostContent = {
-  title: string;
-  body: string;
 };

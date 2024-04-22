@@ -1,34 +1,49 @@
 "use server";
-import { authSelf, getSelf } from "@/services/auth.service";
+import { authSelf } from "@/services/auth.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import { createBlogPost, getBlogPostsByUserId } from "@/services/post.service";
 import { ActionDataResponse } from "@/types/action.types";
-import { Post, Image } from "@prisma/client";
-import { BlogPostCreateDto } from "@/types/post.types";
+import { BlogPostCreateDto, BlogPostDto } from "@/types/post.types";
 import {
   BLOG_POST_IMAGE_MAX_SIZE,
   ELIGIBLE_IMAGE_TYPES,
 } from "@/configs/file.config";
 import { getSubscriptionPlanById } from "@/services/subscription-plan.service";
 import { generateFileKey } from "@/helpers/server/s3.helpers";
-import { getSignedFileUploadUrl } from "@/services/s3.service";
+import {
+  getSignedFileReadUrl,
+  getSignedFileUploadUrl,
+} from "@/services/s3.service";
 import { revalidatePath } from "next/cache";
 
 type OnGetSelfPostsResponse = ActionDataResponse<{
-  posts: (Post & {
-    images: Image[];
-  })[];
+  blogPosts: BlogPostDto[];
 }>;
 
 export const onGetSelfBlogPosts = async (): Promise<OnGetSelfPostsResponse> => {
   try {
-    const self = await getSelf();
+    const self = await authSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
     const posts = await getBlogPostsByUserId(self.id);
+    const blogPosts = await Promise.all(
+      posts.map(async (post) => {
+        const image = post.images[0];
+        const imageUrl = await getSignedFileReadUrl(image?.key || "");
+        return {
+          id: post.id,
+          title: post.title,
+          body: post.body,
+          imageUrl: imageUrl || "",
+          subscriptionPlan: post.subscriptionPlan,
+          createdAt: post.createdAt,
+          updatedAt: post.updatedAt,
+        };
+      })
+    );
     return {
       success: true,
       data: {
-        posts,
+        blogPosts,
       },
     };
   } catch (error) {

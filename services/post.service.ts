@@ -1,6 +1,5 @@
 "use server";
 import { db } from "@/lib/db";
-import { Post, Image } from "@prisma/client";
 
 type CreateBlogPostProps = {
   userId: string;
@@ -37,13 +36,7 @@ export const createBlogPost = async ({
   }
 };
 
-export const getBlogPostsByUserId = async (
-  userId: string
-): Promise<
-  (Post & {
-    images: Image[];
-  })[]
-> => {
+export const getBlogPostsByUserId = async (userId: string) => {
   try {
     return await db.post.findMany({
       where: {
@@ -52,8 +45,12 @@ export const getBlogPostsByUserId = async (
           none: {},
         },
       },
+      orderBy: {
+        createdAt: "desc",
+      },
       include: {
         images: true,
+        subscriptionPlan: true,
       },
     });
   } catch (error) {

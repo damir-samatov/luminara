@@ -33,10 +33,10 @@ export const onGetSelfVideoPosts =
       const posts = await getVideoPostsByUserId(self.id);
       const videoPosts = await Promise.all(
         posts.map(async (post) => {
-          const video = post.videos[0]!;
+          const video = post.videos[0];
           const [videoUrl, thumbnailUrl] = await Promise.all([
-            getSignedFileReadUrl(video.key),
-            getSignedFileReadUrl(video.thumbnailKey),
+            getSignedFileReadUrl(video?.key || ""),
+            getSignedFileReadUrl(video?.thumbnailKey || ""),
           ]);
           return {
             id: post.id,
