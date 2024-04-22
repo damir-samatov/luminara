@@ -95,8 +95,8 @@ export const onCreateVideoPost = async ({
         return ERROR_RESPONSES.UNAUTHORIZED;
     }
 
-    const thumbnailKey = generateFileKey("images");
-    const videoKey = generateFileKey("videos");
+    const thumbnailKey = generateFileKey(self.id, thumbnail.type);
+    const videoKey = generateFileKey(self.id, video.type);
 
     const [thumbnailUploadUrl, videoUploadUrl] = await Promise.all([
       getSignedFileUploadUrl({

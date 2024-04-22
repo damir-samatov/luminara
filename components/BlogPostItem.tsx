@@ -9,7 +9,7 @@ type PostItemProps = {
   };
 };
 
-export const ImagePostItem: FC<PostItemProps> = async ({ post }) => {
+export const BlogPostItem: FC<PostItemProps> = async ({ post }) => {
   const imageUrls = await Promise.all(
     post.images.map(async (image) => onGetSignedFileReadUrl({ key: image.key }))
   );

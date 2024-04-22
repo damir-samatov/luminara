@@ -1,30 +1,43 @@
 "use server";
 import { db } from "@/lib/db";
-import { ImagePostCreateDto } from "@/types/post.types";
 import { Post, Image } from "@prisma/client";
 
-export const createImagePost = async (postCreateDto: ImagePostCreateDto) => {
-  const { userId, title, body, images } = postCreateDto;
+type CreateBlogPostProps = {
+  userId: string;
+  title: string;
+  body: string;
+  subscriptionPlanId: string | null;
+  image: {
+    title: string;
+    key: string;
+  };
+};
 
-  const imagesCreate =
-    images.length < 1 ? undefined : { createMany: { data: images } };
-
+export const createBlogPost = async ({
+  userId,
+  title,
+  image,
+  body,
+  subscriptionPlanId,
+}: CreateBlogPostProps) => {
+  const imageCreate = { createMany: { data: [image] } };
   try {
     return await db.post.create({
       data: {
+        userId,
         title,
         body,
-        userId,
-        images: imagesCreate,
+        images: imageCreate,
+        subscriptionPlanId,
       },
     });
   } catch (error) {
-    console.error("createImagePost", error);
+    console.error("createBlogPost", error);
     return null;
   }
 };
 
-export const getImagePostsByUserId = async (
+export const getBlogPostsByUserId = async (
   userId: string
 ): Promise<
   (Post & {
@@ -44,7 +57,7 @@ export const getImagePostsByUserId = async (
       },
     });
   } catch (error) {
-    console.error("getImagePostsByUserId", error);
+    console.error("getBlogPostsByUserId", error);
     return [];
   }
 };

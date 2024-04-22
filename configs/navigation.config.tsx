@@ -26,7 +26,7 @@ export const STUDIO_LINKS = [
   {
     href: "/posts",
     label: "Blog Posts",
-    activeOn: ["/posts"],
+    activeOn: ["/posts", "/posts/new"],
     icon: <MegaphoneIcon className="h-6 w-6 shrink-0" />,
   },
   {

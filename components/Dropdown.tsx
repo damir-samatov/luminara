@@ -41,13 +41,15 @@ export const Dropdown: FC<DropdownProps> = ({ options, active, onChange }) => {
       >
         <span>{active.label}</span>
       </button>
-      <div className="pointer-events-none absolute right-3 top-1/2 z-10 -translate-y-1/2">
-        {isOpen ? (
-          <ChevronUpIcon className="h-4 w-4 text-gray-100" />
-        ) : (
-          <ChevronDownIcon className="h-4 w-4 text-gray-100" />
-        )}
-      </div>
+      {options.length > 1 && (
+        <div className="pointer-events-none absolute right-3 top-1/2 z-10 -translate-y-1/2">
+          {isOpen ? (
+            <ChevronUpIcon className="h-4 w-4 text-gray-100" />
+          ) : (
+            <ChevronDownIcon className="h-4 w-4 text-gray-100" />
+          )}
+        </div>
+      )}
       {isOpen && (
         <div className="absolute left-0 right-0 top-[120%] z-10 flex flex-col rounded-lg bg-gray-900">
           {options.map((option) => {

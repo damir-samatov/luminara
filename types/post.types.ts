@@ -1,13 +1,13 @@
 import { SubscriptionPlan } from "@prisma/client";
 
-export type ImagePostCreateDto = {
-  userId: string;
+export type BlogPostCreateDto = {
   title: string;
   body: string;
-  images: {
-    title: string;
-    key: string;
-  }[];
+  subscriptionPlanId: string | null;
+  image: {
+    type: string;
+    size: number;
+  };
 };
 
 export type VideoPostCreateDto = {

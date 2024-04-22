@@ -6,7 +6,7 @@ import { getBan } from "@/services/ban.service";
 import { Post, Subscription, SubscriptionPlan, User } from "@prisma/client";
 import { ActionDataResponse } from "@/types/action.types";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
-import { getImagePostsByUserId } from "@/services/post.service";
+import { getBlogPostsByUserId } from "@/services/post.service";
 import { getSubscriptionPlansByUserId } from "@/services/subscription-plan.service";
 
 type OnGetProfileDataResponse = ActionDataResponse<{
@@ -30,7 +30,7 @@ export const onGetProfileData = async (
     if (selfBan) return ERROR_RESPONSES.NOT_FOUND;
     const [subscription, posts, subscriptionPlans] = await Promise.all([
       getSubscription(self.id, user.id),
-      getImagePostsByUserId(user.id),
+      getBlogPostsByUserId(user.id),
       getSubscriptionPlansByUserId(user.id),
     ]);
 

@@ -125,7 +125,7 @@ export const onCreateSubscriptionPlan = async ({
     const self = await authSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
 
-    const imageKey = generateFileKey(self.id);
+    const imageKey = generateFileKey(self.id, image.type);
 
     const imageUploadUrl = await getSignedFileUploadUrl({
       key: imageKey,

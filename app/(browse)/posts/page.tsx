@@ -1,12 +1,12 @@
 import { notFound } from "next/navigation";
-import { onGetSelfImagePosts } from "@/actions/post.actions";
-import { ImagePostItem } from "@/components/ImagePostItem";
+import { onGetSelfBlogPosts } from "@/actions/post.actions";
+import { BlogPostItem } from "@/components/BlogPostItem";
 import { classNames } from "@/utils/style.utils";
 import Link from "next/link";
 import { PencilIcon } from "@heroicons/react/24/outline";
 
 const PostsPage = async () => {
-  const res = await onGetSelfImagePosts();
+  const res = await onGetSelfBlogPosts();
 
   if (!res.success) return notFound();
 
@@ -23,7 +23,7 @@ const PostsPage = async () => {
       </Link>
       <div className="flex flex-col gap-4">
         {res.data.posts.map((post) => (
-          <ImagePostItem key={post.id} post={post} />
+          <BlogPostItem key={post.id} post={post} />
         ))}
       </div>
     </div>

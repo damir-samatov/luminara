@@ -1,5 +1,5 @@
 "use client";
-import { FC, useCallback, useMemo, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import { Button } from "@/components/Button";
 import { TextInput } from "@/components/TextInput";
 import { useRouter } from "next/navigation";
@@ -19,7 +19,7 @@ import { toast } from "react-toastify";
 import { onCreateVideoPost } from "@/actions/video.actions";
 import { uploadFileToS3 } from "@/helpers/client/file.helpers";
 import { SubscriptionPlan } from "@prisma/client";
-import { Dropdown } from "@/components/Dropdown";
+import { SubscriptionPlanSelector } from "@/components/SubscriptionPlanSelector";
 
 type VideoPostCreatorProps = {
   subscriptionPlans: (SubscriptionPlan & {
@@ -59,29 +59,12 @@ export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
     setThumbnailFile(null);
   }, []);
 
-  const [activeOption, setActiveOption] = useState({
-    value: "follower",
-    label: "Follower",
-  });
-
-  const options = useMemo(() => {
-    return [
-      {
-        value: "follower",
-        label: "Follower - Free",
-      },
-      ...subscriptionPlans
-        .sort((a, b) => a.price - b.price)
-        .map((s) => ({
-          value: s.id,
-          label: `${s.title} - ${s.price}$`,
-        })),
-    ];
-  }, [subscriptionPlans]);
-
-  const selectedPlan = useMemo(() => {
-    return subscriptionPlans.find((plan) => plan.id === activeOption.value);
-  }, [subscriptionPlans, activeOption]);
+  const [activeSubscriptionPlan, setActiveSubscriptionPlan] = useState<
+    | (SubscriptionPlan & {
+        imageUrl: string | null;
+      })
+    | null
+  >(null);
 
   const onSubmit = useCallback(async () => {
     try {
@@ -92,7 +75,9 @@ export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
       const res = await onCreateVideoPost({
         title: content.title,
         body: content.body,
-        subscriptionPlanId: selectedPlan ? selectedPlan.id : null,
+        subscriptionPlanId: activeSubscriptionPlan
+          ? activeSubscriptionPlan.id
+          : null,
         video: {
           size: videoFile.size,
           type: videoFile.type,
@@ -103,10 +88,12 @@ export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
         },
       });
 
-      if (!res.success)
+      if (!res.success) {
+        setIsLoading(false);
         return toast(res.message, {
           type: "error",
         });
+      }
 
       const [videoUploadRes, thumbnailUploadRes] = await Promise.all([
         uploadFileToS3({
@@ -120,8 +107,12 @@ export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
           onProgress: setThumbnailProgress,
         }),
       ]);
-      if (!videoUploadRes || !thumbnailUploadRes)
+
+      if (!videoUploadRes || !thumbnailUploadRes) {
+        setIsLoading(false);
         return toast("Failed uploading", { type: "error" });
+      }
+
       toast("Video is successfully published", { type: "success" });
       router.push("/videos");
     } catch (error) {
@@ -129,7 +120,14 @@ export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
       console.error(error);
       setIsLoading(false);
     }
-  }, [isLoading, content, videoFile, thumbnailFile, router, selectedPlan]);
+  }, [
+    isLoading,
+    content,
+    videoFile,
+    thumbnailFile,
+    router,
+    activeSubscriptionPlan,
+  ]);
 
   const [activeTab, setActiveTab] = useState(0);
 
@@ -153,27 +151,11 @@ export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
                   onChange={(value) => onPostContentChange("body", value)}
                 />
               </div>
-              <div className="flex w-full max-w-48 flex-col gap-2">
-                <p>Subscription Plan</p>
-                <div className="aspect-square w-full overflow-hidden rounded-lg bg-black">
-                  {selectedPlan?.imageUrl && (
-                    <img
-                      width={640}
-                      height={640}
-                      src={selectedPlan.imageUrl}
-                      alt={selectedPlan.title}
-                      className="object-cover"
-                    />
-                  )}
-                </div>
-                <div className="mt-auto">
-                  <Dropdown
-                    options={options}
-                    active={activeOption}
-                    onChange={setActiveOption}
-                  />
-                </div>
-              </div>
+              <SubscriptionPlanSelector
+                onChange={setActiveSubscriptionPlan}
+                subscriptionPlans={subscriptionPlans}
+                activeSubscriptionPlan={activeSubscriptionPlan}
+              />
             </div>
           </div>
         </div>

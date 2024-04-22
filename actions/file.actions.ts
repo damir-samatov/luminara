@@ -25,13 +25,9 @@ export const onGetSignedFileReadUrl = async ({
 }: GetSignedFileReadUrlParams): Promise<OnGetSignedFileReadUrlResponse> => {
   try {
     const self = await getSelf();
-
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
-
     const signedUrl = await getSignedFileReadUrl(key);
-
     if (!signedUrl) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-
     return {
       success: true,
       data: {
@@ -66,7 +62,7 @@ export const onGetSignedFileUploadUrl = async ({
 
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
 
-    const key = generateFileKey(self.id);
+    const key = generateFileKey(self.id, type);
 
     const signedUrl = await getSignedFileUploadUrl({
       key,
