@@ -9,37 +9,42 @@ import {
   onGoLive,
   onGoOffline,
   onRefreshSelfStreamKey,
-  onRemoveSelfStreamSubscriptionPlan,
   onUpdateSelfStreamSettings,
-  onUpdateSelfStreamSubscriptionPlan,
 } from "@/actions/stream-owner.actions";
 import { StreamSettingsUpdateDto } from "@/types/stream.types";
 import { useObjectShadow } from "@/hooks/useObjectShadow";
-import { classNames } from "@/utils/style.utils";
 import { Button } from "@/components/Button";
+import { SubscriptionPlanSelector } from "@/components/SubscriptionPlanSelector";
 
 type StreamEditorProps = {
   stream: Stream;
   user: User;
-  subscriptionPlans: SubscriptionPlan[];
+  subscriptionPlans: (SubscriptionPlan & {
+    imageUrl: string | null;
+  })[];
   playbackUrl: string;
-  appliedThumbnailUrl: string;
+  thumbnailUrl: string;
 };
 
 export const StreamEditor: FC<StreamEditorProps> = ({
   subscriptionPlans,
-  stream: initialStream,
-  appliedThumbnailUrl: initialAppliedThumbnailUrl,
+  stream: savedStream,
+  thumbnailUrl: savedThumbnailUrl,
   user,
   playbackUrl,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
-  const [stream, setStream] = useState<Stream>(initialStream);
+  const [stream, setStream] = useState<Stream>(savedStream);
+  const [activeSubscriptionPlan, setActiveSubscriptionPlan] = useState<
+    | (SubscriptionPlan & {
+        imageUrl: string | null;
+      })
+    | null
+  >(null);
 
-  const [appliedThumbnailUrl, setAppliedThumbnailUrl] = useState<string>(
-    initialAppliedThumbnailUrl
-  );
+  const [thumbnailUrl, setAppliedThumbnailUrl] =
+    useState<string>(savedThumbnailUrl);
 
   const [streamSettings, setStreamSettings] = useState<StreamSettingsUpdateDto>(
     {
@@ -141,28 +146,6 @@ export const StreamEditor: FC<StreamEditorProps> = ({
     setStreamSettings(settingsPrevState);
   }, [settingsPrevState]);
 
-  const onSubscriptionPlanClick = useCallback(async (id: string) => {
-    setIsLoading(true);
-    try {
-      const res = await onUpdateSelfStreamSubscriptionPlan(id);
-      if (res.success) setStream(res.data.stream);
-    } catch (error) {
-      console.log(error);
-    }
-    setIsLoading(false);
-  }, []);
-
-  const onRemoveSubscriptionPlanClick = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const res = await onRemoveSelfStreamSubscriptionPlan();
-      if (res.success) setStream(res.data.stream);
-    } catch (error) {
-      console.log(error);
-    }
-    setIsLoading(false);
-  }, []);
-
   const tabs = useMemo(
     () => [
       {
@@ -175,7 +158,7 @@ export const StreamEditor: FC<StreamEditorProps> = ({
               streamerImageUrl={user.imageUrl}
               streamerUsername={user.username}
               playbackUrl={playbackUrl}
-              thumbnailUrl={appliedThumbnailUrl}
+              thumbnailUrl={thumbnailUrl}
             />
           </div>
         ),
@@ -209,7 +192,7 @@ export const StreamEditor: FC<StreamEditorProps> = ({
         component: (
           <StreamThumbnail
             setThumbnailUrl={setAppliedThumbnailUrl}
-            thumbnailUrl={appliedThumbnailUrl}
+            thumbnailUrl={thumbnailUrl}
           />
         ),
         label: "Thumbnail",
@@ -217,7 +200,7 @@ export const StreamEditor: FC<StreamEditorProps> = ({
     ],
     [
       stream,
-      appliedThumbnailUrl,
+      thumbnailUrl,
       playbackUrl,
       user,
       onRefreshStreamKeyClick,
@@ -230,74 +213,54 @@ export const StreamEditor: FC<StreamEditorProps> = ({
   );
 
   return (
-    <div className="flex flex-grow flex-col gap-4 p-4 lg:grid lg:grid-cols-5 lg:items-start">
-      <div className="flex h-full flex-grow flex-col gap-4 lg:col-span-4">
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {tabs.map((tab, i) => (
-            <Button
-              type={activeTab === i ? "primary" : "secondary"}
-              onClick={() => setActiveTab(i)}
-              key={tab.label}
-            >
-              {tab.label}
-            </Button>
-          ))}
+    <div className="mx-auto flex w-full max-w-7xl flex-grow flex-col gap-6 p-4">
+      <h2 className="text-sm md:text-xl lg:text-3xl">Stream Dashboard</h2>
+      <div className="flex w-full flex-grow flex-col gap-4 lg:grid lg:grid-cols-4 lg:items-start">
+        <div className="flex h-full flex-grow flex-col gap-4 lg:col-span-3">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {tabs.map((tab, i) => (
+              <Button
+                type={activeTab === i ? "primary" : "secondary"}
+                onClick={() => setActiveTab(i)}
+                key={tab.label}
+              >
+                {tab.label}
+              </Button>
+            ))}
+          </div>
+          <div className="flex flex-grow flex-col">
+            {tabs[activeTab]?.component}
+          </div>
         </div>
-        <div className="flex flex-grow flex-col">
-          {tabs[activeTab]?.component}
-        </div>
-      </div>
-      <div
-        className={classNames(
-          isLoading && "disabled-block",
-          "flex flex-col gap-4 rounded-lg border-2 border-gray-700 p-4 text-sm text-gray-300"
-        )}
-      >
-        <p className="text-xl">
-          <span>Status: </span>
-          {stream.isLive ? (
-            <span className="font-bold text-green-500">LIVE</span>
-          ) : (
-            <span className="font-bold text-red-500">OFFLINE</span>
+        <div className="flex flex-col gap-4  text-sm text-gray-300">
+          {!stream.isLive && (
+            <div className="mx-auto flex w-full max-w-80 flex-col gap-2">
+              <p className="text-lg">Subscription plan</p>
+              <SubscriptionPlanSelector
+                subscriptionPlans={subscriptionPlans}
+                activeSubscriptionPlan={activeSubscriptionPlan}
+                onChange={setActiveSubscriptionPlan}
+              />
+            </div>
           )}
-        </p>
-        <p className="text-lg">
-          Starting the stream will make it available for your audience
-        </p>
 
-        {!stream.isLive && (
-          <>
-            <p className="text-sm">Required plan:</p>
-            <Button
-              type={!stream.subscriptionPlanId ? "primary" : "secondary"}
-              onClick={onRemoveSubscriptionPlanClick}
-            >
-              Follower
-            </Button>
-            {subscriptionPlans.map((subscriptionPlan) => {
-              return (
-                <Button
-                  type={
-                    subscriptionPlan.id === stream.subscriptionPlanId
-                      ? "primary"
-                      : "secondary"
-                  }
-                  key={subscriptionPlan.id}
-                  onClick={() => onSubscriptionPlanClick(subscriptionPlan.id)}
-                >
-                  {subscriptionPlan.title} {subscriptionPlan.price}$
-                </Button>
-              );
-            })}
-          </>
-        )}
+          <p className="text-xl">
+            <span>Status: </span>
+            {stream.isLive ? (
+              <span className="font-bold text-green-500">LIVE</span>
+            ) : (
+              <span className="font-bold text-red-500">OFFLINE</span>
+            )}
+          </p>
 
-        <div className="flex flex-col gap-2">
+          <p>Starting the stream will make it available for your audience</p>
+
           {stream.isLive && (
             <Button type="secondary" onClick={onOpenModerationPage}>
               Moderation Tab
             </Button>
           )}
+
           <Button
             isDisabled={isLoading}
             type={stream.isLive ? "danger" : "success"}

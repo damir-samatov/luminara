@@ -34,42 +34,41 @@ export const StreamSettings: FC<StreamSettingsProps> = ({
   return (
     <div className="flex flex-col gap-4 rounded-lg border-2 border-gray-700 p-4">
       <ToggleInput
+        isDisabled={isLoading}
         label="Enable Chat"
         value={streamSettings.isChatEnabled}
         onChange={(value) => onChange("isChatEnabled", value)}
       />
-      <div>
-        <p>Title</p>
-        <TextInput
-          value={streamSettings.title}
-          onChange={(value) => onChange("title", value)}
-          placeholder="Title..."
-        />
-      </div>
-      <div>
-        <p>Description</p>
-        <TextEditor
-          onChange={(value) => onChange("description", value)}
-          value={streamSettings.description}
-          placeholder="Description..."
-        />
-      </div>
+      <p>Title</p>
+      <TextInput
+        isDisabled={isLoading}
+        value={streamSettings.title}
+        onChange={(value) => onChange("title", value)}
+        placeholder="Title..."
+      />
+      <p>Description</p>
+      <TextEditor
+        isDisabled={isLoading}
+        onChange={(value) => onChange("description", value)}
+        value={streamSettings.description}
+        placeholder="Description..."
+      />
       {changeDetected && (
-        <div className="flex gap-2 sm:max-w-80">
+        <div className="ml-auto flex w-full gap-2 sm:max-w-96">
           <Button
-            isDisabled={isLoading || !changeDetected}
+            type="secondary"
+            isDisabled={isLoading}
+            onClick={onDiscardSettings}
+          >
+            Discard
+          </Button>
+          <Button
+            isDisabled={isLoading}
             isLoading={isLoading}
             loadingText="Saving..."
             onClick={onSaveClick}
           >
             Save
-          </Button>
-          <Button
-            type="secondary"
-            isDisabled={isLoading || !changeDetected}
-            onClick={onDiscardSettings}
-          >
-            Discard
           </Button>
         </div>
       )}

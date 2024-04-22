@@ -4,24 +4,25 @@ import { onCreateSelfStream } from "@/actions/stream-owner.actions";
 import { useState } from "react";
 import streamerImg from "@/public/images/streamer.webp";
 import { redirect } from "next/navigation";
+import { toast } from "react-toastify";
 
-export const StreamCreate = () => {
+export const StreamCreator = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isStreamCreated, setIsStreamCreated] = useState(false);
   const onCreateStreamClick = async () => {
     setIsLoading(true);
     try {
       const res = await onCreateSelfStream();
-      if (!res.success) {
-        setIsLoading(false);
-        return;
-      }
-      setIsStreamCreated(true);
+      if (!res.success) return setIsLoading(false);
+
+      toast("Stream dashboard created successfully!", {
+        type: "success",
+      });
+
       redirect("/stream");
     } catch (error) {
+      setIsLoading(false);
       console.error(error);
     }
-    setIsLoading(false);
   };
 
   return (
@@ -47,12 +48,12 @@ export const StreamCreate = () => {
               </p>
             </div>
             <Button
-              isLoading={isLoading && !isStreamCreated}
-              isDisabled={isLoading || isStreamCreated}
+              isLoading={isLoading}
+              isDisabled={isLoading}
               loadingText="Creating the stream dashboard..."
               onClick={onCreateStreamClick}
             >
-              {isStreamCreated ? "Ready!!!" : "Let's Go!!!"}
+              Let&apos;s Go
             </Button>
           </div>
         </div>

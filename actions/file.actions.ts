@@ -62,7 +62,7 @@ export const onGetSignedFileUploadUrl = async ({
 
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
 
-    const key = generateFileKey(self.id, type);
+    const key = generateFileKey(self.id);
 
     const signedUrl = await getSignedFileUploadUrl({
       key,

@@ -104,8 +104,8 @@ export const BlogPostCreator: FC<BlogPostCreatorProps> = ({
         <BackButton href="/posts" />
         <h2 className="text-sm sm:text-xl lg:text-3xl">New Blog Post</h2>
       </div>
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
-        <div className="flex flex-grow flex-col gap-2 rounded-lg border-2 border-gray-700 p-4">
+      <div className="grid gap-4 sm:grid-cols-3 sm:flex-row sm:items-start">
+        <div className="flex flex-grow flex-col gap-2 rounded-lg border-2 border-gray-700 p-4 sm:col-span-2">
           <p>Title</p>
           <TextInput
             value={content.title}
@@ -148,7 +148,7 @@ export const BlogPostCreator: FC<BlogPostCreatorProps> = ({
             onChange={(value) => onPostContentChange("body", value)}
           />
         </div>
-        <div className="mx-auto w-full max-w-48">
+        <div className="w-full sm:col-span-1">
           <SubscriptionPlanSelector
             onChange={setActiveSubscriptionPlan}
             subscriptionPlans={subscriptionPlans}

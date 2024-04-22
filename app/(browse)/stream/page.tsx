@@ -1,41 +1,39 @@
-import { onGetStreamDataAsOwner } from "@/actions/stream-owner.actions";
+import { onGetSelfStreamDashboardData } from "@/actions/stream-owner.actions";
 import { notFound } from "next/navigation";
 import { ErrorResponseType } from "@/types/action.types";
-import { StreamCreate } from "./_components/StreamCreate";
+import { StreamCreator } from "./_components/StreamCreator";
 import { StreamEditor } from "./_components/StreamEditor";
-import { onGetSelfSubscriptionPlans } from "@/actions/subscription-plan.actions";
 
 const StreamPage = async () => {
-  const streamRes = await onGetStreamDataAsOwner();
-  const subscriptionPlansRes = await onGetSelfSubscriptionPlans();
+  const res = await onGetSelfStreamDashboardData();
 
-  if (streamRes.success && subscriptionPlansRes.success) {
-    const { stream, user, playbackUrl, appliedThumbnailUrl } = streamRes.data;
-    const { subscriptionPlans } = subscriptionPlansRes.data;
+  if (!res.success) {
+    if (res.type === ErrorResponseType.NOT_FOUND)
+      return (
+        <>
+          <title>Stream Create</title>
+          <StreamCreator />;
+        </>
+      );
 
-    return (
-      <>
-        <title>Stream Dashboard</title>
-        <StreamEditor
-          subscriptionPlans={subscriptionPlans}
-          stream={stream}
-          user={user}
-          playbackUrl={playbackUrl}
-          appliedThumbnailUrl={appliedThumbnailUrl}
-        />
-      </>
-    );
+    return notFound();
   }
 
-  if (!streamRes.success && streamRes.type === ErrorResponseType.NOT_FOUND)
-    return (
-      <>
-        <title>Stream Create</title>
-        <StreamCreate />;
-      </>
-    );
+  const { subscriptionPlans, user, stream, playbackUrl, thumbnailUrl } =
+    res.data;
 
-  return notFound();
+  return (
+    <>
+      <title>Stream Dashboard</title>
+      <StreamEditor
+        subscriptionPlans={subscriptionPlans}
+        stream={stream}
+        user={user}
+        playbackUrl={playbackUrl}
+        thumbnailUrl={thumbnailUrl}
+      />
+    </>
+  );
 };
 
 export default StreamPage;

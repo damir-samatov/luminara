@@ -40,8 +40,7 @@ export const SubscriptionPlanSelector: FC<SubscriptionPlanSelectorProps> = ({
     ];
   }, [subscriptionPlans]);
   return (
-    <div className="flex w-full max-w-48 flex-col gap-2">
-      <p>Subscription Plan</p>
+    <div className="flex w-full flex-col gap-2">
       <div className="aspect-square w-full overflow-hidden rounded-lg bg-black">
         {activeSubscriptionPlan?.imageUrl && (
           <img

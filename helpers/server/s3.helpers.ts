@@ -1,8 +1,8 @@
 "use server";
 import { v4 as uuid } from "uuid";
 
-export const generateFileKey = (userId: string, fileType: string) => {
-  return `${userId}_${uuid()}.${fileType.split("/")[1]}`;
+export const generateFileKey = (userId: string) => {
+  return `${userId}_${uuid()}`;
 };
 
 export const extractUserIdFromFileKey = (key: string) => {

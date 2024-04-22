@@ -136,8 +136,8 @@ export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
       component: (
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-4 rounded-lg border-2 border-gray-700 p-4 sm:flex-row">
-              <div className="flex flex-grow flex-col gap-2">
+            <div className="grid grid-cols-1 gap-4 rounded-lg border-2 border-gray-700 p-4 sm:grid-cols-3">
+              <div className="flex flex-grow flex-col gap-2 sm:col-span-2">
                 <p>Title</p>
                 <TextInput
                   isDisabled={isLoading}
@@ -151,11 +151,13 @@ export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
                   onChange={(value) => onPostContentChange("body", value)}
                 />
               </div>
-              <SubscriptionPlanSelector
-                onChange={setActiveSubscriptionPlan}
-                subscriptionPlans={subscriptionPlans}
-                activeSubscriptionPlan={activeSubscriptionPlan}
-              />
+              <div className="w-full sm:col-span-1">
+                <SubscriptionPlanSelector
+                  onChange={setActiveSubscriptionPlan}
+                  subscriptionPlans={subscriptionPlans}
+                  activeSubscriptionPlan={activeSubscriptionPlan}
+                />
+              </div>
             </div>
           </div>
         </div>

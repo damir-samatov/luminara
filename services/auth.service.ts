@@ -12,16 +12,12 @@ export const getSelf = async () => {
 
     if (!session || !session.userId) return null;
 
-    const user = await poll({
+    return await poll({
       attempts: 5,
       interval: 2000,
       callback: async () => await getUserByExternalUserId(session.userId),
       successCallback: (user) => !!user,
     });
-
-    if (!user) return null;
-
-    return user;
   } catch (error) {
     console.error("getSelf", error);
     return null;
@@ -34,16 +30,12 @@ export const authSelf = async () => {
 
     if (!session || !session.userId) return null;
 
-    const user = await poll({
+    return await poll({
       attempts: 5,
       interval: 2000,
       callback: async () => await getUserIdByExternalUserId(session.userId),
       successCallback: (user) => user !== null,
     });
-
-    if (!user) return null;
-
-    return user;
   } catch (error) {
     console.error("authSelf", error);
     return null;

@@ -12,7 +12,7 @@ import {
 } from "@/services/stream.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import { ActionDataResponse } from "@/types/action.types";
-import { Stream, User } from "@prisma/client";
+import { Stream, SubscriptionPlan, User } from "@prisma/client";
 import { StreamSettingsUpdateDto } from "@/types/stream.types";
 import { revalidatePath } from "next/cache";
 import {
@@ -20,11 +20,17 @@ import {
   getIvsViewerToken,
   refreshIvsChannelStreamKey,
 } from "@/services/ivs.service";
-import { deleteFile, getSignedFileReadUrl } from "@/services/s3.service";
+import {
+  deleteFile,
+  getSignedFileReadUrl,
+  getSignedFileUploadUrl,
+} from "@/services/s3.service";
 import {
   createIvsChatRoom,
   deleteIvsChatMessage,
 } from "@/services/ivs-chat.service";
+import { getSubscriptionPlansByUserId } from "@/services/subscription-plan.service";
+import { generateFileKey } from "@/helpers/server/s3.helpers";
 
 type StreamActionsResponse = ActionDataResponse<{ stream: Stream }>;
 
@@ -43,6 +49,64 @@ export const onGetSelfStream = async (): Promise<StreamActionsResponse> => {
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };
+
+type OnGetStreamDashboardDataResponse = ActionDataResponse<{
+  thumbnailUrl: string;
+  playbackUrl: string;
+  user: User;
+  stream: Stream;
+  subscriptionPlans: (SubscriptionPlan & {
+    imageUrl: string | null;
+  })[];
+}>;
+
+export const onGetSelfStreamDashboardData =
+  async (): Promise<OnGetStreamDashboardDataResponse> => {
+    try {
+      const self = await getSelf();
+      if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+      const [stream, subscriptionPlans] = await Promise.all([
+        getStreamByUserId(self.id),
+        getSubscriptionPlansByUserId(self.id),
+      ]);
+      if (!stream) return ERROR_RESPONSES.NOT_FOUND;
+      if (!subscriptionPlans) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+      const [viewerToken, thumbnailUrl] = await Promise.all([
+        getIvsViewerToken(stream.channelArn),
+        getSignedFileReadUrl(stream.thumbnailKey),
+      ]);
+
+      const subscriptionPlansWithImageUrls = await Promise.all(
+        subscriptionPlans.map(async (subscriptionPlan) => {
+          const imageUrl = await getSignedFileReadUrl(
+            subscriptionPlan.imageKey
+          );
+          return {
+            ...subscriptionPlan,
+            imageUrl,
+          };
+        })
+      );
+
+      if (!viewerToken || !thumbnailUrl)
+        return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+      return {
+        success: true,
+        data: {
+          user: self,
+          subscriptionPlans: subscriptionPlansWithImageUrls,
+          stream,
+          thumbnailUrl,
+          playbackUrl: `${stream.playbackUrl}?token=${viewerToken}`,
+        },
+      };
+    } catch (error) {
+      console.error("onGetSelfStreamDashboardData", error);
+      return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+    }
+  };
 
 export const onUpdateSelfStreamSubscriptionPlan = async (
   subscriptionPlanId: string
@@ -154,11 +218,9 @@ export const onUpdateSelfStreamSettings = async (
 export const onCreateSelfStream = async (): Promise<StreamActionsResponse> => {
   try {
     const self = await getSelf();
-
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
 
     const existingStream = await getStreamByUserId(self.id);
-
     if (existingStream) return ERROR_RESPONSES.STREAM_EXISTS;
 
     const [ivsChannel, ivsChatRoom] = await Promise.all([
@@ -173,14 +235,14 @@ export const onCreateSelfStream = async (): Promise<StreamActionsResponse> => {
 
     const stream = await createStream(self.id, {
       title: `Welcome to ${self.username}'s Stream`,
-      description: "",
+      description: "<p></p>",
       channelArn: ivsChannel.channelArn,
       chatRoomArn: ivsChatRoom.chatRoomArn,
       serverUrl: ivsChannel.serverUrl,
       streamKey: ivsChannel.streamKey,
       streamKeyArn: ivsChannel.streamKeyArn,
       playbackUrl: ivsChannel.playbackUrl,
-      thumbnailKey: "",
+      thumbnailKey: generateFileKey(self.id),
       isLive: false,
       isChatEnabled: false,
     });
@@ -281,12 +343,11 @@ export const onGetStreamDataAsOwner =
       if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
 
       const stream = await getStreamByUserId(self.id);
-
       if (!stream) return ERROR_RESPONSES.NOT_FOUND;
 
       const [viewerToken, thumbnailUrl] = await Promise.all([
         getIvsViewerToken(stream.channelArn),
-        stream.thumbnailKey ? getSignedFileReadUrl(stream.thumbnailKey) : null,
+        getSignedFileReadUrl(stream.thumbnailKey),
       ]);
 
       if (!viewerToken) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
@@ -331,6 +392,45 @@ export const onDeleteSelfChatMessage = async (messageId: string) => {
     };
   } catch (error) {
     console.error("onDeleteSelfChatMessage", error);
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+  }
+};
+
+type GetSignedFileUploadUrlParams = {
+  type: string;
+  size: number;
+};
+type OnGetStreamThumbnailUploadUrlResponse = ActionDataResponse<{
+  thumbnailUploadUrl: string;
+}>;
+
+export const onGetStreamThumbnailUploadUrl = async ({
+  type,
+  size,
+}: GetSignedFileUploadUrlParams): Promise<OnGetStreamThumbnailUploadUrlResponse> => {
+  try {
+    const self = await getSelf();
+    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+
+    const stream = await getStreamByUserId(self.id);
+    if (!stream) return ERROR_RESPONSES.NOT_FOUND;
+
+    const thumbnailUploadUrl = await getSignedFileUploadUrl({
+      key: stream.thumbnailKey,
+      size,
+      type,
+    });
+
+    if (!thumbnailUploadUrl) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    return {
+      success: true,
+      data: {
+        thumbnailUploadUrl,
+      },
+    };
+  } catch (error) {
+    console.error("onGetStreamThumbnailUploadUrl", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };
