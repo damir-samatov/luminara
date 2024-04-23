@@ -86,27 +86,6 @@ export const updateStreamKeyByUserId = ({
     return null;
   }
 };
-type UpdateThumbnailKeyByUserIdProps = {
-  userId: string;
-  thumbnailKey: string;
-};
-
-export const updateStreamThumbnailByUserId = ({
-  userId,
-  thumbnailKey,
-}: UpdateThumbnailKeyByUserIdProps) => {
-  try {
-    return db.stream.update({
-      where: {
-        userId,
-      },
-      data: { thumbnailKey },
-    });
-  } catch (error) {
-    console.error("updateStreamThumbnailByUserId", error);
-    return null;
-  }
-};
 
 export const updateStreamStatusByUserId = (userId: string, isLive: boolean) => {
   try {
@@ -124,7 +103,7 @@ export const updateStreamStatusByUserId = (userId: string, isLive: boolean) => {
 
 export const updateStreamSubscriptionPlanByUserId = (
   userId: string,
-  subscriptionPlanId: string
+  subscriptionPlanId: string | null
 ) => {
   try {
     return db.stream.update({
@@ -135,20 +114,6 @@ export const updateStreamSubscriptionPlanByUserId = (
     });
   } catch (error) {
     console.error("updateStreamSubscriptionPlanByUserId", error);
-    return null;
-  }
-};
-
-export const removeStreamSubscriptionPlanByUserId = (userId: string) => {
-  try {
-    return db.stream.update({
-      where: {
-        userId,
-      },
-      data: { subscriptionPlanId: null },
-    });
-  } catch (error) {
-    console.error("removeStreamSubscriptionPlanByUserId", error);
     return null;
   }
 };

@@ -1,4 +1,4 @@
-import { onGetStreamDataAsModerator } from "@/actions/stream-viewer.actions";
+import { onGetStreamModerationData } from "@/actions/stream-viewer.actions";
 import { notFound } from "next/navigation";
 import { AwsStream } from "@/components/AwsStream";
 import { FC } from "react";
@@ -15,7 +15,7 @@ type StreamModerationPageProps = {
 const StreamModerationPage: FC<StreamModerationPageProps> = async ({
   params,
 }) => {
-  const res = await onGetStreamDataAsModerator(params.slug);
+  const res = await onGetStreamModerationData(params.slug);
 
   if (!res.success) return notFound();
 

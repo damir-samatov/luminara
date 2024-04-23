@@ -6,7 +6,7 @@ import { v4 as uuid } from "uuid";
 import { TextInput } from "@/components/TextInput";
 import { stringToColor } from "@/utils/style.utils";
 import { PaperAirplaneIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { onDeleteSelfChatMessage } from "@/actions/stream-owner.actions";
+import { onDeleteChatMessage } from "@/actions/stream-owner.actions";
 import { chatRoomTokenProvider } from "@/helpers/client/chat-room.helpers";
 import { StreamUserRoles } from "@/types/stream.types";
 
@@ -77,7 +77,7 @@ export const AwsChatRoom: FC<AwsChatRoomProps> = ({
   };
 
   const onDeleteMessage = async (messageId: string) => {
-    await onDeleteSelfChatMessage(messageId);
+    await onDeleteChatMessage(messageId);
   };
 
   useEffect(() => {

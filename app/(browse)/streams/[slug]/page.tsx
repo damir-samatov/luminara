@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { FC } from "react";
 import { AwsStream } from "@/components/AwsStream";
-import { onGetStreamDataAsViewer } from "@/actions/stream-viewer.actions";
+import { onGetStreamWatchData } from "@/actions/stream-viewer.actions";
 
 type LiveStreamPageProps = {
   params: {
@@ -10,7 +10,7 @@ type LiveStreamPageProps = {
 };
 
 const LiveStreamPage: FC<LiveStreamPageProps> = async ({ params }) => {
-  const res = await onGetStreamDataAsViewer(params.slug);
+  const res = await onGetStreamWatchData(params.slug);
 
   if (res.success) {
     const {

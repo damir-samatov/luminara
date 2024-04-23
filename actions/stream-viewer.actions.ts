@@ -56,7 +56,7 @@ type OnGetStreamDataAsViewerResponse = ActionDataResponse<{
   isChatEnabled: boolean;
 }>;
 
-export const onGetStreamDataAsViewer = async (
+export const onGetStreamWatchData = async (
   streamerUsername: string
 ): Promise<OnGetStreamDataAsViewerResponse> => {
   try {
@@ -93,7 +93,7 @@ export const onGetStreamDataAsViewer = async (
       },
     };
   } catch (error) {
-    console.error("onGetStreamDataAsViewer", error);
+    console.error("onGetStreamWatchData", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };
@@ -108,7 +108,7 @@ type OnGetStreamDataAsModeratorResponse = ActionDataResponse<{
   isChatEnabled: boolean;
 }>;
 
-export const onGetStreamDataAsModerator = async (
+export const onGetStreamModerationData = async (
   streamerUsername: string
 ): Promise<OnGetStreamDataAsModeratorResponse> => {
   try {
@@ -123,10 +123,11 @@ export const onGetStreamDataAsModerator = async (
 
     const [viewerToken, thumbnailUrl] = await Promise.all([
       getIvsViewerToken(stream.channelArn),
-      stream.thumbnailKey ? getSignedFileReadUrl(stream.thumbnailKey) : null,
+      getSignedFileReadUrl(stream.thumbnailKey),
     ]);
 
-    if (!viewerToken) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+    if (!viewerToken || !thumbnailUrl)
+      return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
     return {
       success: true,
@@ -141,7 +142,7 @@ export const onGetStreamDataAsModerator = async (
       },
     };
   } catch (error) {
-    console.error("onGetStreamDataAsModerator", error);
+    console.error("onGetStreamModerationData", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };

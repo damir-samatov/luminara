@@ -3,12 +3,9 @@ import { authSelf, getSelf } from "@/services/auth.service";
 import {
   createStream,
   getStreamByUserId,
-  removeStreamSubscriptionPlanByUserId,
   updateStreamKeyByUserId,
   updateStreamSettingsByUserId,
   updateStreamStatusByUserId,
-  updateStreamSubscriptionPlanByUserId,
-  updateStreamThumbnailByUserId,
 } from "@/services/stream.service";
 import { ERROR_RESPONSES, SUCCESS_RESPONSES } from "@/configs/responses.config";
 import { ActionDataResponse } from "@/types/action.types";
@@ -21,7 +18,6 @@ import {
   refreshIvsChannelStreamKey,
 } from "@/services/ivs.service";
 import {
-  deleteFile,
   getSignedFileReadUrl,
   getSignedFileUploadUrl,
 } from "@/services/s3.service";
@@ -34,22 +30,6 @@ import { generateFileKey } from "@/helpers/server/s3.helpers";
 
 type StreamActionsResponse = ActionDataResponse<{ stream: Stream }>;
 
-export const onGetSelfStream = async (): Promise<StreamActionsResponse> => {
-  try {
-    const self = await getSelf();
-    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
-    const stream = await getStreamByUserId(self.id);
-    if (!stream) return ERROR_RESPONSES.NOT_FOUND;
-    return {
-      success: true,
-      data: { stream },
-    };
-  } catch (error) {
-    console.error("onGetSelfStream", error);
-    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-  }
-};
-
 type OnGetStreamDashboardDataResponse = ActionDataResponse<{
   thumbnailUrl: string;
   playbackUrl: string;
@@ -60,7 +40,7 @@ type OnGetStreamDashboardDataResponse = ActionDataResponse<{
   })[];
 }>;
 
-export const onGetSelfStreamDashboardData =
+export const onGetStreamDashboardData =
   async (): Promise<OnGetStreamDashboardDataResponse> => {
     try {
       const self = await getSelf();
@@ -103,95 +83,12 @@ export const onGetSelfStreamDashboardData =
         },
       };
     } catch (error) {
-      console.error("onGetSelfStreamDashboardData", error);
+      console.error("onGetStreamDashboardData", error);
       return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
     }
   };
 
-export const onUpdateSelfStreamSubscriptionPlan = async (
-  subscriptionPlanId: string
-): Promise<StreamActionsResponse> => {
-  try {
-    const self = await getSelf();
-
-    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
-
-    const stream = await updateStreamSubscriptionPlanByUserId(
-      self.id,
-      subscriptionPlanId
-    );
-
-    if (!stream) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-
-    return {
-      success: true,
-      data: {
-        stream,
-      },
-    };
-  } catch (error) {
-    console.error("onUpdateSelfStreamSubscriptionPlan", error);
-    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-  }
-};
-
-export const onRemoveSelfStreamSubscriptionPlan =
-  async (): Promise<StreamActionsResponse> => {
-    try {
-      const self = await getSelf();
-
-      if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
-
-      const stream = await removeStreamSubscriptionPlanByUserId(self.id);
-
-      if (!stream) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-
-      return {
-        success: true,
-        data: {
-          stream,
-        },
-      };
-    } catch (error) {
-      console.error("onRemoveSelfStreamSubscriptionPlan", error);
-      return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-    }
-  };
-
-export const onUpdateSelfStreamThumbnailKey = async (
-  thumbnailKey: string
-): Promise<StreamActionsResponse> => {
-  try {
-    const self = await getSelf();
-
-    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
-
-    const existingStream = await getStreamByUserId(self.id);
-
-    if (!existingStream) return ERROR_RESPONSES.NOT_FOUND;
-
-    deleteFile(existingStream.thumbnailKey);
-
-    const stream = await updateStreamThumbnailByUserId({
-      userId: self.id,
-      thumbnailKey,
-    });
-
-    if (!stream) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-
-    return {
-      success: true,
-      data: {
-        stream,
-      },
-    };
-  } catch (error) {
-    console.error("onUpdateSelfStreamThumbnailKey", error);
-    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-  }
-};
-
-export const onUpdateSelfStreamSettings = async (
+export const onUpdateStreamSettings = async (
   updatedStreamSettings: StreamSettingsUpdateDto
 ): Promise<StreamActionsResponse> => {
   try {
@@ -210,12 +107,12 @@ export const onUpdateSelfStreamSettings = async (
       },
     };
   } catch (error) {
-    console.error("onUpdateSelfStream", error);
+    console.error("onUpdateStreamSettings", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };
 
-export const onCreateSelfStream = async () => {
+export const onCreateStream = async () => {
   try {
     const self = await getSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
@@ -253,145 +150,7 @@ export const onCreateSelfStream = async () => {
 
     return SUCCESS_RESPONSES.SUCCESS;
   } catch (error) {
-    console.error("onGetSelfStream", error);
-    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-  }
-};
-
-type OnRefreshSelfStreamKey = ActionDataResponse<{
-  streamKey: string;
-}>;
-
-export const onRefreshSelfStreamKey =
-  async (): Promise<OnRefreshSelfStreamKey> => {
-    try {
-      const self = await authSelf();
-      if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
-
-      const stream = await getStreamByUserId(self.id);
-      if (!stream) return ERROR_RESPONSES.NOT_FOUND;
-
-      const refreshedIvsChannelStreamKey = await refreshIvsChannelStreamKey({
-        channelArn: stream.channelArn,
-        streamKeyArn: stream.streamKeyArn,
-      });
-
-      if (!refreshedIvsChannelStreamKey)
-        return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-
-      const updatedStream = await updateStreamKeyByUserId({
-        userId: self.id,
-        streamKey: refreshedIvsChannelStreamKey.streamKey,
-        streamKeyArn: refreshedIvsChannelStreamKey.streamKeyArn,
-      });
-
-      if (!updatedStream) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-
-      return {
-        success: true,
-        data: { streamKey: updatedStream.streamKey },
-      };
-    } catch (error) {
-      console.error("onGetSelfStream", error);
-      return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-    }
-  };
-
-export const onGoLive = async (): Promise<StreamActionsResponse> => {
-  try {
-    const self = await getSelf();
-    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
-    const stream = await updateStreamStatusByUserId(self.id, true);
-    if (!stream) return ERROR_RESPONSES.NOT_FOUND;
-    return {
-      success: true,
-      data: { stream },
-    };
-  } catch (error) {
-    console.error("onGetSelfStream", error);
-    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-  }
-};
-
-export const onGoOffline = async (): Promise<StreamActionsResponse> => {
-  try {
-    const self = await getSelf();
-    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
-    const stream = await updateStreamStatusByUserId(self.id, false);
-    if (!stream) return ERROR_RESPONSES.NOT_FOUND;
-    return {
-      success: true,
-      data: { stream },
-    };
-  } catch (error) {
-    console.error("onGoOffline", error);
-    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-  }
-};
-
-type OnGetStreamDataAsOwnerResponse = ActionDataResponse<{
-  stream: Stream;
-  user: User;
-  playbackUrl: string;
-  appliedThumbnailUrl: string;
-}>;
-
-export const onGetStreamDataAsOwner =
-  async (): Promise<OnGetStreamDataAsOwnerResponse> => {
-    try {
-      const self = await getSelf();
-      if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
-
-      const stream = await getStreamByUserId(self.id);
-      if (!stream) return ERROR_RESPONSES.NOT_FOUND;
-
-      const [viewerToken, thumbnailUrl] = await Promise.all([
-        getIvsViewerToken(stream.channelArn),
-        getSignedFileReadUrl(stream.thumbnailKey),
-      ]);
-
-      if (!viewerToken) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-
-      return {
-        success: true,
-        data: {
-          stream,
-          user: self,
-          playbackUrl: `${stream.playbackUrl}?token=${viewerToken}`,
-          appliedThumbnailUrl: thumbnailUrl || self.imageUrl,
-        },
-      };
-    } catch (error) {
-      console.error("onGetStreamDataAsOwner", error);
-      return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-    }
-  };
-
-export const onDeleteSelfChatMessage = async (messageId: string) => {
-  try {
-    const self = await getSelf();
-    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
-
-    const stream = await getStreamByUserId(self.id);
-    if (!stream) return ERROR_RESPONSES.NOT_FOUND;
-
-    const deleteIvsChatMessageRes = await deleteIvsChatMessage({
-      messageId,
-      chatRoomArn: stream.chatRoomArn,
-      reason: "I don't like this message.",
-    });
-
-    if (!deleteIvsChatMessageRes) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-
-    return {
-      success: true,
-      data: {
-        stream,
-        user: self,
-      },
-    };
-  } catch (error) {
-    console.error("onDeleteSelfChatMessage", error);
+    console.error("onCreateStream", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };
@@ -400,6 +159,7 @@ type GetSignedFileUploadUrlParams = {
   type: string;
   size: number;
 };
+
 type OnGetStreamThumbnailUploadUrlResponse = ActionDataResponse<{
   thumbnailUploadUrl: string;
 }>;
@@ -431,6 +191,105 @@ export const onGetStreamThumbnailUploadUrl = async ({
     };
   } catch (error) {
     console.error("onGetStreamThumbnailUploadUrl", error);
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+  }
+};
+
+type OnRefreshSelfStreamKey = ActionDataResponse<{
+  streamKey: string;
+}>;
+
+export const onRefreshStreamKey = async (): Promise<OnRefreshSelfStreamKey> => {
+  try {
+    const self = await authSelf();
+    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+
+    const stream = await getStreamByUserId(self.id);
+    if (!stream) return ERROR_RESPONSES.NOT_FOUND;
+
+    const refreshedIvsChannelStreamKey = await refreshIvsChannelStreamKey({
+      channelArn: stream.channelArn,
+      streamKeyArn: stream.streamKeyArn,
+    });
+
+    if (!refreshedIvsChannelStreamKey)
+      return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    const updatedStream = await updateStreamKeyByUserId({
+      userId: self.id,
+      streamKey: refreshedIvsChannelStreamKey.streamKey,
+      streamKeyArn: refreshedIvsChannelStreamKey.streamKeyArn,
+    });
+
+    if (!updatedStream) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    return {
+      success: true,
+      data: { streamKey: updatedStream.streamKey },
+    };
+  } catch (error) {
+    console.error("onRefreshStreamKey", error);
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+  }
+};
+
+export const onGoLive = async (): Promise<StreamActionsResponse> => {
+  try {
+    const self = await getSelf();
+    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+    const stream = await updateStreamStatusByUserId(self.id, true);
+    if (!stream) return ERROR_RESPONSES.NOT_FOUND;
+    return {
+      success: true,
+      data: { stream },
+    };
+  } catch (error) {
+    console.error("onGoLive", error);
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+  }
+};
+
+export const onGoOffline = async (): Promise<StreamActionsResponse> => {
+  try {
+    const self = await getSelf();
+    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+    const stream = await updateStreamStatusByUserId(self.id, false);
+    if (!stream) return ERROR_RESPONSES.NOT_FOUND;
+    return {
+      success: true,
+      data: { stream },
+    };
+  } catch (error) {
+    console.error("onGoOffline", error);
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+  }
+};
+
+export const onDeleteChatMessage = async (messageId: string) => {
+  try {
+    const self = await getSelf();
+    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+
+    const stream = await getStreamByUserId(self.id);
+    if (!stream) return ERROR_RESPONSES.NOT_FOUND;
+
+    const deleteIvsChatMessageRes = await deleteIvsChatMessage({
+      messageId,
+      chatRoomArn: stream.chatRoomArn,
+      reason: "I don't like this message.",
+    });
+
+    if (!deleteIvsChatMessageRes) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    return {
+      success: true,
+      data: {
+        stream,
+        user: self,
+      },
+    };
+  } catch (error) {
+    console.error("onDeleteChatMessage", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };

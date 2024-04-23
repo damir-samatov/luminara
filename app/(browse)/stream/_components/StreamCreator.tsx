@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/Button";
-import { onCreateSelfStream } from "@/actions/stream-owner.actions";
+import { onCreateStream } from "@/actions/stream-owner.actions";
 import { useState } from "react";
 import streamerImg from "@/public/images/streamer.webp";
 import { redirect } from "next/navigation";
@@ -12,7 +12,7 @@ export const StreamCreator = () => {
     try {
       setIsLoading(true);
 
-      const res = await onCreateSelfStream();
+      const res = await onCreateStream();
 
       toast(res.message, {
         type: res.success ? "success" : "error",

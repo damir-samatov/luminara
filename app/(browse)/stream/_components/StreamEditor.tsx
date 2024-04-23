@@ -8,7 +8,7 @@ import { User, Stream, SubscriptionPlan } from "@prisma/client";
 import {
   onGoLive,
   onGoOffline,
-  onUpdateSelfStreamSettings,
+  onUpdateStreamSettings,
 } from "@/actions/stream-owner.actions";
 import { StreamSettingsUpdateDto } from "@/types/stream.types";
 import { useObjectShadow } from "@/hooks/useObjectShadow";
@@ -112,7 +112,7 @@ export const StreamEditor: FC<StreamEditorProps> = ({
   const onSaveSettings = useCallback(async () => {
     if (!settingsChangeDetected) return;
     try {
-      const res = await onUpdateSelfStreamSettings(streamSettings);
+      const res = await onUpdateStreamSettings(streamSettings);
       if (!res.success) return;
       const { title, isChatEnabled, description } = res.data.stream;
       setSettingsPrevState({

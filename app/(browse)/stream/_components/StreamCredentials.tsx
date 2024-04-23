@@ -1,7 +1,7 @@
 import { SensitiveText } from "@/components/SensitiveText";
 import { FC, useState } from "react";
 import { Button } from "@/components/Button";
-import { onRefreshSelfStreamKey } from "@/actions/stream-owner.actions";
+import { onRefreshStreamKey } from "@/actions/stream-owner.actions";
 import { toast } from "react-toastify";
 
 type StreamCredentialsProps = {
@@ -19,7 +19,7 @@ export const StreamCredentials: FC<StreamCredentialsProps> = ({
   const onSubmit = async () => {
     try {
       setIsLoading(true);
-      const res = await onRefreshSelfStreamKey();
+      const res = await onRefreshStreamKey();
       if (!res.success) return toast(res.message, { type: "error" });
       setStreamKey(res.data.streamKey);
       toast("Stream key refreshed successfully", { type: "success" });
