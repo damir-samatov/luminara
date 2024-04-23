@@ -10,7 +10,7 @@ import {
   updateStreamSubscriptionPlanByUserId,
   updateStreamThumbnailByUserId,
 } from "@/services/stream.service";
-import { ERROR_RESPONSES } from "@/configs/responses.config";
+import { ERROR_RESPONSES, SUCCESS_RESPONSES } from "@/configs/responses.config";
 import { ActionDataResponse } from "@/types/action.types";
 import { Stream, SubscriptionPlan, User } from "@prisma/client";
 import { StreamSettingsUpdateDto } from "@/types/stream.types";
@@ -215,7 +215,7 @@ export const onUpdateSelfStreamSettings = async (
   }
 };
 
-export const onCreateSelfStream = async (): Promise<StreamActionsResponse> => {
+export const onCreateSelfStream = async () => {
   try {
     const self = await getSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
@@ -249,12 +249,9 @@ export const onCreateSelfStream = async (): Promise<StreamActionsResponse> => {
 
     if (!stream) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
-    revalidatePath("/stream", "page");
+    revalidatePath("/stream");
 
-    return {
-      data: { stream },
-      success: true,
-    };
+    return SUCCESS_RESPONSES.SUCCESS;
   } catch (error) {
     console.error("onGetSelfStream", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;

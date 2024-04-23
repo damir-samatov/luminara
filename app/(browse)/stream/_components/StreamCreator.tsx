@@ -9,19 +9,25 @@ import { toast } from "react-toastify";
 export const StreamCreator = () => {
   const [isLoading, setIsLoading] = useState(false);
   const onCreateStreamClick = async () => {
-    setIsLoading(true);
     try {
-      const res = await onCreateSelfStream();
-      if (!res.success) return setIsLoading(false);
+      setIsLoading(true);
 
-      toast("Stream dashboard created successfully!", {
-        type: "success",
+      const res = await onCreateSelfStream();
+
+      toast(res.message, {
+        type: res.success ? "success" : "error",
       });
+
+      if (!res.success) return console.error(res.message);
 
       redirect("/stream");
     } catch (error) {
-      setIsLoading(false);
       console.error(error);
+      toast("Something went wrong, try again", {
+        type: "success",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
