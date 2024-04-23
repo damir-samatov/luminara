@@ -3,19 +3,6 @@ import { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
 import { UserCreateDto, UserUpdateDto } from "@/types/user.types";
 
-export const getUserById = async (id: string) => {
-  try {
-    return await db.user.findUnique({
-      where: {
-        id,
-      },
-    });
-  } catch (error) {
-    console.error("getUserById:", error);
-    return null;
-  }
-};
-
 export const getUserByExternalUserId = async (externalUserId: string) => {
   try {
     return await db.user.findUnique({
@@ -81,11 +68,11 @@ export const createUser = async (userCreateDto: UserCreateDto) => {
   }
 };
 
-export const updateUser = (userUpdateDto: UserUpdateDto) => {
+export const updateUser = async (userUpdateDto: UserUpdateDto) => {
   try {
     const { externalUserId, username, imageUrl, firstName, lastName } =
       userUpdateDto;
-    return db.user.update({
+    return await db.user.update({
       where: {
         externalUserId,
       },
@@ -102,9 +89,9 @@ export const updateUser = (userUpdateDto: UserUpdateDto) => {
   }
 };
 
-export const deleteUserByExternalUserId = (externalUserId: string) => {
+export const deleteUserByExternalUserId = async (externalUserId: string) => {
   try {
-    return db.user.delete({
+    return await db.user.delete({
       where: {
         externalUserId,
       },
