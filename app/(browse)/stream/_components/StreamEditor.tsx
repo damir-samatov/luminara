@@ -8,7 +8,6 @@ import { User, Stream, SubscriptionPlan } from "@prisma/client";
 import {
   onGoLive,
   onGoOffline,
-  onRefreshSelfStreamKey,
   onUpdateSelfStreamSettings,
 } from "@/actions/stream-owner.actions";
 import { StreamSettingsUpdateDto } from "@/types/stream.types";
@@ -100,16 +99,6 @@ export const StreamEditor: FC<StreamEditorProps> = ({
     setIsLoading(false);
   }, [moderationWindow]);
 
-  const onRefreshStreamKeyClick = useCallback(async () => {
-    try {
-      const res = await onRefreshSelfStreamKey();
-      if (!res.success) return;
-      setStream(res.data.stream);
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
-
   const onSettingsChange = useCallback(
     <T extends keyof StreamSettingsUpdateDto>(
       key: T,
@@ -149,6 +138,7 @@ export const StreamEditor: FC<StreamEditorProps> = ({
   const tabs = useMemo(
     () => [
       {
+        label: "Preview",
         component: (
           <div className="flex aspect-[9/16] h-full w-full flex-grow flex-col overflow-y-auto rounded-lg border-2 border-gray-700 lg:aspect-auto">
             <AwsStream
@@ -162,21 +152,18 @@ export const StreamEditor: FC<StreamEditorProps> = ({
             />
           </div>
         ),
-        label: "Preview",
       },
       {
+        label: "Keys",
         component: (
           <StreamCredentials
-            onRefreshStreamKey={onRefreshStreamKeyClick}
-            streamCredentials={{
-              streamKey: stream.streamKey,
-              serverUrl: stream.serverUrl,
-            }}
+            streamKey={stream.streamKey}
+            streamUrl={stream.serverUrl}
           />
         ),
-        label: "Credentials",
       },
       {
+        label: "Settings",
         component: (
           <StreamSettings
             streamSettings={streamSettings}
@@ -186,16 +173,15 @@ export const StreamEditor: FC<StreamEditorProps> = ({
             changeDetected={settingsChangeDetected}
           />
         ),
-        label: "Settings",
       },
       {
+        label: "Thumbnail",
         component: (
           <StreamThumbnail
             setThumbnailUrl={setAppliedThumbnailUrl}
             thumbnailUrl={thumbnailUrl}
           />
         ),
-        label: "Thumbnail",
       },
     ],
     [
@@ -203,7 +189,6 @@ export const StreamEditor: FC<StreamEditorProps> = ({
       thumbnailUrl,
       playbackUrl,
       user,
-      onRefreshStreamKeyClick,
       onSettingsChange,
       onDiscardSettings,
       onSaveSettings,

@@ -1,5 +1,5 @@
 "use server";
-import { getSelf } from "@/services/auth.service";
+import { authSelf, getSelf } from "@/services/auth.service";
 import {
   createStream,
   getStreamByUserId,
@@ -258,14 +258,17 @@ export const onCreateSelfStream = async () => {
   }
 };
 
+type OnRefreshSelfStreamKey = ActionDataResponse<{
+  streamKey: string;
+}>;
+
 export const onRefreshSelfStreamKey =
-  async (): Promise<StreamActionsResponse> => {
+  async (): Promise<OnRefreshSelfStreamKey> => {
     try {
-      const self = await getSelf();
+      const self = await authSelf();
       if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
 
       const stream = await getStreamByUserId(self.id);
-
       if (!stream) return ERROR_RESPONSES.NOT_FOUND;
 
       const refreshedIvsChannelStreamKey = await refreshIvsChannelStreamKey({
@@ -286,7 +289,7 @@ export const onRefreshSelfStreamKey =
 
       return {
         success: true,
-        data: { stream: updatedStream },
+        data: { streamKey: updatedStream.streamKey },
       };
     } catch (error) {
       console.error("onGetSelfStream", error);
