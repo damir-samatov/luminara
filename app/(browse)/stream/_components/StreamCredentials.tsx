@@ -41,7 +41,7 @@ export const StreamCredentials: FC<StreamCredentialsProps> = ({
         <SensitiveText value={streamKey} label="Stream Key" />
       </div>
       <Button
-        className="ml-auto sm:max-w-80"
+        className="ml-auto sm:max-w-48"
         isLoading={isLoading}
         isDisabled={isLoading}
         onClick={onSubmit}
