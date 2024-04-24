@@ -10,7 +10,10 @@ const NewVideoPage = async () => {
   return (
     <>
       <title>New Video</title>
-      <VideoPostCreator subscriptionPlans={res.data.subscriptionPlans} />
+      <VideoPostCreator
+        subscriptionPlans={res.data.subscriptionPlans}
+        freeFollowerImageUrl={res.data.freeFollowerImageUrl}
+      />
     </>
   );
 };

@@ -33,7 +33,7 @@ export const onGetSelfBlogPosts = async (): Promise<OnGetSelfPostsResponse> => {
           id: post.id,
           title: post.title,
           body: post.body,
-          imageUrl: imageUrl || "",
+          imageUrl,
           subscriptionPlan: post.subscriptionPlan,
           createdAt: post.createdAt,
           updatedAt: post.updatedAt,

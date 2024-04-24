@@ -1,28 +1,18 @@
 import { Dropdown } from "@/components/Dropdown";
 import { FC, useMemo } from "react";
-import { SubscriptionPlan } from "@prisma/client";
+import { SubscriptionPlanDto } from "@/types/subscription-plan.types";
 
 type SubscriptionPlanSelectorProps = {
-  subscriptionPlans: (SubscriptionPlan & {
-    imageUrl: string | null;
-  })[];
-  activeSubscriptionPlan:
-    | (SubscriptionPlan & {
-        imageUrl: string | null;
-      })
-    | null;
-  onChange: (
-    plan:
-      | (SubscriptionPlan & {
-          imageUrl: string | null;
-        })
-      | null
-  ) => void;
+  freeFollowerImageUrl: string;
+  subscriptionPlans: SubscriptionPlanDto[];
+  activeSubscriptionPlan: SubscriptionPlanDto | null;
+  onChange: (plan: SubscriptionPlanDto | null) => void;
 };
 
 export const SubscriptionPlanSelector: FC<SubscriptionPlanSelectorProps> = ({
   subscriptionPlans,
   activeSubscriptionPlan,
+  freeFollowerImageUrl,
   onChange,
 }) => {
   const options = useMemo(() => {
@@ -42,12 +32,20 @@ export const SubscriptionPlanSelector: FC<SubscriptionPlanSelectorProps> = ({
   return (
     <div className="flex w-full flex-col gap-2">
       <div className="aspect-square w-full overflow-hidden rounded-lg bg-black">
-        {activeSubscriptionPlan?.imageUrl && (
+        {activeSubscriptionPlan ? (
           <img
             width={640}
             height={640}
             src={activeSubscriptionPlan.imageUrl}
             alt={activeSubscriptionPlan.title}
+            className="object-cover"
+          />
+        ) : (
+          <img
+            width={640}
+            height={640}
+            src={freeFollowerImageUrl}
+            alt="Follower - Free"
             className="object-cover"
           />
         )}

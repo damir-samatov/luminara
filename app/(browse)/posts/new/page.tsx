@@ -8,7 +8,10 @@ const PostCreatePage = async () => {
   return (
     <>
       <title>New Blog Post</title>
-      <BlogPostCreator subscriptionPlans={res.data.subscriptionPlans} />
+      <BlogPostCreator
+        subscriptionPlans={res.data.subscriptionPlans}
+        freeFollowerImageUrl={res.data.freeFollowerImageUrl}
+      />
     </>
   );
 };

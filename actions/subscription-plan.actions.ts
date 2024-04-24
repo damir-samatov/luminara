@@ -4,7 +4,7 @@ import {
   ActionDataResponse,
 } from "@/types/action.types";
 import { SubscriptionPlan } from "@prisma/client";
-import { authSelf } from "@/services/auth.service";
+import { authSelf, getSelf } from "@/services/auth.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import {
   createSubscriptionPlan,
@@ -15,6 +15,7 @@ import {
 } from "@/services/subscription-plan.service";
 import {
   SubscriptionPlanCreateDto,
+  SubscriptionPlanDto,
   SubscriptionPlanUpdateContentDto,
 } from "@/types/subscription-plan.types";
 import {
@@ -30,15 +31,14 @@ import {
 } from "@/configs/file.config";
 
 type OnGetSelfSubscriptionPlansResponse = ActionDataResponse<{
-  subscriptionPlans: (SubscriptionPlan & {
-    imageUrl: string | null;
-  })[];
+  subscriptionPlans: SubscriptionPlanDto[];
+  freeFollowerImageUrl: string;
 }>;
 
 export const onGetSelfSubscriptionPlans =
   async (): Promise<OnGetSelfSubscriptionPlansResponse> => {
     try {
-      const self = await authSelf();
+      const self = await getSelf();
       if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
       const subscriptionPlans = await getSubscriptionPlansByUserId(self.id);
       if (!subscriptionPlans) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
@@ -58,6 +58,7 @@ export const onGetSelfSubscriptionPlans =
         success: true,
         data: {
           subscriptionPlans: subscriptionPlansWithImageUrls,
+          freeFollowerImageUrl: self.imageUrl,
         },
       };
     } catch (error) {

@@ -9,7 +9,7 @@ import {
 } from "@/services/stream.service";
 import { ERROR_RESPONSES, SUCCESS_RESPONSES } from "@/configs/responses.config";
 import { ActionDataResponse } from "@/types/action.types";
-import { Stream, SubscriptionPlan, User } from "@prisma/client";
+import { Stream, User } from "@prisma/client";
 import { StreamSettingsUpdateDto } from "@/types/stream.types";
 import { revalidatePath } from "next/cache";
 import {
@@ -27,6 +27,7 @@ import {
 } from "@/services/ivs-chat.service";
 import { getSubscriptionPlansByUserId } from "@/services/subscription-plan.service";
 import { generateFileKey } from "@/helpers/server/s3.helpers";
+import { SubscriptionPlanDto } from "@/types/subscription-plan.types";
 
 type StreamActionsResponse = ActionDataResponse<{ stream: Stream }>;
 
@@ -35,9 +36,7 @@ type OnGetStreamDashboardDataResponse = ActionDataResponse<{
   playbackUrl: string;
   user: User;
   stream: Stream;
-  subscriptionPlans: (SubscriptionPlan & {
-    imageUrl: string | null;
-  })[];
+  subscriptionPlans: SubscriptionPlanDto[];
 }>;
 
 export const onGetStreamDashboardData =

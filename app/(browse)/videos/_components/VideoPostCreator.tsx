@@ -18,17 +18,17 @@ import { BackButton } from "@/components/BackButton";
 import { toast } from "react-toastify";
 import { onCreateVideoPost } from "@/actions/video.actions";
 import { uploadFileToS3 } from "@/helpers/client/file.helpers";
-import { SubscriptionPlan } from "@prisma/client";
 import { SubscriptionPlanSelector } from "@/components/SubscriptionPlanSelector";
+import { SubscriptionPlanDto } from "@/types/subscription-plan.types";
 
 type VideoPostCreatorProps = {
-  subscriptionPlans: (SubscriptionPlan & {
-    imageUrl: string | null;
-  })[];
+  subscriptionPlans: SubscriptionPlanDto[];
+  freeFollowerImageUrl: string;
 };
 
 export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
   subscriptionPlans,
+  freeFollowerImageUrl,
 }) => {
   const router = useRouter();
   const [videoFile, setVideoFile] = useState<File | null>(null);
@@ -59,12 +59,8 @@ export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
     setThumbnailFile(null);
   }, []);
 
-  const [activeSubscriptionPlan, setActiveSubscriptionPlan] = useState<
-    | (SubscriptionPlan & {
-        imageUrl: string | null;
-      })
-    | null
-  >(null);
+  const [activeSubscriptionPlan, setActiveSubscriptionPlan] =
+    useState<SubscriptionPlanDto | null>(null);
 
   const onSubmit = useCallback(async () => {
     try {
@@ -153,6 +149,7 @@ export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
               </div>
               <div className="w-full sm:col-span-1">
                 <SubscriptionPlanSelector
+                  freeFollowerImageUrl={freeFollowerImageUrl}
                   onChange={setActiveSubscriptionPlan}
                   subscriptionPlans={subscriptionPlans}
                   activeSubscriptionPlan={activeSubscriptionPlan}

@@ -12,3 +12,15 @@ export type SubscriptionPlanUpdateContentDto = {
   title: string;
   description: string;
 };
+
+export type SubscriptionPlanDto = {
+  id: string;
+  userId: string;
+  title: string;
+  description: string;
+  price: number;
+  imageUrl: string;
+  imageKey: string;
+  createdAt: Date;
+  updatedAt: Date;
+};

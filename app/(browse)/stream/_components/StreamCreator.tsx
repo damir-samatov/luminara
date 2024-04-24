@@ -2,24 +2,21 @@
 import { Button } from "@/components/Button";
 import { onCreateStream } from "@/actions/stream-owner.actions";
 import { useState } from "react";
-import streamerImg from "@/public/images/streamer.webp";
+import streamerImg from "@/public/images/streamer-bg.webp";
 import { redirect } from "next/navigation";
 import { toast } from "react-toastify";
+import Image from "next/image";
 
 export const StreamCreator = () => {
   const [isLoading, setIsLoading] = useState(false);
   const onCreateStreamClick = async () => {
     try {
       setIsLoading(true);
-
       const res = await onCreateStream();
-
       toast(res.message, {
         type: res.success ? "success" : "error",
       });
-
-      if (!res.success) return console.error(res.message);
-
+      if (!res.success) return;
       redirect("/stream");
     } catch (error) {
       console.error(error);
@@ -34,7 +31,7 @@ export const StreamCreator = () => {
   return (
     <div className="relative flex-grow">
       <div className="absolute inset-0 h-full w-full">
-        <img
+        <Image
           className="rounded-md"
           src={streamerImg.src}
           alt="Streamer"
@@ -42,8 +39,8 @@ export const StreamCreator = () => {
           width={1920}
           height={1080}
         />
-        <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-[#00000044] p-4">
-          <div className="flex flex-col items-center justify-between gap-6 rounded-2xl bg-gray-950 px-12 py-8 text-center text-white">
+        <div className="absolute left-0 right-0 top-10 flex flex-col items-center justify-center rounded-lg bg-[#00000020] p-4">
+          <div className="flex max-w-screen-sm flex-col items-center justify-between gap-6 rounded-lg bg-gray-950 p-6 text-center text-white">
             <h1 className="text-center text-2xl font-bold text-gray-200">
               Become a Streamer!
             </h1>
@@ -54,12 +51,13 @@ export const StreamCreator = () => {
               </p>
             </div>
             <Button
+              className="w-full max-w-40"
+              loadingText="Initiating..."
               isLoading={isLoading}
               isDisabled={isLoading}
-              loadingText="Creating the stream dashboard..."
               onClick={onCreateStreamClick}
             >
-              Let&apos;s Go
+              Initiate
             </Button>
           </div>
         </div>

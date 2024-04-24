@@ -46,7 +46,7 @@ export const getSignedFileUploadUrl = async ({
 
 export const getSignedFileReadUrl = async (key: string) => {
   try {
-    if (key.length < 1) return null;
+    if (key.length < 1) return "";
     const getObjectCommand = new GetObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET_NAME,
       Key: key,
@@ -57,7 +57,7 @@ export const getSignedFileReadUrl = async (key: string) => {
     });
   } catch (error) {
     console.error("getSignedFileReadUrl", error);
-    return null;
+    return "";
   }
 };
 

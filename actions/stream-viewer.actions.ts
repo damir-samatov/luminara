@@ -75,7 +75,7 @@ export const onGetStreamWatchData = async (
 
     const [viewerToken, thumbnailUrl] = await Promise.all([
       getIvsViewerToken(stream.channelArn),
-      stream.thumbnailKey ? getSignedFileReadUrl(stream.thumbnailKey) : null,
+      getSignedFileReadUrl(stream.thumbnailKey),
     ]);
 
     if (!viewerToken) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
@@ -86,7 +86,7 @@ export const onGetStreamWatchData = async (
         title: stream.title,
         description: stream.description,
         playbackUrl: `${stream.playbackUrl}?token=${viewerToken}`,
-        thumbnailUrl: thumbnailUrl || stream.user.imageUrl,
+        thumbnailUrl: thumbnailUrl,
         streamerImageUrl: stream.user.imageUrl,
         streamerUsername: stream.user.username,
         isChatEnabled: stream.isChatEnabled,
@@ -126,8 +126,7 @@ export const onGetStreamModerationData = async (
       getSignedFileReadUrl(stream.thumbnailKey),
     ]);
 
-    if (!viewerToken || !thumbnailUrl)
-      return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+    if (!viewerToken) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
     return {
       success: true,
@@ -135,7 +134,7 @@ export const onGetStreamModerationData = async (
         title: stream.title,
         description: stream.description,
         playbackUrl: `${stream.playbackUrl}?token=${viewerToken}`,
-        thumbnailUrl: thumbnailUrl || stream.user.imageUrl,
+        thumbnailUrl: thumbnailUrl,
         streamerImageUrl: stream.user.imageUrl,
         streamerUsername: stream.user.username,
         isChatEnabled: stream.isChatEnabled,

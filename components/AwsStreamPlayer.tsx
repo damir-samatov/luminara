@@ -25,11 +25,13 @@ const WASM_BINARY_URL =
 type AwsStreamPlayerProps = {
   playbackUrl: string;
   thumbnailUrl: string;
+  fallbackThumbnailUrl: string;
 };
 
 export const AwsStreamPlayer: FC<AwsStreamPlayerProps> = ({
   playbackUrl,
   thumbnailUrl,
+  fallbackThumbnailUrl,
 }) => {
   const videoElRef = useRef<HTMLVideoElement>(null);
   const playerWrapperElRef = useRef<HTMLDivElement>(null);
@@ -111,7 +113,8 @@ export const AwsStreamPlayer: FC<AwsStreamPlayerProps> = ({
       {!isReady && (
         <VideoPlaceholder
           text="Streamer is offline"
-          placeholderUrl={thumbnailUrl}
+          url={thumbnailUrl}
+          fallbackUrl={fallbackThumbnailUrl}
         />
       )}
       <div

@@ -13,11 +13,13 @@ import { TrashIcon } from "@heroicons/react/24/outline";
 import { FileDrop } from "@/components/FileDrop";
 
 type StreamThumbnailProps = {
+  fallbackThumbnailUrl: string;
   thumbnailUrl: string;
   setThumbnailUrl: (url: string) => void;
 };
 
 export const StreamThumbnail: FC<StreamThumbnailProps> = ({
+  fallbackThumbnailUrl,
   thumbnailUrl,
   setThumbnailUrl,
 }) => {
@@ -66,6 +68,9 @@ export const StreamThumbnail: FC<StreamThumbnailProps> = ({
             width={1920}
             height={1080}
             loading="eager"
+            onError={(e) => {
+              e.currentTarget.setAttribute("src", fallbackThumbnailUrl);
+            }}
           />
         </div>
         <div className="mx-auto flex w-full max-w-80 flex-col justify-between gap-2">

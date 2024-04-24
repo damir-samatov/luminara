@@ -4,19 +4,24 @@ import { SignalIcon } from "@heroicons/react/24/outline";
 
 type VideoPlaceholderProps = {
   text: string;
-  placeholderUrl: string;
+  url: string;
+  fallbackUrl: string;
 };
 
 export const VideoPlaceholder: FC<VideoPlaceholderProps> = ({
   text,
-  placeholderUrl,
+  url,
+  fallbackUrl,
 }) => {
   return (
     <div className="relative aspect-video w-full rounded">
       <div className="absolute bottom-0 left-0 right-0 top-0">
         <img
           className="absolute rounded"
-          src={placeholderUrl}
+          src={url}
+          onError={(e) => {
+            e.currentTarget.setAttribute("src", fallbackUrl);
+          }}
           alt={text}
           loading="eager"
           width={1920}

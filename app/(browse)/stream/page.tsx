@@ -12,7 +12,7 @@ const StreamPage = async () => {
       return (
         <>
           <title>Stream Create</title>
-          <StreamCreator />;
+          <StreamCreator />
         </>
       );
 

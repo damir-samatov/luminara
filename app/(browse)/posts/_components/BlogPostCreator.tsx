@@ -4,7 +4,6 @@ import { TextInput } from "@/components/TextInput";
 import { useRouter } from "next/navigation";
 import { TextEditor } from "@/components/TextEditor";
 import { BackButton } from "@/components/BackButton";
-import { SubscriptionPlan } from "@prisma/client";
 import { SubscriptionPlanSelector } from "@/components/SubscriptionPlanSelector";
 import { Button } from "@/components/Button";
 import { FilePreview } from "@/components/FilePreview";
@@ -18,15 +17,16 @@ import {
 import { toast } from "react-toastify";
 import { uploadFileToS3 } from "@/helpers/client/file.helpers";
 import { onCreateBlogPost } from "@/actions/post.actions";
+import { SubscriptionPlanDto } from "@/types/subscription-plan.types";
 
 type BlogPostCreatorProps = {
-  subscriptionPlans: (SubscriptionPlan & {
-    imageUrl: string | null;
-  })[];
+  subscriptionPlans: SubscriptionPlanDto[];
+  freeFollowerImageUrl: string;
 };
 
 export const BlogPostCreator: FC<BlogPostCreatorProps> = ({
   subscriptionPlans,
+  freeFollowerImageUrl,
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -36,12 +36,8 @@ export const BlogPostCreator: FC<BlogPostCreatorProps> = ({
     title: "",
     body: "",
   });
-  const [activeSubscriptionPlan, setActiveSubscriptionPlan] = useState<
-    | (SubscriptionPlan & {
-        imageUrl: string | null;
-      })
-    | null
-  >(null);
+  const [activeSubscriptionPlan, setActiveSubscriptionPlan] =
+    useState<SubscriptionPlanDto | null>(null);
 
   const onPostContentChange = <T extends keyof typeof content>(
     key: T,
@@ -150,6 +146,7 @@ export const BlogPostCreator: FC<BlogPostCreatorProps> = ({
         </div>
         <div className="w-full sm:col-span-1">
           <SubscriptionPlanSelector
+            freeFollowerImageUrl={freeFollowerImageUrl}
             onChange={setActiveSubscriptionPlan}
             subscriptionPlans={subscriptionPlans}
             activeSubscriptionPlan={activeSubscriptionPlan}

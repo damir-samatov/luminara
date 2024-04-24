@@ -4,7 +4,7 @@ import { AwsStream } from "@/components/AwsStream";
 import { StreamCredentials } from "../_components/StreamCredentials";
 import { StreamSettings } from "../_components/StreamSettings";
 import { StreamThumbnail } from "../_components/StreamThumbnail";
-import { User, Stream, SubscriptionPlan } from "@prisma/client";
+import { User, Stream } from "@prisma/client";
 import {
   onGoLive,
   onGoOffline,
@@ -14,13 +14,12 @@ import { StreamSettingsUpdateDto } from "@/types/stream.types";
 import { useObjectShadow } from "@/hooks/useObjectShadow";
 import { Button } from "@/components/Button";
 import { SubscriptionPlanSelector } from "@/components/SubscriptionPlanSelector";
+import { SubscriptionPlanDto } from "@/types/subscription-plan.types";
 
 type StreamEditorProps = {
   stream: Stream;
   user: User;
-  subscriptionPlans: (SubscriptionPlan & {
-    imageUrl: string | null;
-  })[];
+  subscriptionPlans: SubscriptionPlanDto[];
   playbackUrl: string;
   thumbnailUrl: string;
 };
@@ -35,12 +34,8 @@ export const StreamEditor: FC<StreamEditorProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
   const [stream, setStream] = useState<Stream>(savedStream);
-  const [activeSubscriptionPlan, setActiveSubscriptionPlan] = useState<
-    | (SubscriptionPlan & {
-        imageUrl: string | null;
-      })
-    | null
-  >(null);
+  const [activeSubscriptionPlan, setActiveSubscriptionPlan] =
+    useState<SubscriptionPlanDto | null>(null);
 
   const [thumbnailUrl, setAppliedThumbnailUrl] =
     useState<string>(savedThumbnailUrl);
@@ -178,6 +173,7 @@ export const StreamEditor: FC<StreamEditorProps> = ({
         label: "Thumbnail",
         component: (
           <StreamThumbnail
+            fallbackThumbnailUrl={user.imageUrl}
             setThumbnailUrl={setAppliedThumbnailUrl}
             thumbnailUrl={thumbnailUrl}
           />
@@ -222,6 +218,7 @@ export const StreamEditor: FC<StreamEditorProps> = ({
             <div className="mx-auto flex w-full max-w-80 flex-col gap-2">
               <p className="text-lg">Subscription plan</p>
               <SubscriptionPlanSelector
+                freeFollowerImageUrl={user.imageUrl}
                 subscriptionPlans={subscriptionPlans}
                 activeSubscriptionPlan={activeSubscriptionPlan}
                 onChange={setActiveSubscriptionPlan}

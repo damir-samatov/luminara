@@ -40,6 +40,7 @@ export const AwsStream: FC<AwsStreamProps> = ({
         <AwsStreamPlayer
           playbackUrl={playbackUrl}
           thumbnailUrl={thumbnailUrl}
+          fallbackThumbnailUrl={streamerImageUrl}
         />
         <div className="mt-4 flex flex-col gap-2">
           <Link
