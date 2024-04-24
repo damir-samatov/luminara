@@ -68,9 +68,7 @@ export const onGetSelfSubscriptionPlans =
   };
 
 type OnGetSubscriptionPlanByIdResponse = ActionDataResponse<{
-  subscriptionPlan: SubscriptionPlan & {
-    imageUrl: string | null;
-  };
+  subscriptionPlan: SubscriptionPlanDto;
 }>;
 
 export const onGetSubscriptionPlanById = async (
@@ -211,11 +209,11 @@ export const onDeleteSubscriptionPlanById = async (
     if (!self || subscriptionPlan.userId !== self.id)
       return ERROR_RESPONSES.UNAUTHORIZED;
 
-    deleteFile(subscriptionPlan.imageKey);
-
     const res = await deleteSubscriptionPlanById(subscriptionPlanId);
 
     if (!res) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    deleteFile(subscriptionPlan.imageKey);
 
     revalidatePath("/subscription-plans");
 

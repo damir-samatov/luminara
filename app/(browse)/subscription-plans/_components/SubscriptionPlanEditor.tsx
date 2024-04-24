@@ -9,7 +9,7 @@ import { BackButton } from "@/components/BackButton";
 
 type SubscriptionPlanEditorProps = {
   subscriptionPlan: SubscriptionPlan & {
-    imageUrl: string | null;
+    imageUrl: string;
   };
 };
 

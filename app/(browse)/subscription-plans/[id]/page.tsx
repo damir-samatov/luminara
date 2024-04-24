@@ -13,9 +13,7 @@ const SubscriptionPlanDetailsPage: FC<
   SubscriptionPlanDetailsPageProps
 > = async ({ params }) => {
   const res = await onGetSubscriptionPlanById(params.id);
-
   if (!res.success) return notFound();
-
   return (
     <>
       <title>Subscription Plan Editor</title>

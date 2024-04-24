@@ -82,6 +82,26 @@ export const getVideoPostsByUserId = async (userId: string) => {
   }
 };
 
+export const getVideoPostsById = async (id: string) => {
+  try {
+    return await db.post.findUnique({
+      where: {
+        id,
+        videos: {
+          some: {},
+        },
+      },
+      include: {
+        videos: true,
+        subscriptionPlan: true,
+      },
+    });
+  } catch (error) {
+    console.error("getVideoPostsById", error);
+    return null;
+  }
+};
+
 type CreateVideoPostProps = {
   userId: string;
   title: string;
@@ -114,6 +134,22 @@ export const createVideoPost = async ({
     });
   } catch (error) {
     console.error("createVideoPost", error);
+    return null;
+  }
+};
+
+export const deleteVideoPostById = async (id: string) => {
+  try {
+    return await db.post.delete({
+      where: {
+        id,
+        videos: {
+          some: {},
+        },
+      },
+    });
+  } catch (error) {
+    console.error("deleteVideoPostById", error);
     return null;
   }
 };

@@ -4,11 +4,14 @@ import { authSelf } from "@/services/auth.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import {
   createVideoPost,
+  deleteVideoPostById,
+  getVideoPostsById,
   getVideoPostsByUserId,
 } from "@/services/post.service";
 import { VideoPostCreateDto, VideoPostDto } from "@/types/post.types";
 import { generateFileKey } from "@/helpers/server/s3.helpers";
 import {
+  deleteFile,
   getSignedFileReadUrl,
   getSignedFileUploadUrl,
 } from "@/services/s3.service";
@@ -139,6 +142,84 @@ export const onCreateVideoPost = async ({
     };
   } catch (error) {
     console.error("onCreateVideoPost", error);
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+  }
+};
+
+type OnGetVideoPostByIdResponse = ActionDataResponse<{
+  videoPost: VideoPostDto;
+}>;
+
+export const onGetVideoPostById = async (
+  id: string
+): Promise<OnGetVideoPostByIdResponse> => {
+  try {
+    const [self, videoPost] = await Promise.all([
+      authSelf(),
+      getVideoPostsById(id),
+    ]);
+
+    if (!videoPost) return ERROR_RESPONSES.NOT_FOUND;
+    if (!self || videoPost.userId !== self.id)
+      return ERROR_RESPONSES.UNAUTHORIZED;
+
+    const video = videoPost.videos[0];
+    if (!video) return ERROR_RESPONSES.NOT_FOUND;
+
+    const [videoUrl, thumbnailUrl] = await Promise.all([
+      getSignedFileReadUrl(video.key),
+      getSignedFileReadUrl(video.thumbnailKey),
+    ]);
+
+    return {
+      success: true,
+      data: {
+        videoPost: {
+          id: videoPost.id,
+          title: videoPost.title,
+          body: videoPost.body,
+          videoUrl,
+          thumbnailUrl,
+          subscriptionPlan: videoPost.subscriptionPlan,
+          createdAt: videoPost.createdAt,
+          updatedAt: videoPost.updatedAt,
+        },
+      },
+    };
+  } catch (error) {
+    console.error("onGetVideoPostById", error);
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+  }
+};
+
+export const onDeleteVideoPostById = async (id: string) => {
+  try {
+    const [self, videoPost] = await Promise.all([
+      authSelf(),
+      getVideoPostsById(id),
+    ]);
+
+    if (!videoPost) return ERROR_RESPONSES.NOT_FOUND;
+    if (!self || videoPost.userId !== self.id)
+      return ERROR_RESPONSES.UNAUTHORIZED;
+
+    const res = await deleteVideoPostById(id);
+
+    if (!res) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    videoPost.videos.forEach((video) => {
+      deleteFile(video.key);
+      deleteFile(video.thumbnailKey);
+    });
+
+    revalidatePath("/videos");
+
+    return {
+      success: true,
+      message: `${videoPost.title} video - deleted successfully.`,
+    };
+  } catch (error) {
+    console.error("onDeleteVideoPostById", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };
