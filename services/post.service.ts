@@ -59,6 +59,42 @@ export const getBlogPostsByUserId = async (userId: string) => {
   }
 };
 
+export const getBlogPostById = async (id: string) => {
+  try {
+    return await db.post.findUnique({
+      where: {
+        id,
+        videos: {
+          none: {},
+        },
+      },
+      include: {
+        images: true,
+        subscriptionPlan: true,
+      },
+    });
+  } catch (error) {
+    console.error("getBlogPostById", error);
+    return null;
+  }
+};
+
+export const deleteBlogPostById = async (id: string) => {
+  try {
+    return await db.post.delete({
+      where: {
+        id,
+        videos: {
+          none: {},
+        },
+      },
+    });
+  } catch (error) {
+    console.error("deleteBlogPostById", error);
+    return null;
+  }
+};
+
 export const getVideoPostsByUserId = async (userId: string) => {
   try {
     return await db.post.findMany({
@@ -82,7 +118,7 @@ export const getVideoPostsByUserId = async (userId: string) => {
   }
 };
 
-export const getVideoPostsById = async (id: string) => {
+export const getVideoPostById = async (id: string) => {
   try {
     return await db.post.findUnique({
       where: {
@@ -97,7 +133,7 @@ export const getVideoPostsById = async (id: string) => {
       },
     });
   } catch (error) {
-    console.error("getVideoPostsById", error);
+    console.error("getVideoPostById", error);
     return null;
   }
 };

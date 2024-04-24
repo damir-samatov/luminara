@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { VideoPostDto } from "@/types/post.types";
 import { BackButton } from "@/components/BackButton";
-import { VideoPostDeleterModal } from "@/app/(browse)/videos/_components/VideoPostDeleteModal";
+import { VideoPostDeleterModal } from "../_components/VideoPostDeleteModal";
 
 type VideoPostEditorProps = {
   videoPost: VideoPostDto;

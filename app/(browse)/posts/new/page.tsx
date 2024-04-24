@@ -1,4 +1,4 @@
-import { BlogPostCreator } from "@/app/(browse)/posts/_components/BlogPostCreator";
+import { BlogPostCreator } from "../_components/BlogPostCreator";
 import { onGetSelfSubscriptionPlans } from "@/actions/subscription-plan.actions";
 import { notFound } from "next/navigation";
 

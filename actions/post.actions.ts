@@ -1,7 +1,12 @@
 "use server";
 import { authSelf } from "@/services/auth.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
-import { createBlogPost, getBlogPostsByUserId } from "@/services/post.service";
+import {
+  createBlogPost,
+  deleteBlogPostById,
+  getBlogPostById,
+  getBlogPostsByUserId,
+} from "@/services/post.service";
 import { ActionDataResponse } from "@/types/action.types";
 import { BlogPostCreateDto, BlogPostDto } from "@/types/post.types";
 import {
@@ -11,6 +16,7 @@ import {
 import { getSubscriptionPlanById } from "@/services/subscription-plan.service";
 import { generateFileKey } from "@/helpers/server/s3.helpers";
 import {
+  deleteFile,
   getSignedFileReadUrl,
   getSignedFileUploadUrl,
 } from "@/services/s3.service";
@@ -114,6 +120,79 @@ export const onCreateBlogPost = async ({
     };
   } catch (error) {
     console.error("onCreateBlogPost", error);
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+  }
+};
+
+type OnGetBlogPostByIdResponse = ActionDataResponse<{
+  blogPost: BlogPostDto;
+}>;
+
+export const onGetBlogPostById = async (
+  id: string
+): Promise<OnGetBlogPostByIdResponse> => {
+  try {
+    const [self, blogPost] = await Promise.all([
+      authSelf(),
+      getBlogPostById(id),
+    ]);
+
+    if (!blogPost) return ERROR_RESPONSES.NOT_FOUND;
+    if (!self || blogPost.userId !== self.id)
+      return ERROR_RESPONSES.UNAUTHORIZED;
+
+    const image = blogPost.images[0];
+    if (!image) return ERROR_RESPONSES.NOT_FOUND;
+
+    const imageUrl = await getSignedFileReadUrl(image.key);
+
+    return {
+      success: true,
+      data: {
+        blogPost: {
+          id: blogPost.id,
+          title: blogPost.title,
+          body: blogPost.body,
+          imageUrl,
+          subscriptionPlan: blogPost.subscriptionPlan,
+          createdAt: blogPost.createdAt,
+          updatedAt: blogPost.updatedAt,
+        },
+      },
+    };
+  } catch (error) {
+    console.error("onGetVideoPostById", error);
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+  }
+};
+
+export const onDeleteBlogPostById = async (id: string) => {
+  try {
+    const [self, blogPost] = await Promise.all([
+      authSelf(),
+      getBlogPostById(id),
+    ]);
+
+    if (!blogPost) return ERROR_RESPONSES.NOT_FOUND;
+    if (!self || blogPost.userId !== self.id)
+      return ERROR_RESPONSES.UNAUTHORIZED;
+
+    const res = await deleteBlogPostById(id);
+
+    if (!res) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    blogPost.images.forEach((image) => {
+      deleteFile(image.key);
+    });
+
+    revalidatePath("/posts");
+
+    return {
+      success: true,
+      message: `${blogPost.title} post - deleted successfully.`,
+    };
+  } catch (error) {
+    console.error("onDeleteBlogPostById", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };

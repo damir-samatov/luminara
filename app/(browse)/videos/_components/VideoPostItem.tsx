@@ -2,7 +2,7 @@ import { FC } from "react";
 import { VideoPostDto } from "@/types/post.types";
 import Link from "next/link";
 import { PencilIcon } from "@heroicons/react/24/outline";
-import { VideoPostDeleterModal } from "@/app/(browse)/videos/_components/VideoPostDeleteModal";
+import { VideoPostDeleterModal } from "../_components/VideoPostDeleteModal";
 
 type VideoPostItemProps = {
   videoPost: VideoPostDto;
@@ -12,7 +12,7 @@ export const VideoPostItem: FC<VideoPostItemProps> = async ({ videoPost }) => {
   return (
     <div className="mx-auto w-full max-w-4xl overflow-hidden rounded bg-gray-800">
       {videoPost.videoUrl && (
-        <div key={videoPost.videoUrl} className="aspect-video w-full bg-black">
+        <div className="aspect-video w-full bg-black">
           <video
             className="h-full w-full object-contain"
             controls

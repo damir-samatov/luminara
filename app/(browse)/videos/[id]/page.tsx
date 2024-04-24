@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { VideoPostEditor } from "@/app/(browse)/videos/_components/VideoPostEditor";
+import { VideoPostEditor } from "../_components/VideoPostEditor";
 import { onGetVideoPostById } from "@/actions/video.actions";
 import { notFound } from "next/navigation";
 
@@ -18,7 +18,7 @@ const VideoPostEditorPage: FC<VideoPostDetailsPageProps> = async ({
 
   return (
     <>
-      <title>Video Post Editor {params.id}</title>
+      <title>Video Editor {params.id}</title>
       <VideoPostEditor videoPost={res.data.videoPost} />
     </>
   );

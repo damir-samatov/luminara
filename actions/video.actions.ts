@@ -5,7 +5,7 @@ import { ERROR_RESPONSES } from "@/configs/responses.config";
 import {
   createVideoPost,
   deleteVideoPostById,
-  getVideoPostsById,
+  getVideoPostById,
   getVideoPostsByUserId,
 } from "@/services/post.service";
 import { VideoPostCreateDto, VideoPostDto } from "@/types/post.types";
@@ -156,7 +156,7 @@ export const onGetVideoPostById = async (
   try {
     const [self, videoPost] = await Promise.all([
       authSelf(),
-      getVideoPostsById(id),
+      getVideoPostById(id),
     ]);
 
     if (!videoPost) return ERROR_RESPONSES.NOT_FOUND;
@@ -196,7 +196,7 @@ export const onDeleteVideoPostById = async (id: string) => {
   try {
     const [self, videoPost] = await Promise.all([
       authSelf(),
-      getVideoPostsById(id),
+      getVideoPostById(id),
     ]);
 
     if (!videoPost) return ERROR_RESPONSES.NOT_FOUND;
