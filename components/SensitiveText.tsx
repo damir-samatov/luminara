@@ -6,6 +6,7 @@ import {
   EyeIcon,
   EyeSlashIcon,
 } from "@heroicons/react/24/outline";
+import { toast } from "react-toastify";
 
 type SensitiveTextProps = {
   value: string;
@@ -20,11 +21,12 @@ export const SensitiveText: FC<SensitiveTextProps> = ({ label, value }) => {
   const onCopy = useCallback(async () => {
     const hasCopied = await copyToClipboard(value);
     if (!hasCopied) return;
+    toast(`${label} - copied`, { type: "success" });
     setIsCopied(true);
     setTimeout(() => {
       setIsCopied(false);
     }, 3000);
-  }, [value, copyToClipboard]);
+  }, [value, copyToClipboard, label]);
 
   return (
     <div className="flex w-full flex-col gap-3 rounded-md bg-gray-900 p-4 text-sm text-gray-100">
