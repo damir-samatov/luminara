@@ -50,7 +50,7 @@ export const Search = () => {
       onFocus={() => setIsFocused(true)}
     >
       <TextInput
-        placeholder="Search users..."
+        placeholder="Search creators..."
         onChange={setSearchTerm}
         value={searchTerm}
       />

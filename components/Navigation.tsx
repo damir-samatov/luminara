@@ -21,7 +21,7 @@ type NavigationProps = {
 
 export const Navigation: FC<NavigationProps> = ({ children }) => {
   const pathname = usePathname();
-  const { subscriptions } = useBrowseNavigationContext();
+  const { subscriptions, self } = useBrowseNavigationContext();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
@@ -44,6 +44,12 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
         <p className="p-2 text-sm font-semibold leading-6 text-gray-400">
           Studio:
         </p>
+        <UserProfileLink
+          isActive={pathname === `/users/${self.username}`}
+          key={self.id}
+          imageUrl={self.imageUrl}
+          username={self.username}
+        />
         {STUDIO_LINKS.map(({ href, label, icon, activeOn }) => (
           <SidebarLink
             key={href}

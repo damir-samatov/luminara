@@ -130,7 +130,7 @@ export const onUpdateStreamSettings = async (
   updatedStreamSettings: StreamSettingsUpdateDto
 ): Promise<StreamActionsResponse> => {
   try {
-    const self = await getSelf();
+    const self = await authSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
     const newStream = await updateStreamSettingsByUserId(
       self.id,
@@ -169,7 +169,7 @@ export const onCreateStream = async () => {
       return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
     const stream = await createStream(self.id, {
-      title: `Welcome to ${self.username}'s Stream`,
+      title: `Welcome to ${self.username}'s`,
       description: "<p></p>",
       channelArn: ivsChannel.channelArn,
       chatRoomArn: ivsChatRoom.chatRoomArn,
@@ -207,7 +207,7 @@ export const onGetStreamThumbnailUploadUrl = async ({
   size,
 }: GetSignedFileUploadUrlParams): Promise<OnGetStreamThumbnailUploadUrlResponse> => {
   try {
-    const self = await getSelf();
+    const self = await authSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
 
     const stream = await getStreamByUserId(self.id);
@@ -273,7 +273,7 @@ export const onRefreshStreamKey = async (): Promise<OnRefreshSelfStreamKey> => {
 
 export const onGoLive = async (): Promise<StreamActionsResponse> => {
   try {
-    const self = await getSelf();
+    const self = await authSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
     const stream = await updateStreamStatusByUserId(self.id, true);
     if (!stream) return ERROR_RESPONSES.NOT_FOUND;
@@ -289,7 +289,7 @@ export const onGoLive = async (): Promise<StreamActionsResponse> => {
 
 export const onGoOffline = async (): Promise<StreamActionsResponse> => {
   try {
-    const self = await getSelf();
+    const self = await authSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
     const stream = await updateStreamStatusByUserId(self.id, false);
     if (!stream) return ERROR_RESPONSES.NOT_FOUND;
@@ -305,7 +305,7 @@ export const onGoOffline = async (): Promise<StreamActionsResponse> => {
 
 export const onDeleteChatMessage = async (messageId: string) => {
   try {
-    const self = await getSelf();
+    const self = await authSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
 
     const stream = await getStreamByUserId(self.id);

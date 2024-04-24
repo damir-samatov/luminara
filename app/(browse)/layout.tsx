@@ -1,21 +1,22 @@
 import { FC, ReactNode } from "react";
-import { onGetSubscriptions } from "@/actions/subscription.actions";
 import { notFound } from "next/navigation";
 import { BrowseNavigationContextProvider } from "@/contexts/BrowseNavigationContext";
 import { Navigation } from "@/components/Navigation";
+import { onGetSelfContextData } from "@/actions/user.actions";
 
 type BrowseLayoutProps = {
   children: ReactNode;
 };
 
 const BrowseLayout: FC<BrowseLayoutProps> = async ({ children }) => {
-  const res = await onGetSubscriptions();
+  const res = await onGetSelfContextData();
 
   if (!res.success) return notFound();
 
   return (
     <BrowseNavigationContextProvider
-      initialSubscriptions={res.data.subscriptions}
+      subscriptions={res.data.subscriptions}
+      self={res.data.self}
     >
       <Navigation>{children}</Navigation>
     </BrowseNavigationContextProvider>

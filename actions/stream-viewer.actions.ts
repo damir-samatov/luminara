@@ -1,7 +1,7 @@
 "use server";
 import { ActionDataResponse } from "@/types/action.types";
 import { IvsChatRoomToken } from "@/types/ivs.types";
-import { getSelf } from "@/services/auth.service";
+import { authSelf, getSelf } from "@/services/auth.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import { getStreamByUsername } from "@/services/stream.service";
 import { getIvsViewerToken } from "@/services/ivs.service";
@@ -60,7 +60,7 @@ export const onGetStreamWatchData = async (
   streamerUsername: string
 ): Promise<OnGetStreamDataAsViewerResponse> => {
   try {
-    const self = await getSelf();
+    const self = await authSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
 
     const stream = await getStreamByUsername(streamerUsername);
@@ -112,7 +112,7 @@ export const onGetStreamModerationData = async (
   streamerUsername: string
 ): Promise<OnGetStreamDataAsModeratorResponse> => {
   try {
-    const self = await getSelf();
+    const self = await authSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
 
     const stream = await getStreamByUsername(streamerUsername);

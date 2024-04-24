@@ -10,29 +10,45 @@ import {
   useContext,
 } from "react";
 import { onGetSubscriptions } from "@/actions/subscription.actions";
+import { User } from "@prisma/client";
 
 type BrowseNavigationContext = {
   subscriptions: SubscriptionWithUser[];
   setSubscriptions: Dispatch<SetStateAction<SubscriptionWithUser[]>>;
   refresh: () => void;
+  self: User;
+  setSelf: Dispatch<SetStateAction<User>>;
 };
 
 const BrowseNavigationContext = createContext<BrowseNavigationContext>({
+  self: {
+    id: "",
+    externalUserId: "",
+    username: "",
+    imageUrl: "",
+    firstName: "",
+    lastName: "",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
   subscriptions: [],
   setSubscriptions: () => {},
+  setSelf: () => {},
   refresh: () => {},
 });
 
 type BrowseNavigationContextProviderProps = {
-  initialSubscriptions: SubscriptionWithUser[];
+  subscriptions: SubscriptionWithUser[];
+  self: User;
   children: ReactNode;
 };
 
 export const BrowseNavigationContextProvider: FC<
   BrowseNavigationContextProviderProps
-> = ({ initialSubscriptions, children }) => {
+> = ({ subscriptions: savedSubscriptions, self: savedSelf, children }) => {
+  const [self, setSelf] = useState<User>(savedSelf);
   const [subscriptions, setSubscriptions] =
-    useState<SubscriptionWithUser[]>(initialSubscriptions);
+    useState<SubscriptionWithUser[]>(savedSubscriptions);
 
   const refresh = async () => {
     const res = await onGetSubscriptions();
@@ -43,8 +59,10 @@ export const BrowseNavigationContextProvider: FC<
   return (
     <BrowseNavigationContext.Provider
       value={{
+        self,
         subscriptions,
         setSubscriptions,
+        setSelf,
         refresh,
       }}
     >
