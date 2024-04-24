@@ -22,9 +22,9 @@ export const StreamCredentials: FC<StreamCredentialsProps> = ({
       const res = await onRefreshStreamKey();
       if (!res.success) return toast(res.message, { type: "error" });
       setStreamKey(res.data.streamKey);
-      toast("Stream key refreshed successfully", { type: "success" });
+      toast("Stream key successfully refreshed", { type: "success" });
     } catch (error) {
-      toast("Something went wrong, try again", { type: "success" });
+      toast("Failed to refresh the stream key", { type: "success" });
       console.error(error);
     } finally {
       setIsLoading(false);

@@ -41,9 +41,13 @@ export const StreamThumbnail: FC<StreamThumbnailProps> = ({
         file,
         onProgress: setProgress,
       });
-      if (!uploadRes) return toast("Failed to upload", { type: "error" });
+      if (!uploadRes)
+        return toast("Failed to upload the stream thumbnail", {
+          type: "error",
+        });
       setThumbnailUrl(URL.createObjectURL(file));
       setFile(null);
+      toast("Stream thumbnail uploaded successfully", { type: "success" });
     } catch (error) {
       toast("Something went wrong", { type: "error" });
       console.error(error);

@@ -6,9 +6,13 @@ import {
   updateStreamKeyByUserId,
   updateStreamSettingsByUserId,
   updateStreamStatusByUserId,
+  updateStreamSubscriptionPlanByUserId,
 } from "@/services/stream.service";
 import { ERROR_RESPONSES, SUCCESS_RESPONSES } from "@/configs/responses.config";
-import { ActionDataResponse } from "@/types/action.types";
+import {
+  ActionCombinedResponse,
+  ActionDataResponse,
+} from "@/types/action.types";
 import { Stream, User } from "@prisma/client";
 import { StreamSettingsUpdateDto } from "@/types/stream.types";
 import { revalidatePath } from "next/cache";
@@ -25,7 +29,10 @@ import {
   createIvsChatRoom,
   deleteIvsChatMessage,
 } from "@/services/ivs-chat.service";
-import { getSubscriptionPlansByUserId } from "@/services/subscription-plan.service";
+import {
+  getSubscriptionPlanById,
+  getSubscriptionPlansByUserId,
+} from "@/services/subscription-plan.service";
 import { generateFileKey } from "@/helpers/server/s3.helpers";
 import { SubscriptionPlanDto } from "@/types/subscription-plan.types";
 
@@ -86,6 +93,38 @@ export const onGetStreamDashboardData =
       return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
     }
   };
+
+export const onUpdateStreamSubscriptionPlan = async (
+  subscriptionPlanId: string | null
+): Promise<ActionCombinedResponse> => {
+  try {
+    const self = await authSelf();
+    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+
+    if (subscriptionPlanId !== null) {
+      const subscriptionPlan =
+        await getSubscriptionPlanById(subscriptionPlanId);
+      if (!subscriptionPlan) return ERROR_RESPONSES.NOT_FOUND;
+      if (subscriptionPlan.userId !== self.id)
+        return ERROR_RESPONSES.UNAUTHORIZED;
+    }
+
+    const updatedStream = await updateStreamSubscriptionPlanByUserId(
+      self.id,
+      subscriptionPlanId
+    );
+
+    if (!updatedStream) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    return {
+      success: true,
+      message: "Subscription plan updated successfully.",
+    };
+  } catch (error) {
+    console.error("onUpdateStreamSubscriptionPlan", error);
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+  }
+};
 
 export const onUpdateStreamSettings = async (
   updatedStreamSettings: StreamSettingsUpdateDto

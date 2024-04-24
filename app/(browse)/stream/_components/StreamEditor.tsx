@@ -9,12 +9,14 @@ import {
   onGoLive,
   onGoOffline,
   onUpdateStreamSettings,
+  onUpdateStreamSubscriptionPlan,
 } from "@/actions/stream-owner.actions";
 import { StreamSettingsUpdateDto } from "@/types/stream.types";
 import { useObjectShadow } from "@/hooks/useObjectShadow";
 import { Button } from "@/components/Button";
 import { SubscriptionPlanSelector } from "@/components/SubscriptionPlanSelector";
 import { SubscriptionPlanDto } from "@/types/subscription-plan.types";
+import { toast } from "react-toastify";
 
 type StreamEditorProps = {
   stream: Stream;
@@ -193,8 +195,41 @@ export const StreamEditor: FC<StreamEditorProps> = ({
     ]
   );
 
+  const onSubscriptionPlanChange = useCallback(
+    async (subscriptionPlanDto: SubscriptionPlanDto | null) => {
+      let prevSubscriptionPlan: SubscriptionPlanDto | null = null;
+
+      setActiveSubscriptionPlan((prev) => {
+        prevSubscriptionPlan = prev;
+        return subscriptionPlanDto;
+      });
+
+      try {
+        const res = await onUpdateStreamSubscriptionPlan(
+          subscriptionPlanDto?.id || null
+        );
+
+        if (res.success) {
+          toast("Subscription plan successfully updated", {
+            type: "success",
+          });
+        } else {
+          setActiveSubscriptionPlan(prevSubscriptionPlan);
+          toast("Failed to update the subscription plan", {
+            type: "error",
+          });
+        }
+      } catch (error) {
+        toast("Failed to update the subscription plan", { type: "error" });
+        console.error(error);
+        setActiveSubscriptionPlan(prevSubscriptionPlan);
+      }
+    },
+    []
+  );
+
   return (
-    <div className="mx-auto flex w-full max-w-7xl flex-grow flex-col gap-6 p-4">
+    <div className="mx-auto flex w-full max-w-screen-2xl flex-grow flex-col gap-6 p-4">
       <h2 className="text-sm md:text-xl lg:text-3xl">Stream Dashboard</h2>
       <div className="flex w-full flex-grow flex-col gap-4 lg:grid lg:grid-cols-4 lg:items-start">
         <div className="flex h-full flex-grow flex-col gap-4 lg:col-span-3">
@@ -221,7 +256,7 @@ export const StreamEditor: FC<StreamEditorProps> = ({
                 freeFollowerImageUrl={user.imageUrl}
                 subscriptionPlans={subscriptionPlans}
                 activeSubscriptionPlan={activeSubscriptionPlan}
-                onChange={setActiveSubscriptionPlan}
+                onChange={onSubscriptionPlanChange}
               />
             </div>
           )}
