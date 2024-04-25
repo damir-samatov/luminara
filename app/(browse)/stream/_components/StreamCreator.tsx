@@ -3,26 +3,33 @@ import { Button } from "@/components/Button";
 import { onCreateStream } from "@/actions/stream-owner.actions";
 import { useState } from "react";
 import streamerImg from "@/public/images/streamer-bg.webp";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Image from "next/image";
 
 export const StreamCreator = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
   const onCreateStreamClick = async () => {
     try {
       setIsLoading(true);
       const res = await onCreateStream();
-      toast(res.message, {
-        type: res.success ? "success" : "error",
-      });
-      if (!res.success) return;
-      redirect("/stream");
+      if (!res.success) {
+        toast("Failed to initiate stream dashboard", {
+          type: "error",
+        });
+      } else {
+        toast("Stream dashboard initiated successfully", {
+          type: "success",
+        });
+      }
+      router.push("/stream");
     } catch (error) {
-      console.error(error);
       toast("Something went wrong, try again", {
-        type: "success",
+        type: "error",
       });
+      console.error(error);
     } finally {
       setIsLoading(false);
     }
