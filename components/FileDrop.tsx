@@ -70,7 +70,7 @@ export const FileDrop: FC<FileDropProps> = ({
 
   return (
     <div
-      className="flex h-full cursor-pointer flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed border-gray-400 p-2 font-bold text-gray-400"
+      className="flex h-full cursor-pointer flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed border-gray-400 p-6 font-bold text-gray-400"
       onClick={onClick}
       onDrop={onFilesDrop}
       onDragLeave={onDragLeave}

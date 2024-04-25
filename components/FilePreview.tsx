@@ -43,18 +43,18 @@ export const FilePreview: FC<FilePreviewProps> = ({ file }) => {
         alt={file.name}
         width={1920}
         height={1080}
-        className="aspect-video cursor-pointer  object-contain"
+        className="aspect-video cursor-pointer object-contain"
         onClick={onImageClick}
       />
     );
   }, [fileType, src, file.name, onImageClick]);
 
   return (
-    <div className="flex flex-col gap-2">
+    <div>
       <div className="aspect-video w-full overflow-hidden rounded-lg bg-black">
         {filePreview}
       </div>
-      <div className="text-xs text-gray-400">
+      <div className="truncate text-xs text-gray-400">
         <p className="truncate">{file.name}</p>
         <p className="truncate">
           {file.type} - {size}

@@ -91,26 +91,24 @@ export const SubscriptionPlanCreator = () => {
           New Subscription Plan
         </h2>
       </div>
-      <div className="flex grid-cols-3 flex-col gap-4 lg:grid">
+      <div className="flex grid-cols-3 flex-col gap-4 md:grid">
         <div className="col-span-1 flex flex-col gap-4">
           {imageFile ? (
-            <>
+            <div className="mx-auto flex w-full max-w-80 flex-col gap-4 md:max-w-full">
               <FilePreview file={imageFile} />
-              <div className="mt-auto">
-                {isLoading ? (
-                  <ProgressBar progress={progress} />
-                ) : (
-                  <Button
-                    className="flex items-center justify-center gap-2"
-                    onClick={() => setImageFile(null)}
-                    type="secondary"
-                  >
-                    <TrashIcon className="h-3 w-3" />
-                    <span>Remove</span>
-                  </Button>
-                )}
-              </div>
-            </>
+              {isLoading ? (
+                <ProgressBar progress={progress} />
+              ) : (
+                <Button
+                  className="flex items-center justify-center gap-2"
+                  onClick={() => setImageFile(null)}
+                  type="secondary"
+                >
+                  <TrashIcon className="h-3 w-3" />
+                  <span>Remove</span>
+                </Button>
+              )}
+            </div>
           ) : (
             <FileDrop
               label="Cover Image"

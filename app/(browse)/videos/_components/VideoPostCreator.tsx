@@ -164,9 +164,9 @@ export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
     },
     {
       component: (
-        <div className="grid min-h-96 gap-4 rounded-lg border-2 border-gray-700 p-4 md:grid-cols-2">
+        <div className="flex flex-col gap-4 rounded-lg border-2 border-gray-700 p-4 md:grid md:min-h-96 md:grid-cols-2">
           {videoFile ? (
-            <div className="flex flex-col gap-2">
+            <div className="mx-auto flex w-full max-w-80 flex-col gap-2 md:max-w-full">
               <p>Video</p>
               <FilePreview file={videoFile} />
               <div className="mt-auto">
@@ -193,7 +193,7 @@ export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
             />
           )}
           {thumbnailFile ? (
-            <div className="flex flex-col gap-2">
+            <div className="mx-auto flex w-full max-w-80 flex-col gap-2 md:max-w-full">
               <p>Thumbnail</p>
               <FilePreview file={thumbnailFile} />
               <div className="mt-auto">

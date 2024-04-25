@@ -67,46 +67,42 @@ export const SubscriptionPlanImageEditor: FC<
   }, [imageFile, subscriptionPlanId]);
 
   return (
-    <div className="flex flex-col-reverse gap-4 rounded-lg border-2 border-gray-700 p-4 md:grid md:grid-cols-2">
-      <div className="flex flex-col gap-4">
-        {imageFile ? (
-          <>
-            <FilePreview file={imageFile} />
-            <div className="mt-auto">
-              {isLoading ? (
-                <ProgressBar progress={progress} />
-              ) : (
-                <div className="flex gap-2">
-                  <Button
-                    className="flex items-center justify-center gap-2"
-                    onClick={() => setImageFile(null)}
-                    type="secondary"
-                  >
-                    <TrashIcon className="h-3 w-3" />
-                    <span>Remove</span>
-                  </Button>
-                  <Button
-                    onClick={onImageUploadClick}
-                    loadingText="Uploading..."
-                    isLoading={isLoading}
-                    isDisabled={isLoading || !imageFile}
-                  >
-                    Upload
-                  </Button>
-                </div>
-              )}
+    <div className="flex flex-col gap-4 rounded-lg border-2 border-gray-700 p-4 md:grid md:grid-cols-2">
+      {imageFile ? (
+        <div className="mx-auto flex w-full max-w-80 flex-col gap-4 md:max-w-full">
+          <FilePreview file={imageFile} />
+          {isLoading ? (
+            <ProgressBar progress={progress} />
+          ) : (
+            <div className="flex flex-col gap-2">
+              <Button
+                className="flex items-center justify-center gap-2"
+                onClick={() => setImageFile(null)}
+                type="secondary"
+              >
+                <TrashIcon className="h-3 w-3" />
+                <span>Remove</span>
+              </Button>
+              <Button
+                onClick={onImageUploadClick}
+                loadingText="Uploading..."
+                isLoading={isLoading}
+                isDisabled={isLoading || !imageFile}
+              >
+                Upload
+              </Button>
             </div>
-          </>
-        ) : (
-          <FileDrop
-            label="Cover Image"
-            onChange={onFilesChange}
-            eligibleFileTypes={ELIGIBLE_IMAGE_TYPES}
-            maxFileSize={SUBSCRIPTION_PLAN_IMAGE_MAX_SIZE}
-          />
-        )}
-      </div>
-      <div className="aspect-square w-full overflow-hidden rounded">
+          )}
+        </div>
+      ) : (
+        <FileDrop
+          label="Cover Image"
+          onChange={onFilesChange}
+          eligibleFileTypes={ELIGIBLE_IMAGE_TYPES}
+          maxFileSize={SUBSCRIPTION_PLAN_IMAGE_MAX_SIZE}
+        />
+      )}
+      <div className="aspect-square w-full overflow-hidden rounded bg-black">
         {imageUrl && (
           <img
             src={imageUrl}

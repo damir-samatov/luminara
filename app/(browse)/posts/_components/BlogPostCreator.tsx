@@ -100,41 +100,37 @@ export const BlogPostCreator: FC<BlogPostCreatorProps> = ({
         <BackButton href="/posts" />
         <h2 className="text-sm sm:text-xl lg:text-3xl">New Blog Post</h2>
       </div>
-      <div className="grid gap-4 sm:grid-cols-3 sm:flex-row sm:items-start">
+      <div className="flex flex-col gap-4 sm:grid sm:grid-cols-3">
         <div className="flex flex-grow flex-col gap-2 rounded-lg border-2 border-gray-700 p-4 sm:col-span-2">
           <p>Title</p>
           <TextInput
             value={content.title}
             onChange={(value) => onPostContentChange("title", value)}
           />
-          <div className="my-4 flex w-full items-stretch justify-center">
+          <div className="py-4">
             {imageFile ? (
-              <div className="flex min-h-60 w-full max-w-60 flex-col gap-2">
+              <div className="mx-auto flex max-w-80 flex-col gap-4">
                 <FilePreview file={imageFile} />
-                <div className="mt-auto">
-                  {isLoading ? (
-                    <ProgressBar progress={imageProgress} />
-                  ) : (
-                    <Button
-                      className="flex items-center justify-center gap-1"
-                      onClick={() => setImageFile(null)}
-                      type="secondary"
-                    >
-                      <TrashIcon className="h-2.5 w-2.5" />
-                      <span className="text-xs">Remove</span>
-                    </Button>
-                  )}
-                </div>
+                {isLoading ? (
+                  <ProgressBar progress={imageProgress} />
+                ) : (
+                  <Button
+                    className="flex items-center justify-center gap-1"
+                    onClick={() => setImageFile(null)}
+                    type="secondary"
+                  >
+                    <TrashIcon className="h-2.5 w-2.5" />
+                    <span className="text-xs">Remove</span>
+                  </Button>
+                )}
               </div>
             ) : (
-              <div className="min-h-60 flex-grow">
-                <FileDrop
-                  label="Image"
-                  onChange={onImageFileChange}
-                  eligibleFileTypes={ELIGIBLE_IMAGE_TYPES}
-                  maxFileSize={BLOG_POST_IMAGE_MAX_SIZE}
-                />
-              </div>
+              <FileDrop
+                label="Image"
+                onChange={onImageFileChange}
+                eligibleFileTypes={ELIGIBLE_IMAGE_TYPES}
+                maxFileSize={BLOG_POST_IMAGE_MAX_SIZE}
+              />
             )}
           </div>
           <p>Body</p>
