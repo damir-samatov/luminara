@@ -3,7 +3,7 @@ import { FC, useCallback, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { TrashIcon } from "@heroicons/react/24/outline";
-import { onDeleteBlogPostById } from "@/actions/post.actions";
+import { onDeleteBlogPostById } from "@/actions/blog-post.actions";
 import { Button } from "@/components/Button";
 import { Modal } from "@/components/Modal";
 

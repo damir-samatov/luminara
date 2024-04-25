@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { onGetSelfBlogPosts } from "@/actions/post.actions";
+import { onGetSelfBlogPosts } from "@/actions/blog-post.actions";
 import { BlogPostItem } from "./_components/BlogPostItem";
 import Link from "next/link";
 import { PlusIcon } from "@heroicons/react/24/outline";

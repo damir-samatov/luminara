@@ -2,7 +2,7 @@
 import { FC, useCallback, useState } from "react";
 import { Modal } from "@/components/Modal";
 import { Button } from "@/components/Button";
-import { onDeleteVideoPostById } from "@/actions/video.actions";
+import { onDeleteVideoPostById } from "@/actions/video-post.actions";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { TrashIcon } from "@heroicons/react/24/outline";

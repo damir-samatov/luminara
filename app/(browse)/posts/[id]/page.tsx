@@ -1,7 +1,8 @@
 import { FC } from "react";
 import { notFound } from "next/navigation";
 import { BlogPostEditor } from "../_components/BlogPostEditor";
-import { onGetBlogPostById } from "@/actions/post.actions";
+import { onGetBlogPostById } from "@/actions/blog-post.actions";
+import { onGetSelfSubscriptionPlans } from "@/actions/subscription-plan.actions";
 
 type BlogPostDetailsPageProps = {
   params: {
@@ -10,14 +11,20 @@ type BlogPostDetailsPageProps = {
 };
 
 const BlogPostEditorPage: FC<BlogPostDetailsPageProps> = async ({ params }) => {
-  const res = await onGetBlogPostById(params.id);
+  const [blogPostRes, subscriptionPlansRes] = await Promise.all([
+    onGetBlogPostById(params.id),
+    onGetSelfSubscriptionPlans(),
+  ]);
 
-  if (!res.success) return notFound();
+  if (!blogPostRes.success || !subscriptionPlansRes.success) return notFound();
 
   return (
     <>
       <title>Blog Post Editor {params.id}</title>
-      <BlogPostEditor blogPost={res.data.blogPost} />
+      <BlogPostEditor
+        blogPost={blogPostRes.data.blogPost}
+        subscriptionPlans={subscriptionPlansRes.data.subscriptionPlans}
+      />
     </>
   );
 };

@@ -1,6 +1,19 @@
 "use server";
 import { db } from "@/lib/db";
 
+export const getPostById = async (id: string) => {
+  try {
+    return await db.post.findUnique({
+      where: {
+        id,
+      },
+    });
+  } catch (error) {
+    console.error("getPostById", error);
+    return null;
+  }
+};
+
 type CreateBlogPostProps = {
   userId: string;
   title: string;
@@ -75,22 +88,6 @@ export const getBlogPostById = async (id: string) => {
     });
   } catch (error) {
     console.error("getBlogPostById", error);
-    return null;
-  }
-};
-
-export const deleteBlogPostById = async (id: string) => {
-  try {
-    return await db.post.delete({
-      where: {
-        id,
-        videos: {
-          none: {},
-        },
-      },
-    });
-  } catch (error) {
-    console.error("deleteBlogPostById", error);
     return null;
   }
 };
@@ -174,18 +171,39 @@ export const createVideoPost = async ({
   }
 };
 
-export const deleteVideoPostById = async (id: string) => {
+export const deletePostById = async (id: string) => {
   try {
     return await db.post.delete({
       where: {
         id,
-        videos: {
-          some: {},
-        },
       },
     });
   } catch (error) {
-    console.error("deleteVideoPostById", error);
+    console.error("deletePostById", error);
+    return null;
+  }
+};
+
+type UpdatePostSubscriptionPlanProps = {
+  postId: string;
+  subscriptionPlanId: string | null;
+};
+
+export const updatePostSubscriptionPlan = async ({
+  postId,
+  subscriptionPlanId,
+}: UpdatePostSubscriptionPlanProps) => {
+  try {
+    return await db.post.update({
+      where: {
+        id: postId,
+      },
+      data: {
+        subscriptionPlanId,
+      },
+    });
+  } catch (error) {
+    console.error("updatePostSubscriptionPlan", error);
     return null;
   }
 };

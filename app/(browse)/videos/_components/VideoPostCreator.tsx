@@ -16,7 +16,7 @@ import {
 } from "@/configs/file.config";
 import { BackButton } from "@/components/BackButton";
 import { toast } from "react-toastify";
-import { onCreateVideoPost } from "@/actions/video.actions";
+import { onCreateVideoPost } from "@/actions/video-post.actions";
 import { uploadFileToS3 } from "@/helpers/client/file.helpers";
 import { SubscriptionPlanSelector } from "@/components/SubscriptionPlanSelector";
 import { SubscriptionPlanDto } from "@/types/subscription-plan.types";

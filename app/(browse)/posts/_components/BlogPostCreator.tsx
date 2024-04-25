@@ -16,7 +16,7 @@ import {
 } from "@/configs/file.config";
 import { toast } from "react-toastify";
 import { uploadFileToS3 } from "@/helpers/client/file.helpers";
-import { onCreateBlogPost } from "@/actions/post.actions";
+import { onCreateBlogPost } from "@/actions/blog-post.actions";
 import { SubscriptionPlanDto } from "@/types/subscription-plan.types";
 
 type BlogPostCreatorProps = {

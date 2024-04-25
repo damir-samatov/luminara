@@ -3,7 +3,7 @@ import { authSelf } from "@/services/auth.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import {
   createBlogPost,
-  deleteBlogPostById,
+  deletePostById,
   getBlogPostById,
   getBlogPostsByUserId,
 } from "@/services/post.service";
@@ -177,7 +177,7 @@ export const onDeleteBlogPostById = async (id: string) => {
     if (!self || blogPost.userId !== self.id)
       return ERROR_RESPONSES.UNAUTHORIZED;
 
-    const res = await deleteBlogPostById(id);
+    const res = await deletePostById(id);
 
     if (!res) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 

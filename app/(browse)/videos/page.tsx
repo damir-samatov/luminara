@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { onGetSelfVideoPosts } from "@/actions/video.actions";
+import { onGetSelfVideoPosts } from "@/actions/video-post.actions";
 import { VideoPostItem } from "./_components/VideoPostItem";
 
 const VideosPage = async () => {

@@ -4,7 +4,7 @@ import { authSelf } from "@/services/auth.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import {
   createVideoPost,
-  deleteVideoPostById,
+  deletePostById,
   getVideoPostById,
   getVideoPostsByUserId,
 } from "@/services/post.service";
@@ -203,7 +203,7 @@ export const onDeleteVideoPostById = async (id: string) => {
     if (!self || videoPost.userId !== self.id)
       return ERROR_RESPONSES.UNAUTHORIZED;
 
-    const res = await deleteVideoPostById(id);
+    const res = await deletePostById(id);
 
     if (!res) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
