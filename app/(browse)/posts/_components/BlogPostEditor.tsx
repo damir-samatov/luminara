@@ -5,6 +5,7 @@ import { BlogPostDto } from "@/types/post.types";
 import { BlogPostDeleterModal } from "../_components/BlogPostDeleteModal";
 import { SubscriptionPlanDto } from "@/types/subscription-plan.types";
 import { PostSubscriptionPlanEditor } from "@/components/PostSubscriptionPlanEditor";
+import { PostContentEditor } from "@/components/PostContentEditor";
 
 type BlogPostEditorProps = {
   blogPost: BlogPostDto;
@@ -28,6 +29,11 @@ export const BlogPostEditor: FC<BlogPostEditorProps> = ({
         subscriptionPlanId={blogPost.subscriptionPlan?.id || null}
         subscriptionPlans={subscriptionPlans}
         postId={blogPost.id}
+      />
+      <PostContentEditor
+        postId={blogPost.id}
+        title={blogPost.title}
+        body={blogPost.body}
       />
     </div>
   );

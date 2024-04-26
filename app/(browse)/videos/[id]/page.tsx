@@ -26,7 +26,7 @@ const VideoPostEditorPage: FC<VideoPostDetailsPageProps> = async ({
 
   return (
     <>
-      <title>Video Editor {params.id}</title>
+      <title>Video Editor</title>
       <VideoPostEditor
         videoPost={videoPostRes.data.videoPost}
         subscriptionPlans={subscriptionPlansRes.data.subscriptionPlans}

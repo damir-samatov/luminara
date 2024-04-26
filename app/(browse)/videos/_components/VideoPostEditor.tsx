@@ -5,6 +5,7 @@ import { BackButton } from "@/components/BackButton";
 import { VideoPostDeleterModal } from "../_components/VideoPostDeleteModal";
 import { SubscriptionPlanDto } from "@/types/subscription-plan.types";
 import { PostSubscriptionPlanEditor } from "@/components/PostSubscriptionPlanEditor";
+import { PostContentEditor } from "@/components/PostContentEditor";
 
 type VideoPostEditorProps = {
   videoPost: VideoPostDto;
@@ -24,11 +25,18 @@ export const VideoPostEditor: FC<VideoPostEditorProps> = ({
           <VideoPostDeleterModal id={videoPost.id} />
         </div>
       </div>
-      <PostSubscriptionPlanEditor
-        subscriptionPlanId={videoPost.subscriptionPlan?.id || null}
-        subscriptionPlans={subscriptionPlans}
-        postId={videoPost.id}
-      />
+      <div>
+        <PostSubscriptionPlanEditor
+          subscriptionPlanId={videoPost.subscriptionPlan?.id || null}
+          subscriptionPlans={subscriptionPlans}
+          postId={videoPost.id}
+        />
+        <PostContentEditor
+          postId={videoPost.id}
+          title={videoPost.title}
+          body={videoPost.body}
+        />
+      </div>
     </div>
   );
 };
