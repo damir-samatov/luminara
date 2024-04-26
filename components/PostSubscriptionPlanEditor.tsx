@@ -5,7 +5,6 @@ import { SubscriptionPlanDto } from "@/types/subscription-plan.types";
 import { onUpdatePostSubscriptionPlan } from "@/actions/post.actions";
 import { toast } from "react-toastify";
 import { SubscriptionPlanSelector } from "@/components/SubscriptionPlanSelector";
-import { useRouter } from "next/navigation";
 
 type PostSubscriptionPlanEditorProps = {
   subscriptionPlanId: string | null;
@@ -16,7 +15,6 @@ type PostSubscriptionPlanEditorProps = {
 export const PostSubscriptionPlanEditor: FC<
   PostSubscriptionPlanEditorProps
 > = ({ subscriptionPlanId, postId, subscriptionPlans }) => {
-  const router = useRouter();
   const { self } = useBrowseNavigationContext();
 
   const [activeSubscriptionPlan, setActiveSubscriptionPlan] =
@@ -44,7 +42,6 @@ export const PostSubscriptionPlanEditor: FC<
           toast("Subscription plan successfully updated", {
             type: "success",
           });
-          router.refresh();
         } else {
           setActiveSubscriptionPlan(prevSubscriptionPlan);
           toast("Failed to update the subscription plan", {

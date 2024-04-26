@@ -25,7 +25,6 @@ export const StreamCreator = () => {
         });
       }
       router.refresh();
-      router.push("/stream");
     } catch (error) {
       toast("Something went wrong, try again", {
         type: "error",

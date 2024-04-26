@@ -18,6 +18,7 @@ import {
   getSignedFileReadUrl,
   getSignedFileUploadUrl,
 } from "@/services/s3.service";
+import { revalidatePath } from "next/cache";
 
 type OnGetSelfPostsResponse = ActionDataResponse<{
   blogPosts: BlogPostDto[];
@@ -106,6 +107,8 @@ export const onCreateBlogPost = async ({
     });
 
     if (!post) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    revalidatePath("/posts", "page");
 
     return {
       success: true,

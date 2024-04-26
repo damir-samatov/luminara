@@ -12,7 +12,6 @@ import { ProgressBar } from "@/components/ProgressBar";
 import { FilePreview } from "@/components/FilePreview";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { FileDrop } from "@/components/FileDrop";
-import { useRouter } from "next/navigation";
 
 type SubscriptionPlanImageEditorProps = {
   initialImageUrl: string | null;
@@ -22,7 +21,6 @@ type SubscriptionPlanImageEditorProps = {
 export const SubscriptionPlanImageEditor: FC<
   SubscriptionPlanImageEditorProps
 > = ({ initialImageUrl, subscriptionPlanId }) => {
-  const router = useRouter();
   const [imageUrl, setImageUrl] = useState(initialImageUrl);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -60,7 +58,6 @@ export const SubscriptionPlanImageEditor: FC<
       setImageUrl(URL.createObjectURL(imageFile));
       setImageFile(null);
       toast("Image uploaded successfully", { type: "success" });
-      router.refresh();
     } catch (error) {
       toast("Something went wrong", { type: "error" });
     } finally {

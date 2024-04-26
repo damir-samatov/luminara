@@ -10,6 +10,7 @@ import {
 import { ERROR_RESPONSES, SUCCESS_RESPONSES } from "@/configs/responses.config";
 import { getSubscriptionPlanById } from "@/services/subscription-plan.service";
 import { deleteFile } from "@/services/s3.service";
+import { revalidatePath } from "next/cache";
 
 type OnUpdatePostSubscriptionPlan = (props: {
   postId: string;
@@ -37,6 +38,9 @@ export const onUpdatePostSubscriptionPlan: OnUpdatePostSubscriptionPlan =
       });
 
       if (!res) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+      revalidatePath("/posts", "page");
+      revalidatePath("/videos", "page");
 
       return SUCCESS_RESPONSES.SUCCESS;
     } catch (error) {
@@ -69,6 +73,9 @@ export const onUpdatePostContent: OnUpdatePostContent = async ({
 
     if (!res) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
+    revalidatePath("/posts", "page");
+    revalidatePath("/videos", "page");
+
     return SUCCESS_RESPONSES.SUCCESS;
   } catch (error) {
     console.error("onUpdatePostContent", error);
@@ -94,6 +101,9 @@ export const onDeletePostById = async (id: string) => {
     post.videos.forEach((video) => {
       deleteFile(video.key);
     });
+
+    revalidatePath("/posts", "page");
+    revalidatePath("/videos", "page");
 
     return {
       success: true,

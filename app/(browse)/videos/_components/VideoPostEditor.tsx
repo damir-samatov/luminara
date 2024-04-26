@@ -20,7 +20,6 @@ export const VideoPostEditor: FC<VideoPostEditorProps> = ({
   const router = useRouter();
 
   const onDeleted = useCallback(() => {
-    router.refresh();
     router.push("/videos");
   }, [router]);
 

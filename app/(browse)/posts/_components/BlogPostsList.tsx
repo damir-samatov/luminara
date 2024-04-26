@@ -2,7 +2,6 @@
 import { FC, useCallback, useState } from "react";
 import { BlogPostDto } from "@/types/post.types";
 import { BlogPostItem } from "@/app/(browse)/posts/_components/BlogPostItem";
-import { useRouter } from "next/navigation";
 
 type BlogPostsListProps = {
   posts: BlogPostDto[];
@@ -11,16 +10,11 @@ type BlogPostsListProps = {
 export const BlogPostsList: FC<BlogPostsListProps> = ({
   posts: savedPosts,
 }) => {
-  const router = useRouter();
   const [posts, setPosts] = useState(savedPosts);
 
-  const onDeleted = useCallback(
-    (id: string) => {
-      setPosts((prev) => prev.filter((post) => post.id !== id));
-      router.refresh();
-    },
-    [router]
-  );
+  const onDeleted = useCallback((id: string) => {
+    setPosts((prev) => prev.filter((post) => post.id !== id));
+  }, []);
 
   return (
     <div className="flex flex-col gap-6">

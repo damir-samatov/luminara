@@ -4,8 +4,8 @@ import { Modal } from "@/components/Modal";
 import { Button } from "@/components/Button";
 import { onDeleteSubscriptionPlanById } from "@/actions/subscription-plan.actions";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 import { TrashIcon } from "@heroicons/react/24/outline";
+import { useRouter } from "next/navigation";
 
 type SubscriptionPlanDeleterModalProps = {
   subscriptionPlanId: string;
@@ -32,7 +32,6 @@ export const SubscriptionPlanDeleterModal: FC<
       const res = await onDeleteSubscriptionPlanById(subscriptionPlanId);
       if (!res.success) return toast(res.message, { type: "error" });
       toast(res.message, { type: "success" });
-      router.refresh();
       router.push("/subscription-plans");
       setIsModalOpen(false);
     } catch (error) {

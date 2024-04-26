@@ -1,8 +1,8 @@
 "use client";
 import { FC, useCallback, useState } from "react";
 import { VideoPostDto } from "@/types/post.types";
-import { useRouter } from "next/navigation";
 import { VideoPostItem } from "@/app/(browse)/videos/_components/VideoPostItem";
+import { useRouter } from "next/navigation";
 
 type VideoPostsListProps = {
   posts: VideoPostDto[];
@@ -17,7 +17,9 @@ export const VideoPostsList: FC<VideoPostsListProps> = ({
   const onDeleted = useCallback(
     (id: string) => {
       setPosts((prev) => prev.filter((post) => post.id !== id));
-      router.refresh();
+      router.replace("/", {
+        scroll: false,
+      });
     },
     [router]
   );

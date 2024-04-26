@@ -28,6 +28,7 @@ import {
   ELIGIBLE_IMAGE_TYPES,
   SUBSCRIPTION_PLAN_IMAGE_MAX_SIZE,
 } from "@/configs/file.config";
+import { revalidatePath } from "next/cache";
 
 type OnGetSelfSubscriptionPlansResponse = ActionDataResponse<{
   subscriptionPlans: SubscriptionPlanDto[];
@@ -143,6 +144,8 @@ export const onCreateSubscriptionPlan = async ({
 
     if (!subscriptionPlan) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
+    revalidatePath("/subscription-plans", "page");
+
     return {
       success: true,
       data: {
@@ -182,6 +185,8 @@ export const onUpdateSubscriptionPlanContent = async ({
 
     if (!subscriptionPlan) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
+    revalidatePath("/subscription-plans", "page");
+
     return {
       success: true,
       data: {
@@ -213,6 +218,8 @@ export const onDeleteSubscriptionPlanById = async (
     if (!res) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
     deleteFile(subscriptionPlan.imageKey);
+
+    revalidatePath("/subscription-plans", "page");
 
     return {
       success: true,
@@ -262,6 +269,8 @@ export const onGetSubscriptionPlanImageUploadUrl = async ({
     });
 
     if (!imageUploadUrl) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    revalidatePath("/subscription-plans", "page");
 
     return {
       success: true,

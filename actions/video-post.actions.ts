@@ -20,6 +20,7 @@ import {
   VIDEO_THUMBNAIL_IMAGE_MAX_SIZE,
 } from "@/configs/file.config";
 import { getSubscriptionPlanById } from "@/services/subscription-plan.service";
+import { revalidatePath } from "next/cache";
 
 type OnGetSelfVideoPostsResponse = ActionDataResponse<{
   videoPosts: VideoPostDto[];
@@ -127,6 +128,8 @@ export const onCreateVideoPost = async ({
     });
 
     if (!post) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    revalidatePath("/videos", "page");
 
     return {
       success: true,

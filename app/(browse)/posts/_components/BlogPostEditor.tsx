@@ -20,7 +20,6 @@ export const BlogPostEditor: FC<BlogPostEditorProps> = ({
   const router = useRouter();
 
   const onDeleted = useCallback(() => {
-    router.refresh();
     router.push("/posts");
   }, [router]);
 
