@@ -189,3 +189,45 @@ export const onGetVideoPostById = async (
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };
+
+type OnGetVideoPostVideoThumbnailUploadUrl = (props: {
+  postId: string;
+  type: string;
+  size: number;
+}) => Promise<ActionDataResponse<{ uploadUrl: string }>>;
+
+export const onGetVideoPostThumbnailUploadUrl: OnGetVideoPostVideoThumbnailUploadUrl =
+  async ({ postId, type, size }) => {
+    try {
+      const [self, post] = await Promise.all([
+        authSelf(),
+        getVideoPostById(postId),
+      ]);
+
+      if (!post) return ERROR_RESPONSES.NOT_FOUND;
+      if (!self || post.userId !== self.id) return ERROR_RESPONSES.UNAUTHORIZED;
+      const video = post.videos[0];
+      if (!video) return ERROR_RESPONSES.NOT_FOUND;
+
+      const uploadUrl = await getSignedFileUploadUrl({
+        key: video.thumbnailKey,
+        type,
+        size,
+      });
+
+      if (!uploadUrl) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+      revalidatePath("/videos", "page");
+      revalidatePath(`/videos/${postId}`, "page");
+
+      return {
+        success: true,
+        data: {
+          uploadUrl,
+        },
+      };
+    } catch (error) {
+      console.error("onGetVideoPostThumbnailUploadUrl", error);
+      return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+    }
+  };

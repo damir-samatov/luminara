@@ -7,6 +7,7 @@ import { PostSubscriptionPlanEditor } from "@/components/PostSubscriptionPlanEdi
 import { PostContentEditor } from "@/components/PostContentEditor";
 import { useRouter } from "next/navigation";
 import { PostDeleterModal } from "@/components/PostDeleterModal";
+import { VideoPostThumbnailEditor } from "@/app/(browse)/videos/_components/VideoPostThumbnailEditor";
 
 type VideoPostEditorProps = {
   videoPost: VideoPostDto;
@@ -42,6 +43,10 @@ export const VideoPostEditor: FC<VideoPostEditorProps> = ({
           postId={videoPost.id}
           title={videoPost.title}
           body={videoPost.body}
+        />
+        <VideoPostThumbnailEditor
+          imageUrl={videoPost.thumbnailUrl}
+          postId={videoPost.id}
         />
       </div>
     </div>

@@ -163,3 +163,48 @@ export const onGetBlogPostById = async (
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };
+
+type OnGetBlogPostImageUploadUrl = (props: {
+  postId: string;
+  type: string;
+  size: number;
+}) => Promise<ActionDataResponse<{ uploadUrl: string }>>;
+
+export const onGetBlogPostImageUploadUrl: OnGetBlogPostImageUploadUrl = async ({
+  postId,
+  type,
+  size,
+}) => {
+  try {
+    const [self, post] = await Promise.all([
+      authSelf(),
+      getBlogPostById(postId),
+    ]);
+
+    if (!post) return ERROR_RESPONSES.NOT_FOUND;
+    if (!self || post.userId !== self.id) return ERROR_RESPONSES.UNAUTHORIZED;
+    const image = post.images[0];
+    if (!image) return ERROR_RESPONSES.NOT_FOUND;
+
+    const uploadUrl = await getSignedFileUploadUrl({
+      key: image.key,
+      type,
+      size,
+    });
+
+    if (!uploadUrl) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    revalidatePath("/posts", "page");
+    revalidatePath(`/posts/${postId}`, "page");
+
+    return {
+      success: true,
+      data: {
+        uploadUrl,
+      },
+    };
+  } catch (error) {
+    console.error("onGetBlogPostImageUploadUrl", error);
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+  }
+};

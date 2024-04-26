@@ -7,6 +7,7 @@ import { PostSubscriptionPlanEditor } from "@/components/PostSubscriptionPlanEdi
 import { PostContentEditor } from "@/components/PostContentEditor";
 import { PostDeleterModal } from "@/components/PostDeleterModal";
 import { useRouter } from "next/navigation";
+import { BlogPostImageEditor } from "@/app/(browse)/posts/_components/BlogPostImageEditor";
 
 type BlogPostEditorProps = {
   blogPost: BlogPostDto;
@@ -42,6 +43,7 @@ export const BlogPostEditor: FC<BlogPostEditorProps> = ({
         title={blogPost.title}
         body={blogPost.body}
       />
+      <BlogPostImageEditor imageUrl={blogPost.imageUrl} postId={blogPost.id} />
     </div>
   );
 };
