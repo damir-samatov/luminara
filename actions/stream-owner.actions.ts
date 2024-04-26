@@ -15,7 +15,6 @@ import {
 } from "@/types/action.types";
 import { Stream, User } from "@prisma/client";
 import { StreamSettingsUpdateDto } from "@/types/stream.types";
-import { revalidatePath } from "next/cache";
 import {
   createIvsChannel,
   getIvsViewerToken,
@@ -183,8 +182,6 @@ export const onCreateStream = async () => {
     });
 
     if (!stream) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-
-    revalidatePath("/stream");
 
     return SUCCESS_RESPONSES.SUCCESS;
   } catch (error) {

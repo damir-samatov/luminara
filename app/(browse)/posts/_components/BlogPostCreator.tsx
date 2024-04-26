@@ -87,6 +87,7 @@ export const BlogPostCreator: FC<BlogPostCreatorProps> = ({
       }
 
       toast.success("Post created successfully");
+      router.refresh();
       router.push("/posts");
     } catch (error) {
       toast.error("Failed to create post");

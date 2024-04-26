@@ -110,6 +110,7 @@ export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
       }
 
       toast("Video is successfully published", { type: "success" });
+      router.refresh();
       router.push("/videos");
     } catch (error) {
       toast("Something went wrong! Please try again.", { type: "error" });

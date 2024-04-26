@@ -6,6 +6,7 @@ import { FC, useCallback, useState } from "react";
 import { useObjectShadow } from "@/hooks/useObjectShadow";
 import { onUpdatePostContent } from "@/actions/post.actions";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 type PostContentEditorProps = {
   postId: string;
@@ -18,6 +19,7 @@ export const PostContentEditor: FC<PostContentEditorProps> = ({
   title,
   body,
 }) => {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [forceUpdate, setForceUpdate] = useState(0);
   const [content, setContent] = useState({
@@ -49,6 +51,7 @@ export const PostContentEditor: FC<PostContentEditorProps> = ({
       if (!res.success) return toast("Something went wrong", { type: "error" });
       updatePrevState(content);
       toast("Content updated successfully", { type: "success" });
+      router.refresh();
     } catch (error) {
       console.error(error);
       toast("Something went wrong", { type: "error" });

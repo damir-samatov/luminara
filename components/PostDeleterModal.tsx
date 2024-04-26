@@ -1,20 +1,19 @@
-"use client";
 import { FC, useCallback, useState } from "react";
-import { Modal } from "@/components/Modal";
-import { Button } from "@/components/Button";
-import { onDeleteVideoPostById } from "@/actions/video-post.actions";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 import { TrashIcon } from "@heroicons/react/24/outline";
+import { Button } from "@/components/Button";
+import { Modal } from "@/components/Modal";
+import { onDeletePostById } from "@/actions/post.actions";
 
-type VideoPostDeleterModalProps = {
+type PostDeleterModalProps = {
   id: string;
+  onDeleted: () => void;
 };
 
-export const VideoPostDeleterModal: FC<VideoPostDeleterModalProps> = ({
+export const PostDeleterModal: FC<PostDeleterModalProps> = ({
   id,
+  onDeleted,
 }) => {
-  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -29,17 +28,17 @@ export const VideoPostDeleterModal: FC<VideoPostDeleterModalProps> = ({
   const onDeleteConfirmClick = useCallback(async () => {
     try {
       setIsLoading(true);
-      const res = await onDeleteVideoPostById(id);
+      const res = await onDeletePostById(id);
       if (!res.success) return toast(res.message, { type: "error" });
       toast(res.message, { type: "success" });
-      router.push("/videos");
       setIsModalOpen(false);
+      onDeleted();
     } catch (error) {
-      toast("Something went wrong.", { type: "error" });
+      toast("Something went wrong", { type: "error" });
     } finally {
       setIsLoading(false);
     }
-  }, [id, setIsLoading, setIsModalOpen, router]);
+  }, [id, setIsLoading, setIsModalOpen, onDeleted]);
 
   return (
     <div>
@@ -56,7 +55,7 @@ export const VideoPostDeleterModal: FC<VideoPostDeleterModalProps> = ({
           <div className="flex flex-col gap-4 rounded-lg border-2 border-gray-800 bg-gray-950 p-6">
             <p className="text-3xl">Confirm deletion!</p>
             <div>
-              <p>Are you sure you want to delete this video?</p>
+              <p>Are you sure you want to delete this?</p>
             </div>
             <div className="mt-4 flex gap-2">
               <Button

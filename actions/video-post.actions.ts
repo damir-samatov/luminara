@@ -4,14 +4,12 @@ import { authSelf } from "@/services/auth.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import {
   createVideoPost,
-  deletePostById,
   getVideoPostById,
   getVideoPostsByUserId,
 } from "@/services/post.service";
 import { VideoPostCreateDto, VideoPostDto } from "@/types/post.types";
 import { generateFileKey } from "@/helpers/server/s3.helpers";
 import {
-  deleteFile,
   getSignedFileReadUrl,
   getSignedFileUploadUrl,
 } from "@/services/s3.service";
@@ -21,7 +19,6 @@ import {
   VIDEO_MAX_SIZE,
   VIDEO_THUMBNAIL_IMAGE_MAX_SIZE,
 } from "@/configs/file.config";
-import { revalidatePath } from "next/cache";
 import { getSubscriptionPlanById } from "@/services/subscription-plan.service";
 
 type OnGetSelfVideoPostsResponse = ActionDataResponse<{
@@ -131,8 +128,6 @@ export const onCreateVideoPost = async ({
 
     if (!post) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
-    revalidatePath("/videos");
-
     return {
       success: true,
       data: {
@@ -188,38 +183,6 @@ export const onGetVideoPostById = async (
     };
   } catch (error) {
     console.error("onGetVideoPostById", error);
-    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-  }
-};
-
-export const onDeleteVideoPostById = async (id: string) => {
-  try {
-    const [self, videoPost] = await Promise.all([
-      authSelf(),
-      getVideoPostById(id),
-    ]);
-
-    if (!videoPost) return ERROR_RESPONSES.NOT_FOUND;
-    if (!self || videoPost.userId !== self.id)
-      return ERROR_RESPONSES.UNAUTHORIZED;
-
-    const res = await deletePostById(id);
-
-    if (!res) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-
-    videoPost.videos.forEach((video) => {
-      deleteFile(video.key);
-      deleteFile(video.thumbnailKey);
-    });
-
-    revalidatePath("/videos");
-
-    return {
-      success: true,
-      message: `${videoPost.title} video - deleted successfully.`,
-    };
-  } catch (error) {
-    console.error("onDeleteVideoPostById", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };

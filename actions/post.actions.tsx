@@ -2,12 +2,14 @@
 import { ActionCombinedResponse } from "@/types/action.types";
 import { authSelf } from "@/services/auth.service";
 import {
+  deletePostById,
   getPostById,
   updatePostContent,
   updatePostSubscriptionPlan,
 } from "@/services/post.service";
 import { ERROR_RESPONSES, SUCCESS_RESPONSES } from "@/configs/responses.config";
 import { getSubscriptionPlanById } from "@/services/subscription-plan.service";
+import { deleteFile } from "@/services/s3.service";
 
 type OnUpdatePostSubscriptionPlan = (props: {
   postId: string;
@@ -70,6 +72,35 @@ export const onUpdatePostContent: OnUpdatePostContent = async ({
     return SUCCESS_RESPONSES.SUCCESS;
   } catch (error) {
     console.error("onUpdatePostContent", error);
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+  }
+};
+
+export const onDeletePostById = async (id: string) => {
+  try {
+    const [self, post] = await Promise.all([authSelf(), getPostById(id)]);
+
+    if (!post) return ERROR_RESPONSES.NOT_FOUND;
+    if (!self || post.userId !== self.id) return ERROR_RESPONSES.UNAUTHORIZED;
+
+    const res = await deletePostById(id);
+
+    if (!res) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    post.images.forEach((image) => {
+      deleteFile(image.key);
+    });
+
+    post.videos.forEach((video) => {
+      deleteFile(video.key);
+    });
+
+    return {
+      success: true,
+      message: `${post.title} - deleted successfully.`,
+    };
+  } catch (error) {
+    console.error("onDeletePostById", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };

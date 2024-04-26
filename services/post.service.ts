@@ -7,6 +7,10 @@ export const getPostById = async (id: string) => {
       where: {
         id,
       },
+      include: {
+        images: true,
+        videos: true,
+      },
     });
   } catch (error) {
     console.error("getPostById", error);

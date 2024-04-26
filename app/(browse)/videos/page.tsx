@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { onGetSelfVideoPosts } from "@/actions/video-post.actions";
-import { VideoPostItem } from "./_components/VideoPostItem";
+import { VideoPostsList } from "@/app/(browse)/videos/_components/VideoPostsList";
 
 const VideosPage = async () => {
   const res = await onGetSelfVideoPosts();
@@ -21,11 +21,7 @@ const VideosPage = async () => {
             <PlusIcon className="mx-auto h-3 w-3" />
           </Link>
         </div>
-        <div className="flex flex-col gap-6">
-          {res.data.videoPosts.map((videoPost) => (
-            <VideoPostItem key={videoPost.id} videoPost={videoPost} />
-          ))}
-        </div>
+        <VideoPostsList posts={res.data.videoPosts} />
       </div>
     </>
   );

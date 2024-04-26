@@ -6,6 +6,7 @@ import { FC, useState } from "react";
 import { useObjectShadow } from "@/hooks/useObjectShadow";
 import { onUpdateSubscriptionPlanContent } from "@/actions/subscription-plan.actions";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 type SubscriptionPlanContentEditorProps = {
   subscriptionPlanId: string;
@@ -16,6 +17,7 @@ type SubscriptionPlanContentEditorProps = {
 export const SubscriptionPlanContentEditor: FC<
   SubscriptionPlanContentEditorProps
 > = ({ subscriptionPlanId, initialDescription, initialTitle }) => {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [forceUpdate, setForceUpdate] = useState(0);
   const [content, setContent] = useState({
@@ -51,6 +53,7 @@ export const SubscriptionPlanContentEditor: FC<
       setContent(newContent);
       updatePrevState(newContent);
       toast("Subscription plan content updated.", { type: "success" });
+      router.refresh();
     } catch (error) {
       toast("Something went wrong.", { type: "error" });
     } finally {

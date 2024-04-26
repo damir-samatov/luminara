@@ -23,7 +23,6 @@ import {
   getSignedFileReadUrl,
   getSignedFileUploadUrl,
 } from "@/services/s3.service";
-import { revalidatePath } from "next/cache";
 import { generateFileKey } from "@/helpers/server/s3.helpers";
 import {
   ELIGIBLE_IMAGE_TYPES,
@@ -144,8 +143,6 @@ export const onCreateSubscriptionPlan = async ({
 
     if (!subscriptionPlan) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
-    revalidatePath("/subscription-plans");
-
     return {
       success: true,
       data: {
@@ -176,13 +173,15 @@ export const onUpdateSubscriptionPlanContent = async ({
   try {
     const self = await authSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+
     const subscriptionPlan = await updateSubscriptionPlanContent({
       userId: self.id,
       subscriptionPlanId,
       subscriptionPlanUpdateContentDto,
     });
+
     if (!subscriptionPlan) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-    revalidatePath("/subscription-plans");
+
     return {
       success: true,
       data: {
@@ -214,8 +213,6 @@ export const onDeleteSubscriptionPlanById = async (
     if (!res) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
     deleteFile(subscriptionPlan.imageKey);
-
-    revalidatePath("/subscription-plans");
 
     return {
       success: true,

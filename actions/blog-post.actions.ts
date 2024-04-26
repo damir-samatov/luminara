@@ -3,7 +3,6 @@ import { authSelf } from "@/services/auth.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import {
   createBlogPost,
-  deletePostById,
   getBlogPostById,
   getBlogPostsByUserId,
 } from "@/services/post.service";
@@ -16,11 +15,9 @@ import {
 import { getSubscriptionPlanById } from "@/services/subscription-plan.service";
 import { generateFileKey } from "@/helpers/server/s3.helpers";
 import {
-  deleteFile,
   getSignedFileReadUrl,
   getSignedFileUploadUrl,
 } from "@/services/s3.service";
-import { revalidatePath } from "next/cache";
 
 type OnGetSelfPostsResponse = ActionDataResponse<{
   blogPosts: BlogPostDto[];
@@ -110,8 +107,6 @@ export const onCreateBlogPost = async ({
 
     if (!post) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
-    revalidatePath("/posts");
-
     return {
       success: true,
       data: {
@@ -162,37 +157,6 @@ export const onGetBlogPostById = async (
     };
   } catch (error) {
     console.error("onGetVideoPostById", error);
-    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-  }
-};
-
-export const onDeleteBlogPostById = async (id: string) => {
-  try {
-    const [self, blogPost] = await Promise.all([
-      authSelf(),
-      getBlogPostById(id),
-    ]);
-
-    if (!blogPost) return ERROR_RESPONSES.NOT_FOUND;
-    if (!self || blogPost.userId !== self.id)
-      return ERROR_RESPONSES.UNAUTHORIZED;
-
-    const res = await deletePostById(id);
-
-    if (!res) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-
-    blogPost.images.forEach((image) => {
-      deleteFile(image.key);
-    });
-
-    revalidatePath("/posts");
-
-    return {
-      success: true,
-      message: `${blogPost.title} post - deleted successfully.`,
-    };
-  } catch (error) {
-    console.error("onDeleteBlogPostById", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };

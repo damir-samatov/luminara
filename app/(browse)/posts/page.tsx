@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import { onGetSelfBlogPosts } from "@/actions/blog-post.actions";
-import { BlogPostItem } from "./_components/BlogPostItem";
 import Link from "next/link";
 import { PlusIcon } from "@heroicons/react/24/outline";
+import { BlogPostsList } from "@/app/(browse)/posts/_components/BlogPostsList";
 
 const PostsPage = async () => {
   const res = await onGetSelfBlogPosts();
@@ -21,11 +21,7 @@ const PostsPage = async () => {
             <PlusIcon className="mx-auto h-3 w-3" />
           </Link>
         </div>
-        <div className="flex flex-col gap-6">
-          {res.data.blogPosts.map((blogPost) => (
-            <BlogPostItem key={blogPost.id} blogPost={blogPost} />
-          ))}
-        </div>
+        <BlogPostsList posts={res.data.blogPosts} />
       </div>
     </>
   );

@@ -32,6 +32,7 @@ export const SubscriptionPlanDeleterModal: FC<
       const res = await onDeleteSubscriptionPlanById(subscriptionPlanId);
       if (!res.success) return toast(res.message, { type: "error" });
       toast(res.message, { type: "success" });
+      router.refresh();
       router.push("/subscription-plans");
       setIsModalOpen(false);
     } catch (error) {
