@@ -11,7 +11,7 @@ const StreamPage = async () => {
     if (res.type === ErrorResponseType.NOT_FOUND)
       return (
         <>
-          <title>Stream Create</title>
+          <title>Initiate Stream</title>
           <StreamCreator />
         </>
       );
@@ -24,7 +24,7 @@ const StreamPage = async () => {
 
   return (
     <>
-      <title>Stream Dashboard</title>
+      <title>My Stream Dashboard</title>
       <StreamEditor
         subscriptionPlans={subscriptionPlans}
         stream={stream}

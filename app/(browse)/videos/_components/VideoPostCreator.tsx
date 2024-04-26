@@ -232,9 +232,6 @@ export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
         <BackButton href="/videos" />
         <h2 className="text-sm md:text-xl lg:text-3xl">New Video</h2>
       </div>
-      {isLoading && (
-        <ProgressBar progress={(videoProgress + thumbnailProgress) / 2} />
-      )}
       <div className="grid grid-cols-3 items-start gap-2">
         {tabs.map((tab, i) => {
           return (
