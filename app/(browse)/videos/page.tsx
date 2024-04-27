@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { onGetSelfVideoPosts } from "@/actions/video-post.actions";
-import { VideoPostsList } from "@/app/(browse)/videos/_components/VideoPostsList";
+import { VideoPostsList } from "@/components/VideoPostsList";
 
 const VideosPage = async () => {
   const res = await onGetSelfVideoPosts();
@@ -21,7 +21,7 @@ const VideosPage = async () => {
             <PlusIcon className="mx-auto h-3 w-3" />
           </Link>
         </div>
-        <VideoPostsList posts={res.data.videoPosts} />
+        <VideoPostsList isSelf posts={res.data.videoPosts} link="/videos" />
       </div>
     </>
   );

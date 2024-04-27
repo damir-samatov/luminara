@@ -12,6 +12,7 @@ import { getStreamByUserId } from "@/services/stream.service";
 type OnGetProfileDataResponse = ActionDataResponse<{
   user: User;
   isLive: boolean;
+  isSelf: boolean;
   subscription: Subscription | null;
   subscriptionPlans: SubscriptionPlan[];
 }>;
@@ -46,6 +47,7 @@ export const onGetProfileData = async (
       data: {
         user,
         isLive: stream?.isLive || false,
+        isSelf: self.id === user.id,
         subscription,
         subscriptionPlans,
       },

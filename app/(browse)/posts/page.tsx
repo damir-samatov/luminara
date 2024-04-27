@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { onGetSelfBlogPosts } from "@/actions/blog-post.actions";
 import Link from "next/link";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { BlogPostsList } from "@/app/(browse)/posts/_components/BlogPostsList";
+import { BlogPostsList } from "@/components/BlogPostsList";
 
 const PostsPage = async () => {
   const res = await onGetSelfBlogPosts();
@@ -21,7 +21,7 @@ const PostsPage = async () => {
             <PlusIcon className="mx-auto h-3 w-3" />
           </Link>
         </div>
-        <BlogPostsList posts={res.data.blogPosts} />
+        <BlogPostsList isSelf posts={res.data.blogPosts} link="/posts" />
       </div>
     </>
   );

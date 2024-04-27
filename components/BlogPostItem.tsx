@@ -3,7 +3,7 @@ import Link from "next/link";
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import { useOnClickOutside } from "usehooks-ts";
 
-type PostItemProps = {
+type BlogPostItemProps = {
   title: string;
   imageUrl: string;
   link: string;
@@ -11,7 +11,7 @@ type PostItemProps = {
   actions?: ReactNode;
 };
 
-export const BlogPostItem: FC<PostItemProps> = ({
+export const BlogPostItem: FC<BlogPostItemProps> = ({
   title,
   imageUrl,
   link,

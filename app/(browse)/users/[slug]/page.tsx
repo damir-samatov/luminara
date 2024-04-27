@@ -4,7 +4,9 @@ import { notFound } from "next/navigation";
 import { ProfileHead } from "./_components/ProfileHead";
 import { onGetBlogPostsByUsername } from "@/actions/blog-post-viewer.actions";
 import { onGetVideoPostsByUsername } from "@/actions/video-post-viewer.actions";
-import { ProfileActions } from "@/app/(browse)/users/[slug]/_components/ProfileActions";
+import { ProfileActions } from "./_components/ProfileActions";
+import { VideoPostsList } from "@/components/VideoPostsList";
+import { BlogPostsList } from "@/components/BlogPostsList";
 
 type ProfilePageProps = {
   params: {
@@ -13,12 +15,16 @@ type ProfilePageProps = {
 };
 
 const ProfilePage: FC<ProfilePageProps> = async ({ params }) => {
-  const res = await onGetProfileData(params.slug);
-  if (!res.success) return notFound();
-  const { user, isLive, subscription, subscriptionPlans } = res.data;
+  const [profileRes, blogPostsRes, videoPostsRes] = await Promise.all([
+    onGetProfileData(params.slug),
+    onGetBlogPostsByUsername({ username: params.slug }),
+    onGetVideoPostsByUsername({ username: params.slug }),
+  ]);
 
-  const posts = await onGetBlogPostsByUsername({ username: user.username });
-  const videos = await onGetVideoPostsByUsername({ username: user.username });
+  if (!profileRes.success) return notFound();
+
+  const { user, isLive, isSelf, subscription, subscriptionPlans } =
+    profileRes.data;
 
   return (
     <div>
@@ -40,15 +46,27 @@ const ProfilePage: FC<ProfilePageProps> = async ({ params }) => {
         avatarUrl={user.imageUrl}
         posterUrl={user.imageUrl}
       />
-      <ProfileActions
-        subscription={subscription}
-        userId={user.id}
-        subscriptionPlans={subscriptionPlans}
-      />
-      POSTS:
-      <pre>{JSON.stringify(posts, null, 2)}</pre>
-      VIDEOS:
-      <pre>{JSON.stringify(videos, null, 2)}</pre>
+      <div className="flex flex-col gap-4 p-4">
+        <ProfileActions
+          subscription={subscription}
+          userId={user.id}
+          subscriptionPlans={subscriptionPlans}
+        />
+        {videoPostsRes.success && (
+          <VideoPostsList
+            isSelf={isSelf}
+            posts={videoPostsRes.data.videoPosts}
+            link={`/users/${user.username}/videos`}
+          />
+        )}
+        {blogPostsRes.success && (
+          <BlogPostsList
+            isSelf={isSelf}
+            posts={blogPostsRes.data.blogPosts}
+            link={`/users/${user.username}/posts`}
+          />
+        )}
+      </div>
     </div>
   );
 };
