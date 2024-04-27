@@ -77,13 +77,12 @@ export const FileDrop: FC<FileDropProps> = ({
       onDragOver={onDragOver}
     >
       <p className="text-sm">{label}</p>
-      <p className="text-xs">Max file size: {readableFileSize(maxFileSize)}</p>
+      <p className="text-xs">Max size - {readableFileSize(maxFileSize)}</p>
       <p className="text-xs">
-        {"Accepts: " +
-          eligibleFileTypes
-            .join(", ")
-            .replaceAll("image/", ".")
-            .replaceAll("video/", ".")}
+        {eligibleFileTypes
+          .join(", ")
+          .replaceAll("image/", ".")
+          .replaceAll("video/", ".")}
       </p>
       <input
         hidden

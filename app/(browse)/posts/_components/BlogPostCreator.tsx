@@ -140,7 +140,7 @@ export const BlogPostCreator: FC<BlogPostCreatorProps> = ({
             onChange={(value) => onPostContentChange("body", value)}
           />
         </div>
-        <div className="w-full sm:col-span-1">
+        <div>
           <SubscriptionPlanSelector
             freeFollowerImageUrl={freeFollowerImageUrl}
             onChange={setActiveSubscriptionPlan}

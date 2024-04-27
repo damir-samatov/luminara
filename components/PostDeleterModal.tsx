@@ -55,7 +55,7 @@ export const PostDeleterModal: FC<PostDeleterModalProps> = ({
           <div className="flex flex-col gap-4 rounded-lg border-2 border-gray-800 bg-gray-950 p-6">
             <p className="text-3xl">Confirm deletion!</p>
             <div>
-              <p>Are you sure you want to delete this?</p>
+              <p>Are you sure you want to delete?</p>
             </div>
             <div className="mt-4 flex gap-2">
               <Button

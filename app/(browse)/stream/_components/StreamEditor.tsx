@@ -250,14 +250,12 @@ export const StreamEditor: FC<StreamEditorProps> = ({
         </div>
         <div className="flex flex-col gap-4  text-sm text-gray-300">
           {!stream.isLive && (
-            <div className="mx-auto flex w-full max-w-60 flex-col gap-2">
-              <SubscriptionPlanSelector
-                freeFollowerImageUrl={user.imageUrl}
-                subscriptionPlans={subscriptionPlans}
-                activeSubscriptionPlan={activeSubscriptionPlan}
-                onChange={onSubscriptionPlanChange}
-              />
-            </div>
+            <SubscriptionPlanSelector
+              freeFollowerImageUrl={user.imageUrl}
+              subscriptionPlans={subscriptionPlans}
+              activeSubscriptionPlan={activeSubscriptionPlan}
+              onChange={onSubscriptionPlanChange}
+            />
           )}
 
           <p className="text-xl">

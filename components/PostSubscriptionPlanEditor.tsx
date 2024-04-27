@@ -57,13 +57,11 @@ export const PostSubscriptionPlanEditor: FC<
     [postId]
   );
   return (
-    <div className="max-w-60">
-      <SubscriptionPlanSelector
-        freeFollowerImageUrl={self.imageUrl}
-        subscriptionPlans={subscriptionPlans}
-        activeSubscriptionPlan={activeSubscriptionPlan}
-        onChange={onSubscriptionPlanChange}
-      />
-    </div>
+    <SubscriptionPlanSelector
+      freeFollowerImageUrl={self.imageUrl}
+      subscriptionPlans={subscriptionPlans}
+      activeSubscriptionPlan={activeSubscriptionPlan}
+      onChange={onSubscriptionPlanChange}
+    />
   );
 };

@@ -20,7 +20,7 @@ const BlogPostEditorPage: FC<BlogPostDetailsPageProps> = async ({ params }) => {
 
   return (
     <>
-      <title>Blog Post Editor {params.id}</title>
+      <title>{`Edit - ${blogPostRes.data.blogPost.title}`}</title>
       <BlogPostEditor
         blogPost={blogPostRes.data.blogPost}
         subscriptionPlans={subscriptionPlansRes.data.subscriptionPlans}

@@ -19,18 +19,19 @@ export const SubscriptionPlanSelector: FC<SubscriptionPlanSelectorProps> = ({
     return [
       {
         value: "follower",
-        label: "Follower - Free",
+        label: "Follower",
       },
       ...subscriptionPlans
         .sort((a, b) => a.price - b.price)
         .map((s) => ({
           value: s.id,
-          label: `${s.title} - ${s.price}$`,
+          label: `${s.price}$ - ${s.title}`,
         })),
     ];
   }, [subscriptionPlans]);
+
   return (
-    <div className="flex w-full flex-col gap-4">
+    <div className="mx-auto flex w-full max-w-52 flex-col gap-4">
       <div className="mx-auto aspect-square w-full max-w-40 overflow-hidden rounded-lg bg-black">
         {activeSubscriptionPlan ? (
           <img
@@ -45,7 +46,7 @@ export const SubscriptionPlanSelector: FC<SubscriptionPlanSelectorProps> = ({
             width={640}
             height={640}
             src={freeFollowerImageUrl}
-            alt="Follower - Free"
+            alt="Follower"
             className="object-cover"
           />
         )}
@@ -56,8 +57,8 @@ export const SubscriptionPlanSelector: FC<SubscriptionPlanSelectorProps> = ({
           active={{
             value: activeSubscriptionPlan?.id ?? "follower",
             label: activeSubscriptionPlan
-              ? `${activeSubscriptionPlan.title} - ${activeSubscriptionPlan.price}$`
-              : "Follower - Free",
+              ? `${activeSubscriptionPlan.price}$ - ${activeSubscriptionPlan.title}`
+              : "Follower",
           }}
           onChange={(option) => {
             const plan = subscriptionPlans.find(

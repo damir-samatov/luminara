@@ -31,7 +31,7 @@ export const VideoPostItem: FC<VideoPostItemProps> = async ({
         <p>
           {post.subscriptionPlan
             ? ` ${post.subscriptionPlan.title} - ${post.subscriptionPlan.price}$`
-            : " Follower - Free"}
+            : "Follower"}
         </p>
         <div className="ml-auto mt-auto grid grid-cols-2 gap-2">
           <Link
