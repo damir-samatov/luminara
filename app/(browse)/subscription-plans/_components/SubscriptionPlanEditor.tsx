@@ -49,7 +49,7 @@ export const SubscriptionPlanEditor: FC<SubscriptionPlanEditorProps> = ({
   );
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 p-2 lg:p-6">
+    <div className="mx-auto w-full max-w-4xl p-2 lg:p-6">
       <div className="flex items-center gap-2">
         <BackButton href="/subscription-plans" />
         <h2 className="text-sm md:text-xl lg:text-3xl">
@@ -61,7 +61,7 @@ export const SubscriptionPlanEditor: FC<SubscriptionPlanEditorProps> = ({
           />
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-2 lg:gap-4">
+      <div className="mt-8 grid grid-cols-2 gap-2 lg:gap-4">
         {tabs.map((tab, i) => (
           <Button
             type={activeTab === i ? "primary" : "secondary"}
@@ -72,7 +72,7 @@ export const SubscriptionPlanEditor: FC<SubscriptionPlanEditorProps> = ({
           </Button>
         ))}
       </div>
-      {tabs[activeTab]?.component}
+      <div className="mt-4">{tabs[activeTab]?.component}</div>
     </div>
   );
 };

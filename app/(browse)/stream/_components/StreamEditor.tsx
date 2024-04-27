@@ -258,8 +258,7 @@ export const StreamEditor: FC<StreamEditorProps> = ({
             />
           )}
 
-          <p className="text-xl">
-            <span>Status: </span>
+          <p className="mt-8 text-center text-xl">
             {stream.isLive ? (
               <span className="font-bold text-green-500">LIVE</span>
             ) : (
