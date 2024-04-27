@@ -1,5 +1,5 @@
 "use client";
-import { useBrowseNavigationContext } from "@/contexts/BrowseNavigationContext";
+import { useGlobalContext } from "@/contexts/GlobalContext";
 import { FC, useCallback, useState } from "react";
 import { SubscriptionPlanDto } from "@/types/subscription-plan.types";
 import { onUpdatePostSubscriptionPlan } from "@/actions/post.actions";
@@ -15,7 +15,7 @@ type PostSubscriptionPlanEditorProps = {
 export const PostSubscriptionPlanEditor: FC<
   PostSubscriptionPlanEditorProps
 > = ({ subscriptionPlanId, postId, subscriptionPlans }) => {
-  const { self } = useBrowseNavigationContext();
+  const { self } = useGlobalContext();
 
   const [activeSubscriptionPlan, setActiveSubscriptionPlan] =
     useState<SubscriptionPlanDto | null>(

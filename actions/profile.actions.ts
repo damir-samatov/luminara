@@ -1,17 +1,17 @@
 "use server";
 import { getUserByUsername } from "@/services/user.service";
-import { getSelf } from "@/services/auth.service";
+import { authSelf } from "@/services/auth.service";
 import { getSubscription } from "@/services/subscription.service";
 import { getBan } from "@/services/ban.service";
-import { Post, Subscription, SubscriptionPlan, User } from "@prisma/client";
+import { Subscription, SubscriptionPlan, User } from "@prisma/client";
 import { ActionDataResponse } from "@/types/action.types";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
-import { getBlogPostsByUserId } from "@/services/post.service";
 import { getSubscriptionPlansByUserId } from "@/services/subscription-plan.service";
+import { getStreamByUserId } from "@/services/stream.service";
 
 type OnGetProfileDataResponse = ActionDataResponse<{
   user: User;
-  posts: Post[];
+  isLive: boolean;
   subscription: Subscription | null;
   subscriptionPlans: SubscriptionPlan[];
 }>;
@@ -21,17 +21,22 @@ export const onGetProfileData = async (
 ): Promise<OnGetProfileDataResponse> => {
   try {
     const [self, user] = await Promise.all([
-      getSelf(),
+      authSelf(),
       getUserByUsername(username),
     ]);
+
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
     if (!user) return ERROR_RESPONSES.NOT_FOUND;
-    const selfBan = await getBan(user.id, self.id);
-    if (selfBan) return ERROR_RESPONSES.NOT_FOUND;
-    const [subscription, posts, subscriptionPlans] = await Promise.all([
+
+    if (self.id !== user.id) {
+      const selfBan = await getBan(user.id, self.id);
+      if (selfBan) return ERROR_RESPONSES.NOT_FOUND;
+    }
+
+    const [subscription, subscriptionPlans, stream] = await Promise.all([
       getSubscription(self.id, user.id),
-      getBlogPostsByUserId(user.id),
       getSubscriptionPlansByUserId(user.id),
+      getStreamByUserId(user.id),
     ]);
 
     if (!subscriptionPlans) return ERROR_RESPONSES.NOT_FOUND;
@@ -39,8 +44,8 @@ export const onGetProfileData = async (
     return {
       success: true,
       data: {
-        posts,
         user,
+        isLive: stream?.isLive || false,
         subscription,
         subscriptionPlans,
       },

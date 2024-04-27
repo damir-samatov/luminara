@@ -10,7 +10,7 @@ import { SignOutButton, UserButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import { SidebarLink } from "@/components/SidebarLink";
 import { UserProfileLink } from "@/components/UserProfileLink";
-import { useBrowseNavigationContext } from "@/contexts/BrowseNavigationContext";
+import { useGlobalContext } from "@/contexts/GlobalContext";
 import { SIDEBAR_LINKS, STUDIO_LINKS } from "@/configs/navigation.config";
 import Link from "next/link";
 import { Search } from "@/components/Search";
@@ -21,7 +21,7 @@ type NavigationProps = {
 
 export const Navigation: FC<NavigationProps> = ({ children }) => {
   const pathname = usePathname();
-  const { subscriptions, self } = useBrowseNavigationContext();
+  const { subscriptions, self } = useGlobalContext();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {

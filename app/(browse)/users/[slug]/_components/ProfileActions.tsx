@@ -6,7 +6,7 @@ import {
   onUnsubscribe,
 } from "@/actions/subscription.actions";
 import { useServerAction } from "@/hooks/useServerAction";
-import { useBrowseNavigationContext } from "@/contexts/BrowseNavigationContext";
+import { useGlobalContext } from "@/contexts/GlobalContext";
 import { Subscription, SubscriptionPlan } from "@prisma/client";
 import { Button } from "@/components/Button";
 
@@ -21,7 +21,7 @@ export const ProfileActions: FC<ProfileProps> = ({
   userId,
   subscriptionPlans,
 }) => {
-  const { refresh } = useBrowseNavigationContext();
+  const { refresh } = useGlobalContext();
   const [hasSubscribed, setHasSubscribed] = useState<boolean>(!!subscription);
 
   const [subscribe, isSubscribePending] = useServerAction(

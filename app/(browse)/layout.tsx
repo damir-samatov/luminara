@@ -1,6 +1,6 @@
 import { FC, ReactNode } from "react";
 import { notFound } from "next/navigation";
-import { BrowseNavigationContextProvider } from "@/contexts/BrowseNavigationContext";
+import { GlobalContextProvider } from "@/contexts/GlobalContext";
 import { Navigation } from "@/components/Navigation";
 import { onGetSelfContextData } from "@/actions/user.actions";
 
@@ -14,12 +14,12 @@ const BrowseLayout: FC<BrowseLayoutProps> = async ({ children }) => {
   if (!res.success) return notFound();
 
   return (
-    <BrowseNavigationContextProvider
+    <GlobalContextProvider
       subscriptions={res.data.subscriptions}
       self={res.data.self}
     >
       <Navigation>{children}</Navigation>
-    </BrowseNavigationContextProvider>
+    </GlobalContextProvider>
   );
 };
 

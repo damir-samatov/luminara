@@ -3,9 +3,9 @@ import { getSelf } from "@/services/auth.service";
 import {
   createSubscription,
   deleteSubscription,
-  getSubscription,
   getSubscriptionsByUserId,
   updateSubscriptionActivePlan,
+  getSubscription,
 } from "@/services/subscription.service";
 import { SubscriptionWithUser } from "@/types/subscription.types";
 import { ERROR_RESPONSES, SUCCESS_RESPONSES } from "@/configs/responses.config";

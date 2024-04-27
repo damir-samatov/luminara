@@ -1,9 +1,9 @@
 "use client";
 import UserCard from "@/components/UserCard";
-import { useBrowseNavigationContext } from "@/contexts/BrowseNavigationContext";
+import { useGlobalContext } from "@/contexts/GlobalContext";
 
 const SubscriptionsPage = () => {
-  const { subscriptions } = useBrowseNavigationContext();
+  const { subscriptions } = useGlobalContext();
 
   return (
     <div className="flex flex-col gap-8 p-4">

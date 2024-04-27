@@ -3,11 +3,17 @@ import {
   ActionSuccessResponse,
   ErrorResponseType,
 } from "@/types/action.types";
+
 export const ERROR_RESPONSES = {
   [ErrorResponseType.FORBIDDEN]: {
     success: false,
     message: "Forbidden resource",
     type: ErrorResponseType.FORBIDDEN,
+  },
+  [ErrorResponseType.NOT_SUBSCRIBED]: {
+    success: false,
+    message: "Not subscribed",
+    type: ErrorResponseType.NOT_SUBSCRIBED,
   },
   [ErrorResponseType.BAD_REQUEST]: {
     success: false,

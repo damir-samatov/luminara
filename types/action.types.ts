@@ -5,6 +5,7 @@ export enum ErrorResponseType {
   NOT_FOUND = "NOT_FOUND",
   FORBIDDEN = "FORBIDDEN",
   BAD_REQUEST = "BAD_REQUEST",
+  NOT_SUBSCRIBED = "NOT_SUBSCRIBED",
 }
 
 export type ActionErrorResponse = {

@@ -12,7 +12,7 @@ import {
 import { onGetSubscriptions } from "@/actions/subscription.actions";
 import { User } from "@prisma/client";
 
-type BrowseNavigationContext = {
+type GlobalContext = {
   subscriptions: SubscriptionWithUser[];
   setSubscriptions: Dispatch<SetStateAction<SubscriptionWithUser[]>>;
   refresh: () => void;
@@ -20,7 +20,7 @@ type BrowseNavigationContext = {
   setSelf: Dispatch<SetStateAction<User>>;
 };
 
-const BrowseNavigationContext = createContext<BrowseNavigationContext>({
+const GlobalContext = createContext<GlobalContext>({
   self: {
     id: "",
     externalUserId: "",
@@ -37,15 +37,17 @@ const BrowseNavigationContext = createContext<BrowseNavigationContext>({
   refresh: () => {},
 });
 
-type BrowseNavigationContextProviderProps = {
+type GlobalContextProviderProps = {
   subscriptions: SubscriptionWithUser[];
   self: User;
   children: ReactNode;
 };
 
-export const BrowseNavigationContextProvider: FC<
-  BrowseNavigationContextProviderProps
-> = ({ subscriptions: savedSubscriptions, self: savedSelf, children }) => {
+export const GlobalContextProvider: FC<GlobalContextProviderProps> = ({
+  subscriptions: savedSubscriptions,
+  self: savedSelf,
+  children,
+}) => {
   const [self, setSelf] = useState<User>(savedSelf);
   const [subscriptions, setSubscriptions] =
     useState<SubscriptionWithUser[]>(savedSubscriptions);
@@ -57,7 +59,7 @@ export const BrowseNavigationContextProvider: FC<
   };
 
   return (
-    <BrowseNavigationContext.Provider
+    <GlobalContext.Provider
       value={{
         self,
         subscriptions,
@@ -67,16 +69,16 @@ export const BrowseNavigationContextProvider: FC<
       }}
     >
       {children}
-    </BrowseNavigationContext.Provider>
+    </GlobalContext.Provider>
   );
 };
 
-export const useBrowseNavigationContext = () => {
-  const context = useContext(BrowseNavigationContext);
+export const useGlobalContext = () => {
+  const context = useContext(GlobalContext);
 
   if (!context)
     throw new Error(
-      "useBrowseNavigationContext must be used within a BrowseNavigationContextProvider"
+      "useGlobalContext must be used within a GlobalContextProvider"
     );
 
   return context;

@@ -1,77 +1,73 @@
-import { FC } from "react";
-import { ProfileActions } from "../_components/ProfileActions";
+"use client";
+import { FC, useMemo } from "react";
 import { classNames, stringToColor } from "@/utils/style.utils";
 import Link from "next/link";
-import { Subscription, SubscriptionPlan } from "@prisma/client";
+import { useGlobalContext } from "@/contexts/GlobalContext";
 
 type ProfileHeadProps = {
-  user: {
-    id: string;
-    username: string;
-    firstName: string;
-    lastName: string;
-    imageUrl: string;
-  };
-  subscription: Subscription | null;
-  subscriptionPlans: SubscriptionPlan[];
+  isLive: boolean;
+  userId: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  avatarUrl: string;
+  posterUrl: string;
 };
 
 export const ProfileHead: FC<ProfileHeadProps> = ({
-  user,
-  subscriptionPlans,
-  subscription,
+  isLive,
+  userId,
+  username,
+  firstName,
+  lastName,
+  avatarUrl,
 }) => {
-  const { id, username, firstName, lastName, imageUrl } = user;
-  const userColor = stringToColor(username);
+  const { self } = useGlobalContext();
+
+  const image = useMemo(
+    () => (
+      <img
+        width={200}
+        height={200}
+        src={avatarUrl}
+        alt={username}
+        className={classNames(
+          "h-24 w-24 rounded-full border-4 md:h-32 md:w-32",
+          isLive ? "border-red-700" : "border-transparent"
+        )}
+      />
+    ),
+    [avatarUrl, isLive, username]
+  );
+
   return (
-    <div className="p-4">
-      <div className="aspect-[6/1] w-full">
-        <img
-          width={1800}
-          height={300}
-          src={imageUrl}
-          alt={username}
-          className="rounded-md"
-        />
-      </div>
-      <div className="mt-4 flex items-end gap-4">
-        <div className="h-32 w-32 overflow-hidden">
-          <img
-            width={200}
-            height={200}
-            src={imageUrl}
-            alt={username}
-            className="rounded-full"
-          />
-        </div>
-        <div className="flex flex-col gap-2">
+    <div className="flex items-end gap-4 p-4">
+      {isLive ? <Link href={`/streams/${username}`}>{image}</Link> : image}
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-2">
           <h1 className="text-xl">
-            <span style={{ color: userColor }}>@</span>
+            <span style={{ color: stringToColor(username) }}>@</span>
             {username}
           </h1>
-          {(firstName || lastName) && (
-            <h2 className="text-sm">
-              {firstName} {lastName}
-            </h2>
+          {self.id === userId && (
+            <p className="rounded-lg bg-blue-900 px-2 py-1 text-sm font-semibold">
+              YOU
+            </p>
           )}
-          {subscription && (
+          {isLive && (
             <Link
-              className={classNames(
-                "w-full rounded-lg border-2 border-gray-700 p-2 text-center text-gray-300 transition-colors duration-200 hover:bg-gray-700"
-              )}
               href={`/streams/${username}`}
+              className="rounded-lg bg-red-700 px-2 py-1 text-sm font-semibold"
             >
-              View Stream
+              LIVE
             </Link>
           )}
         </div>
-        <div>
-          <ProfileActions
-            subscription={subscription}
-            userId={id}
-            subscriptionPlans={subscriptionPlans}
-          />
-        </div>
+        {(firstName || lastName) && (
+          <h2 className="text-sm">
+            {firstName} {lastName}
+          </h2>
+        )}
       </div>
     </div>
   );

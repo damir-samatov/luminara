@@ -18,6 +18,28 @@ export const getSubscription = async (subscriberId: string, userId: string) => {
   }
 };
 
+export const getSubscriptionWithPlan = async (
+  subscriberId: string,
+  userId: string
+) => {
+  try {
+    return await db.subscription.findUnique({
+      where: {
+        userId_subscriberId: {
+          userId,
+          subscriberId,
+        },
+      },
+      include: {
+        subscriptionPlan: true,
+      },
+    });
+  } catch (error) {
+    console.error("getSubscriptionWithPlan", error);
+    return null;
+  }
+};
+
 export const createSubscription = async (
   subscriberId: string,
   userId: string

@@ -238,3 +238,91 @@ export const updatePostContent = async ({
     return null;
   }
 };
+
+export const getBlogPostsByUserIdAndPrice = async (
+  userId: string,
+  maxPrice: number
+) => {
+  try {
+    return await db.post.findMany({
+      where: {
+        AND: [
+          {
+            userId,
+            videos: {
+              none: {},
+            },
+          },
+          {
+            OR: [
+              {
+                subscriptionPlan: {
+                  price: {
+                    lte: maxPrice,
+                  },
+                },
+              },
+              {
+                subscriptionPlanId: null,
+              },
+            ],
+          },
+        ],
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        images: true,
+        subscriptionPlan: true,
+      },
+    });
+  } catch (error) {
+    console.error("getBlogPostsByUserId", error);
+    return [];
+  }
+};
+
+export const getVideoPostsByUserIdAndPrice = async (
+  userId: string,
+  maxPrice: number
+) => {
+  try {
+    return await db.post.findMany({
+      where: {
+        AND: [
+          {
+            userId,
+            videos: {
+              some: {},
+            },
+          },
+          {
+            OR: [
+              {
+                subscriptionPlan: {
+                  price: {
+                    lte: maxPrice,
+                  },
+                },
+              },
+              {
+                subscriptionPlanId: null,
+              },
+            ],
+          },
+        ],
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        videos: true,
+        subscriptionPlan: true,
+      },
+    });
+  } catch (error) {
+    console.error("getVideoPostsByUserIdAndPrice", error);
+    return [];
+  }
+};
