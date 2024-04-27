@@ -42,7 +42,7 @@ export const VideoPostItem: FC<VideoPostItemProps> = ({
 
   return (
     <div className="mx-auto w-full max-w-4xl rounded">
-      <Link href={link}>
+      <Link className="block" href={link}>
         <video
           ref={videoRef}
           className="aspect-video w-full rounded-lg bg-black object-contain"

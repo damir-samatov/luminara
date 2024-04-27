@@ -20,7 +20,7 @@ export const VideoPostsList: FC<VideoPostsListProps> = ({
   }, []);
 
   return (
-    <div className="grid grid-cols-3 flex-col gap-6">
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
       {posts.map((post) => (
         <VideoPostItem
           key={post.id}

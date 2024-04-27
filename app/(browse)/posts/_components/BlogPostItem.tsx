@@ -1,41 +1,63 @@
-import { FC } from "react";
-import { BlogPostDto } from "@/types/post.types";
+import { FC, ReactNode, useCallback, useRef, useState } from "react";
 import Link from "next/link";
-import { PencilIcon } from "@heroicons/react/24/outline";
-import { PostDeleterModal } from "@/components/PostDeleterModal";
+import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
+import { useOnClickOutside } from "usehooks-ts";
 
 type PostItemProps = {
-  post: BlogPostDto;
-  onDeleted: () => void;
+  title: string;
+  imageUrl: string;
+  link: string;
+  date: Date;
+  actions?: ReactNode;
 };
 
-export const BlogPostItem: FC<PostItemProps> = async ({ post, onDeleted }) => {
+export const BlogPostItem: FC<PostItemProps> = ({
+  title,
+  imageUrl,
+  link,
+  date,
+  actions,
+}) => {
+  const [showActions, setShowActions] = useState(false);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleClickOutside = useCallback(() => {
+    setShowActions(false);
+  }, []);
+  useOnClickOutside(containerRef, handleClickOutside);
+
   return (
-    <div className="mx-auto w-full max-w-4xl overflow-hidden rounded bg-gray-800">
-      <img
-        className="aspect-video w-full rounded-md bg-black object-contain"
-        width={1920}
-        height={1080}
-        src={post.imageUrl}
-        alt={post.title}
-        loading="lazy"
-      />
-      <div className="flex flex-col gap-2 p-4">
-        <p className="text-end text-xs text-gray-600">
-          {post.createdAt.toDateString()}
-        </p>
-        <h2 className="text-3xl">{post.title}</h2>
-        <div className="mt-4" dangerouslySetInnerHTML={{ __html: post.body }} />
-        <div className="ml-auto mt-auto grid grid-cols-2 gap-2">
-          <Link
-            href={`/posts/${post.id}`}
-            className="ml-auto flex w-full items-center justify-center gap-2 rounded border-2 border-gray-700 bg-transparent px-2 py-2 text-center text-xs font-semibold text-gray-100 hover:border-gray-600 hover:bg-gray-600 md:px-4 md:text-sm"
-          >
-            <PencilIcon className="h-3 w-3" />
-            <span>Edit</span>
-          </Link>
-          <PostDeleterModal id={post.id} onDeleted={onDeleted} />
+    <div className="mx-auto w-full max-w-4xl rounded">
+      <Link className="block" href={link}>
+        <img
+          className="aspect-video w-full rounded-md bg-black object-contain"
+          width={1920}
+          height={1080}
+          src={imageUrl}
+          alt={title}
+          loading="eager"
+        />
+      </Link>
+      <div className="relative mt-6 flex items-start justify-between gap-2">
+        <div className="flex flex-col gap-2 overflow-x-hidden">
+          <h2 className="truncate text-xl">{title}</h2>
+          <p className="text-xs text-gray-500">{date.toDateString()}</p>
         </div>
+        {actions && (
+          <button
+            disabled={showActions}
+            onClick={() => setShowActions(true)}
+            className="rounded-lg px-2 py-2 text-gray-400 hover:bg-gray-800 hover:text-gray-100"
+          >
+            <EllipsisVerticalIcon className="h-6 w-6" />
+          </button>
+        )}
+        {actions && showActions && (
+          <div ref={containerRef} className="absolute right-4 top-10 z-20">
+            {actions}
+          </div>
+        )}
       </div>
     </div>
   );

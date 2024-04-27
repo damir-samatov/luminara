@@ -29,6 +29,15 @@ export const BlogPostEditor: FC<BlogPostEditorProps> = ({
   const tabs = useMemo(
     () => [
       {
+        label: "Image",
+        component: (
+          <BlogPostImageEditor
+            imageUrl={blogPost.imageUrl}
+            postId={blogPost.id}
+          />
+        ),
+      },
+      {
         label: "Content",
         component: (
           <PostContentEditor
@@ -38,21 +47,12 @@ export const BlogPostEditor: FC<BlogPostEditorProps> = ({
           />
         ),
       },
-      {
-        label: "Image",
-        component: (
-          <BlogPostImageEditor
-            imageUrl={blogPost.imageUrl}
-            postId={blogPost.id}
-          />
-        ),
-      },
     ],
     [blogPost]
   );
 
   return (
-    <div className="mx-auto w-full max-w-5xl p-2 lg:p-6">
+    <div className="mx-auto w-full max-w-6xl p-2 lg:p-6">
       <div className="flex items-center gap-2">
         <BackButton href="/posts" />
         <h2 className="text-sm md:text-xl lg:text-3xl">{blogPost.title}</h2>

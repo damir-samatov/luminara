@@ -30,12 +30,11 @@ export const VideoPostEditor: FC<VideoPostEditorProps> = ({
   const tabs = useMemo(
     () => [
       {
-        label: "Content",
+        label: "Video",
         component: (
-          <PostContentEditor
+          <VideoPostVideoEditor
+            videoUrl={videoPost.videoUrl}
             postId={videoPost.id}
-            title={videoPost.title}
-            body={videoPost.body}
           />
         ),
       },
@@ -49,11 +48,12 @@ export const VideoPostEditor: FC<VideoPostEditorProps> = ({
         ),
       },
       {
-        label: "Video",
+        label: "Content",
         component: (
-          <VideoPostVideoEditor
-            videoUrl={videoPost.videoUrl}
+          <PostContentEditor
             postId={videoPost.id}
+            title={videoPost.title}
+            body={videoPost.body}
           />
         ),
       },
@@ -62,7 +62,7 @@ export const VideoPostEditor: FC<VideoPostEditorProps> = ({
   );
 
   return (
-    <div className="mx-auto w-full max-w-5xl p-2 lg:p-6">
+    <div className="mx-auto w-full max-w-6xl p-2 lg:p-6">
       <div className="flex items-center gap-2">
         <BackButton href="/videos" />
         <h2 className="text-sm md:text-xl lg:text-3xl">{videoPost.title}</h2>

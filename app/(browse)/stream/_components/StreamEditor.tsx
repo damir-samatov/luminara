@@ -231,8 +231,8 @@ export const StreamEditor: FC<StreamEditorProps> = ({
   return (
     <div className="mx-auto flex w-full max-w-screen-2xl flex-grow flex-col gap-4 p-4">
       <h2 className="text-sm md:text-xl lg:text-3xl">My Stream Dashboard</h2>
-      <div className="flex w-full flex-grow flex-col gap-4 lg:grid lg:grid-cols-4 lg:items-start">
-        <div className="flex h-full flex-grow flex-col gap-4 lg:col-span-3">
+      <div className="flex w-full flex-grow flex-col gap-4 lg:grid lg:grid-cols-5 lg:items-start">
+        <div className="flex h-full flex-grow flex-col gap-4 lg:col-span-4">
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
             {tabs.map((tab, i) => (
               <Button
