@@ -7,7 +7,7 @@ import { onDeletePostById } from "@/actions/post.actions";
 
 type PostDeleterModalProps = {
   id: string;
-  onDeleted: () => void;
+  onDeleted?: () => void;
 };
 
 export const PostDeleterModal: FC<PostDeleterModalProps> = ({
@@ -32,7 +32,7 @@ export const PostDeleterModal: FC<PostDeleterModalProps> = ({
       if (!res.success) return toast(res.message, { type: "error" });
       toast(res.message, { type: "success" });
       setIsModalOpen(false);
-      onDeleted();
+      onDeleted && onDeleted();
     } catch (error) {
       toast("Something went wrong", { type: "error" });
     } finally {
