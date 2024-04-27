@@ -54,7 +54,7 @@ export const FilePreview: FC<FilePreviewProps> = ({ file }) => {
       <div className="aspect-video w-full overflow-hidden rounded-lg bg-black">
         {filePreview}
       </div>
-      <div className="truncate text-xs text-gray-400">
+      <div className="mt-2 truncate text-xs text-gray-400">
         <p className="truncate">{file.name}</p>
         <p className="truncate">
           {file.type} - {size}

@@ -45,7 +45,7 @@ export const VideoPostItem: FC<VideoPostItemProps> = ({
       <Link href={link}>
         <video
           ref={videoRef}
-          className="aspect-video w-full rounded-md bg-black object-contain"
+          className="aspect-video w-full rounded-lg bg-black object-contain"
           src={videoUrl}
           poster={thumbnailUrl}
           onMouseEnter={onMouseEnter}
@@ -64,13 +64,13 @@ export const VideoPostItem: FC<VideoPostItemProps> = ({
           <button
             disabled={showActions}
             onClick={() => setShowActions(true)}
-            className="py-1 pl-4 text-gray-400 hover:text-gray-100"
+            className="rounded-lg px-2 py-2 text-gray-400 hover:bg-gray-800 hover:text-gray-100"
           >
             <EllipsisVerticalIcon className="h-6 w-6" />
           </button>
         )}
         {actions && showActions && (
-          <div ref={containerRef} className="absolute right-4 top-10">
+          <div ref={containerRef} className="absolute right-4 top-10 z-20">
             {actions}
           </div>
         )}
