@@ -7,22 +7,19 @@ import { ProgressBar } from "@/components/ProgressBar";
 import { Button } from "@/components/Button";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { FileDrop } from "@/components/FileDrop";
-import {
-  ELIGIBLE_IMAGE_TYPES,
-  BLOG_POST_IMAGE_MAX_SIZE,
-} from "@/configs/file.config";
-import { onGetBlogPostImageUploadUrl } from "@/actions/blog-post.actions";
+import { ELIGIBLE_VIDEO_TYPES, VIDEO_MAX_SIZE } from "@/configs/file.config";
+import { onGetVideoPostUploadUrl } from "@/actions/video-post.actions";
 
-type BlogPostImageEditorProps = {
-  imageUrl: string;
+type VideoPostVideoEditorProps = {
+  videoUrl: string;
   postId: string;
 };
 
-export const BlogPostImageEditor: FC<BlogPostImageEditorProps> = ({
-  imageUrl: savedImageUrl,
+export const VideoPostVideoEditor: FC<VideoPostVideoEditorProps> = ({
+  videoUrl: savedVideoUrl,
   postId,
 }) => {
-  const [imageUrl, setImageUrl] = useState<string>(savedImageUrl);
+  const [imageUrl, setImageUrl] = useState<string>(savedVideoUrl);
 
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -32,7 +29,7 @@ export const BlogPostImageEditor: FC<BlogPostImageEditorProps> = ({
     try {
       if (!file || isLoading) return;
       setIsLoading(true);
-      const res = await onGetBlogPostImageUploadUrl({
+      const res = await onGetVideoPostUploadUrl({
         postId,
         type: file.type,
         size: file.size,
@@ -44,11 +41,11 @@ export const BlogPostImageEditor: FC<BlogPostImageEditorProps> = ({
         onProgress: setProgress,
       });
       if (!uploadRes)
-        return toast("Failed to upload the stream", {
+        return toast("Failed to upload the video", {
           type: "error",
         });
       setFile(null);
-      toast("Image uploaded successfully", { type: "success" });
+      toast("Video uploaded successfully", { type: "success" });
       setImageUrl(URL.createObjectURL(file));
     } catch (error) {
       toast("Something went wrong", { type: "error" });
@@ -67,13 +64,10 @@ export const BlogPostImageEditor: FC<BlogPostImageEditorProps> = ({
   return (
     <div className="flex flex-col gap-4 rounded-lg border-2 border-gray-700 p-4">
       <div className="flex flex-col items-stretch gap-4 md:grid md:grid-cols-3">
-        <img
+        <video
           className="aspect-video w-full rounded-md bg-black object-contain md:col-span-2"
           src={imageUrl}
-          alt="Post Image"
-          width={1920}
-          height={1080}
-          loading="eager"
+          controls
         />
         {file ? (
           <div className="mx-auto flex w-full max-w-80 flex-col justify-between gap-2">
@@ -100,10 +94,10 @@ export const BlogPostImageEditor: FC<BlogPostImageEditorProps> = ({
           </div>
         ) : (
           <FileDrop
-            label="Image"
+            label="Video"
             onChange={onFileChange}
-            eligibleFileTypes={ELIGIBLE_IMAGE_TYPES}
-            maxFileSize={BLOG_POST_IMAGE_MAX_SIZE}
+            eligibleFileTypes={ELIGIBLE_VIDEO_TYPES}
+            maxFileSize={VIDEO_MAX_SIZE}
           />
         )}
       </div>

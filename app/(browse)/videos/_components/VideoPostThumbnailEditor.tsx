@@ -13,12 +13,12 @@ import {
 } from "@/configs/file.config";
 import { onGetVideoPostThumbnailUploadUrl } from "@/actions/video-post.actions";
 
-type BlogPostImageEditorProps = {
+type VideoPostThumbnailEditorProps = {
   imageUrl: string;
   postId: string;
 };
 
-export const VideoPostThumbnailEditor: FC<BlogPostImageEditorProps> = ({
+export const VideoPostThumbnailEditor: FC<VideoPostThumbnailEditorProps> = ({
   imageUrl: savedImageUrl,
   postId,
 }) => {
@@ -66,49 +66,46 @@ export const VideoPostThumbnailEditor: FC<BlogPostImageEditorProps> = ({
 
   return (
     <div className="flex flex-col gap-4 rounded-lg border-2 border-gray-700 p-4">
-      <div className="flex flex-col items-stretch gap-4 md:flex-row">
-        <div className="aspect-video w-full overflow-hidden rounded-md bg-gray-800">
-          <img
-            src={imageUrl}
-            alt="Post Image"
-            width={1920}
-            height={1080}
-            loading="eager"
+      <div className="flex flex-col items-stretch gap-4 md:grid md:grid-cols-3">
+        <img
+          className="aspect-video w-full rounded-md bg-black object-contain md:col-span-2"
+          src={imageUrl}
+          alt="Thumbnail Image"
+          width={1920}
+          height={1080}
+          loading="eager"
+        />
+        {file ? (
+          <div className="mx-auto flex w-full max-w-80 flex-col justify-between gap-2">
+            <FilePreview file={file} />
+            <div className="flex flex-col gap-2">
+              {isLoading ? (
+                <ProgressBar progress={progress} />
+              ) : (
+                <>
+                  <Button
+                    className="mt-auto flex items-center justify-center gap-1"
+                    onClick={() => setFile(null)}
+                    type="secondary"
+                  >
+                    <TrashIcon className="h-2.5 w-2.5" />
+                    <span className="text-xs">Remove</span>
+                  </Button>
+                  <Button onClick={onSubmit} type="primary">
+                    <span className="text-xs">Upload</span>
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
+        ) : (
+          <FileDrop
+            label="Thumbnail"
+            onChange={onFileChange}
+            eligibleFileTypes={ELIGIBLE_IMAGE_TYPES}
+            maxFileSize={BLOG_POST_IMAGE_MAX_SIZE}
           />
-        </div>
-        <div className="mx-auto flex w-full max-w-80 flex-col justify-between gap-2">
-          {file ? (
-            <>
-              <FilePreview file={file} />
-              <div className="flex flex-col gap-2">
-                {isLoading ? (
-                  <ProgressBar progress={progress} />
-                ) : (
-                  <>
-                    <Button
-                      className="mt-auto flex items-center justify-center gap-1"
-                      onClick={() => setFile(null)}
-                      type="secondary"
-                    >
-                      <TrashIcon className="h-2.5 w-2.5" />
-                      <span className="text-xs">Remove</span>
-                    </Button>
-                    <Button onClick={onSubmit} type="primary">
-                      <span className="text-xs">Upload</span>
-                    </Button>
-                  </>
-                )}
-              </div>
-            </>
-          ) : (
-            <FileDrop
-              label="Thumbnail"
-              onChange={onFileChange}
-              eligibleFileTypes={ELIGIBLE_IMAGE_TYPES}
-              maxFileSize={BLOG_POST_IMAGE_MAX_SIZE}
-            />
-          )}
-        </div>
+        )}
       </div>
     </div>
   );

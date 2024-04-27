@@ -62,9 +62,7 @@ export const FilePreview: FC<FilePreviewProps> = ({ file }) => {
       </div>
       {fileType === FileType.IMAGE && isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)} maxWidth={1200}>
-          <div className="aspect-video w-full overflow-hidden rounded-lg bg-black">
-            {filePreview}
-          </div>
+          <div className="w-full rounded-lg bg-black">{filePreview}</div>
         </Modal>
       )}
     </div>

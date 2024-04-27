@@ -8,6 +8,7 @@ import { PostContentEditor } from "@/components/PostContentEditor";
 import { useRouter } from "next/navigation";
 import { PostDeleterModal } from "@/components/PostDeleterModal";
 import { VideoPostThumbnailEditor } from "@/app/(browse)/videos/_components/VideoPostThumbnailEditor";
+import { VideoPostVideoEditor } from "@/app/(browse)/videos/_components/VideoPostVideoEditor";
 
 type VideoPostEditorProps = {
   videoPost: VideoPostDto;
@@ -46,6 +47,10 @@ export const VideoPostEditor: FC<VideoPostEditorProps> = ({
         />
         <VideoPostThumbnailEditor
           imageUrl={videoPost.thumbnailUrl}
+          postId={videoPost.id}
+        />
+        <VideoPostVideoEditor
+          videoUrl={videoPost.videoUrl}
           postId={videoPost.id}
         />
       </div>

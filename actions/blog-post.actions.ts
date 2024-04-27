@@ -176,6 +176,9 @@ export const onGetBlogPostImageUploadUrl: OnGetBlogPostImageUploadUrl = async ({
   size,
 }) => {
   try {
+    if (size > BLOG_POST_IMAGE_MAX_SIZE || !ELIGIBLE_IMAGE_TYPES.includes(type))
+      return ERROR_RESPONSES.BAD_REQUEST;
+
     const [self, post] = await Promise.all([
       authSelf(),
       getBlogPostById(postId),

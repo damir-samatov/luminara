@@ -34,6 +34,10 @@ import {
 } from "@/services/subscription-plan.service";
 import { generateFileKey } from "@/helpers/server/s3.helpers";
 import { SubscriptionPlanDto } from "@/types/subscription-plan.types";
+import {
+  ELIGIBLE_IMAGE_TYPES,
+  STREAM_THUMBNAIL_IMAGE_MAX_SIZE,
+} from "@/configs/file.config";
 
 type StreamActionsResponse = ActionDataResponse<{ stream: Stream }>;
 
@@ -204,6 +208,12 @@ export const onGetStreamThumbnailUploadUrl = async ({
   size,
 }: GetSignedFileUploadUrlParams): Promise<OnGetStreamThumbnailUploadUrlResponse> => {
   try {
+    if (
+      size > STREAM_THUMBNAIL_IMAGE_MAX_SIZE ||
+      !ELIGIBLE_IMAGE_TYPES.includes(type)
+    )
+      return ERROR_RESPONSES.BAD_REQUEST;
+
     const self = await authSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
 
