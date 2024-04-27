@@ -15,19 +15,13 @@ export const VideoPostItem: FC<VideoPostItemProps> = async ({
 }) => {
   return (
     <div className="mx-auto w-full max-w-4xl overflow-hidden rounded bg-gray-800">
-      {post.videoUrl && (
-        <div className="aspect-video w-full bg-black">
-          <video
-            className="h-full w-full object-contain"
-            controls
-            width="480"
-            height="360"
-            src={post.videoUrl}
-            poster={post.thumbnailUrl}
-            preload="none"
-          />
-        </div>
-      )}
+      <video
+        className="aspect-video w-full rounded-md bg-black object-contain"
+        src={post.videoUrl}
+        poster={post.thumbnailUrl}
+        preload="none"
+        controls
+      />
       <div className="flex flex-col gap-2 p-4">
         <p className="text-end text-xs text-gray-500">
           Published at: {post.createdAt.toDateString()}

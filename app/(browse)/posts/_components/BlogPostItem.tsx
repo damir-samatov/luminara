@@ -12,15 +12,14 @@ type PostItemProps = {
 export const BlogPostItem: FC<PostItemProps> = async ({ post, onDeleted }) => {
   return (
     <div className="mx-auto w-full max-w-4xl overflow-hidden rounded bg-gray-800">
-      <div className="aspect-video w-full">
-        <img
-          width={1920}
-          height={1080}
-          src={post.imageUrl}
-          alt={post.title}
-          loading="lazy"
-        />
-      </div>
+      <img
+        className="aspect-video w-full rounded-md bg-black object-contain"
+        width={1920}
+        height={1080}
+        src={post.imageUrl}
+        alt={post.title}
+        loading="lazy"
+      />
       <div className="flex flex-col gap-2 p-4">
         <p className="text-end text-xs text-gray-600">
           {post.createdAt.toDateString()}
