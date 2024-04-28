@@ -1,5 +1,5 @@
 "use server";
-import { authSelf } from "@/services/auth.service";
+import { authSelf, getSelf } from "@/services/auth.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import {
   createBlogPost,
@@ -22,11 +22,12 @@ import { revalidatePath } from "next/cache";
 
 type OnGetSelfPostsResponse = ActionDataResponse<{
   blogPosts: BlogPostDto[];
+  username: string;
 }>;
 
 export const onGetSelfBlogPosts = async (): Promise<OnGetSelfPostsResponse> => {
   try {
-    const self = await authSelf();
+    const self = await getSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
     const posts = await getBlogPostsByUserId(self.id);
     const blogPosts = await Promise.all(
@@ -48,6 +49,7 @@ export const onGetSelfBlogPosts = async (): Promise<OnGetSelfPostsResponse> => {
       success: true,
       data: {
         blogPosts,
+        username: self.username,
       },
     };
   } catch (error) {

@@ -61,7 +61,7 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
         ))}
         {subscriptions.length > 0 && (
           <p className="p-2 text-sm font-semibold leading-6 text-gray-400">
-            Subscriptions:
+            Recent Subscriptions:
           </p>
         )}
         {subscriptions.map((subscription) => (

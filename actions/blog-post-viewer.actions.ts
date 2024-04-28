@@ -1,14 +1,16 @@
 import { ActionDataResponse } from "@/types/action.types";
 import { BlogPostDto } from "@/types/post.types";
 import { authSelf } from "@/services/auth.service";
-import { getUserIdByUsername } from "@/services/user.service";
+import { getUserById, getUserIdByUsername } from "@/services/user.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import { getSubscriptionWithPlan } from "@/services/subscription.service";
 import {
+  getBlogPostById,
   getBlogPostsByUserId,
   getBlogPostsByUserIdAndPrice,
 } from "@/services/post.service";
 import { getSignedFileReadUrl } from "@/services/s3.service";
+import { UserDto } from "@/types/user.types";
 
 type OnGetBlogPostsByUserId = (props: {
   username: string;
@@ -72,6 +74,76 @@ export const onGetBlogPostsByUsername: OnGetBlogPostsByUserId = async ({
     };
   } catch (error) {
     console.error("onGetBlogPostsByUsername", error);
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+  }
+};
+
+type OnGetBlogPostById = (props: {
+  id: string;
+}) => Promise<ActionDataResponse<{ blogPost: BlogPostDto; user: UserDto }>>;
+
+export const onGetBlogPostByIdAsViewer: OnGetBlogPostById = async ({ id }) => {
+  try {
+    const [self, blogPost] = await Promise.all([
+      authSelf(),
+      getBlogPostById(id),
+    ]);
+
+    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+    if (!blogPost) return ERROR_RESPONSES.NOT_FOUND;
+
+    if (self.id !== blogPost.userId) {
+      const subscription = await getSubscriptionWithPlan(
+        self.id,
+        blogPost.userId
+      );
+      if (!subscription) return ERROR_RESPONSES.NOT_SUBSCRIBED;
+
+      if (
+        blogPost.subscriptionPlan &&
+        blogPost.subscriptionPlan.price >
+          (subscription.subscriptionPlan?.price || 0)
+      )
+        return ERROR_RESPONSES.NOT_SUBSCRIBED;
+
+      if (
+        blogPost.subscriptionPlan &&
+        blogPost.subscriptionPlan.price >
+          (subscription.subscriptionPlan?.price || 0)
+      )
+        return ERROR_RESPONSES.NOT_SUBSCRIBED;
+    }
+
+    const [user, imageUrl] = await Promise.all([
+      getUserById(blogPost.userId),
+      getSignedFileReadUrl(blogPost.images[0]?.key || ""),
+    ]);
+
+    if (!user) return ERROR_RESPONSES.NOT_FOUND;
+
+    return {
+      success: true,
+      data: {
+        blogPost: {
+          id: blogPost.id,
+          title: blogPost.title,
+          body: blogPost.body,
+          imageUrl,
+          subscriptionPlan: blogPost.subscriptionPlan,
+          createdAt: blogPost.createdAt,
+          updatedAt: blogPost.updatedAt,
+        },
+        user: {
+          id: user.id,
+          username: user.username,
+          imageUrl: user.imageUrl,
+          firstName: user.firstName,
+          lastName: user.lastName,
+        },
+      },
+    };
+  } catch (error) {
+    console.error("onGetBlogPostByIdAsViewer", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };

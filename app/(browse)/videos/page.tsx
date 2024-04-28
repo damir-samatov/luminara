@@ -21,7 +21,11 @@ const VideosPage = async () => {
             <PlusIcon className="mx-auto h-3 w-3" />
           </Link>
         </div>
-        <VideoPostsList isSelf posts={res.data.videoPosts} link="/videos" />
+        <VideoPostsList
+          isSelf
+          posts={res.data.videoPosts}
+          link={`/users/${res.data.username}/videos`}
+        />
       </div>
     </>
   );

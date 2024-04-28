@@ -1,6 +1,6 @@
 "use server";
 import { ActionDataResponse } from "@/types/action.types";
-import { authSelf } from "@/services/auth.service";
+import { authSelf, getSelf } from "@/services/auth.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import {
   createVideoPost,
@@ -23,13 +23,14 @@ import { getSubscriptionPlanById } from "@/services/subscription-plan.service";
 import { revalidatePath } from "next/cache";
 
 type OnGetSelfVideoPostsResponse = ActionDataResponse<{
+  username: string;
   videoPosts: VideoPostDto[];
 }>;
 
 export const onGetSelfVideoPosts =
   async (): Promise<OnGetSelfVideoPostsResponse> => {
     try {
-      const self = await authSelf();
+      const self = await getSelf();
       if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
       const posts = await getVideoPostsByUserId(self.id);
       const videoPosts = await Promise.all(
@@ -54,6 +55,7 @@ export const onGetSelfVideoPosts =
       return {
         success: true,
         data: {
+          username: self.username,
           videoPosts,
         },
       };

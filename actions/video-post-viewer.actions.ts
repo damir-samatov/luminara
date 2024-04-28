@@ -1,14 +1,16 @@
 import { ActionDataResponse } from "@/types/action.types";
 import { VideoPostDto } from "@/types/post.types";
 import { authSelf } from "@/services/auth.service";
-import { getUserIdByUsername } from "@/services/user.service";
+import { getUserById, getUserIdByUsername } from "@/services/user.service";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import { getSubscriptionWithPlan } from "@/services/subscription.service";
 import {
+  getVideoPostById,
   getVideoPostsByUserId,
   getVideoPostsByUserIdAndPrice,
 } from "@/services/post.service";
 import { getSignedFileReadUrl } from "@/services/s3.service";
+import { UserDto } from "@/types/user.types";
 
 type OnGetBlogPostsByUserId = (props: {
   username: string;
@@ -76,6 +78,80 @@ export const onGetVideoPostsByUsername: OnGetBlogPostsByUserId = async ({
     };
   } catch (error) {
     console.error("onGetVideoPostsByUsername", error);
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+  }
+};
+
+type OnGetVideoPostById = (props: {
+  id: string;
+}) => Promise<ActionDataResponse<{ videoPost: VideoPostDto; user: UserDto }>>;
+
+export const onGetVideoPostByIdAsViewer: OnGetVideoPostById = async ({
+  id,
+}) => {
+  try {
+    const [self, videoPost] = await Promise.all([
+      authSelf(),
+      getVideoPostById(id),
+    ]);
+
+    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+    if (!videoPost) return ERROR_RESPONSES.NOT_FOUND;
+
+    if (self.id !== videoPost.userId) {
+      const subscription = await getSubscriptionWithPlan(
+        self.id,
+        videoPost.userId
+      );
+      if (!subscription) return ERROR_RESPONSES.NOT_SUBSCRIBED;
+
+      if (
+        videoPost.subscriptionPlan &&
+        videoPost.subscriptionPlan.price >
+          (subscription.subscriptionPlan?.price || 0)
+      )
+        return ERROR_RESPONSES.NOT_SUBSCRIBED;
+
+      if (
+        videoPost.subscriptionPlan &&
+        videoPost.subscriptionPlan.price >
+          (subscription.subscriptionPlan?.price || 0)
+      )
+        return ERROR_RESPONSES.NOT_SUBSCRIBED;
+    }
+
+    const [user, videoUrl, thumbnailUrl] = await Promise.all([
+      getUserById(videoPost.userId),
+      getSignedFileReadUrl(videoPost.videos[0]?.key || ""),
+      getSignedFileReadUrl(videoPost.videos[0]?.thumbnailKey || ""),
+    ]);
+
+    if (!user) return ERROR_RESPONSES.NOT_FOUND;
+
+    return {
+      success: true,
+      data: {
+        videoPost: {
+          id: videoPost.id,
+          title: videoPost.title,
+          body: videoPost.body,
+          thumbnailUrl,
+          videoUrl,
+          subscriptionPlan: videoPost.subscriptionPlan,
+          createdAt: videoPost.createdAt,
+          updatedAt: videoPost.updatedAt,
+        },
+        user: {
+          id: user.id,
+          username: user.username,
+          imageUrl: user.imageUrl,
+          firstName: user.firstName,
+          lastName: user.lastName,
+        },
+      },
+    };
+  } catch (error) {
+    console.error("onGetVideoPostByIdAsViewer", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };

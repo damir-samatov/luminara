@@ -1,13 +1,72 @@
 import { FC } from "react";
+import { onGetVideoPostByIdAsViewer } from "@/actions/video-post-viewer.actions";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { stringToColor } from "@/utils/style.utils";
 
-type UserVideoPostPageProps = {
+type VideoPostPageProps = {
   params: {
     id: string;
   };
 };
 
-const UserVideoPostPage: FC<UserVideoPostPageProps> = async ({ params }) => {
-  return <div>VIDEO_POST_{params.id}</div>;
+const VideoPostPage: FC<VideoPostPageProps> = async ({ params }) => {
+  const res = await onGetVideoPostByIdAsViewer({ id: params.id });
+
+  if (!res.success) return notFound();
+
+  const { title, body, videoUrl, thumbnailUrl } = res.data.videoPost;
+  const { username, imageUrl: userImageUrl } = res.data.user;
+
+  return (
+    <>
+      <title>{title}</title>
+      <div className="mx-auto flex w-full max-w-7xl flex-grow flex-col gap-4 p-4 md:grid md:grid-cols-3">
+        <div className="col-span-2 flex flex-col gap-4">
+          <div>
+            <video
+              src={videoUrl}
+              poster={thumbnailUrl}
+              controls
+              className="aspect-video w-full overflow-hidden rounded-xl bg-black object-contain"
+            />
+          </div>
+          <h2 className="text-lg lg:text-3xl">{title}</h2>
+          <Link
+            className="flex w-max items-end gap-2"
+            href={`/users/${username}`}
+          >
+            <img
+              className="h-12 w-12 rounded-full"
+              src={userImageUrl}
+              alt={username}
+              height={360}
+              width={360}
+              loading="eager"
+            />
+            <p className="text-lg">
+              <span
+                style={{
+                  color: stringToColor(username),
+                }}
+              >
+                @
+              </span>
+              <span>{username}</span>
+            </p>
+          </Link>
+          <div
+            className="hidden text-sm lg:block"
+            dangerouslySetInnerHTML={{ __html: body }}
+          />
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <p>Some Comment</p>
+        </div>
+      </div>
+    </>
+  );
 };
 
-export default UserVideoPostPage;
+export default VideoPostPage;

@@ -21,7 +21,11 @@ const PostsPage = async () => {
             <PlusIcon className="mx-auto h-3 w-3" />
           </Link>
         </div>
-        <BlogPostsList isSelf posts={res.data.blogPosts} link="/posts" />
+        <BlogPostsList
+          isSelf
+          posts={res.data.blogPosts}
+          link={`/users/${res.data.username}/posts`}
+        />
       </div>
     </>
   );

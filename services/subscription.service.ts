@@ -118,7 +118,7 @@ export const getSubscriptionsByUserId = async (
 ): Promise<SubscriptionWithUser[]> => {
   try {
     return await db.subscription.findMany({
-      take: 10,
+      take: 6,
       where: {
         subscriberId: userId,
         user: {

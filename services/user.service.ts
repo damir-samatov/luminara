@@ -2,6 +2,19 @@
 import { db } from "@/lib/db";
 import { UserCreateDto, UserUpdateDto } from "@/types/user.types";
 
+export const getUserById = async (id: string) => {
+  try {
+    return await db.user.findUnique({
+      where: {
+        id,
+      },
+    });
+  } catch (error) {
+    console.error("getUserById", error);
+    return null;
+  }
+};
+
 export const getUserByExternalUserId = async (externalUserId: string) => {
   try {
     return await db.user.findUnique({
