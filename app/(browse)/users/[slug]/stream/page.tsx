@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { FC } from "react";
-import { AwsStream } from "@/components/AwsStream";
 import { onGetStreamWatchData } from "@/actions/stream-viewer.actions";
+import { StreamWrapper } from "@/components/StreamWrapper";
 
 type LiveStreamPageProps = {
   params: {
@@ -9,7 +9,7 @@ type LiveStreamPageProps = {
   };
 };
 
-const LiveStreamPage: FC<LiveStreamPageProps> = async ({ params }) => {
+const StreamPage: FC<LiveStreamPageProps> = async ({ params }) => {
   const res = await onGetStreamWatchData(params.slug);
 
   if (res.success) {
@@ -24,7 +24,7 @@ const LiveStreamPage: FC<LiveStreamPageProps> = async ({ params }) => {
     } = res.data;
 
     return (
-      <AwsStream
+      <StreamWrapper
         isChatEnabled={isChatEnabled}
         title={title}
         description={description}
@@ -39,4 +39,4 @@ const LiveStreamPage: FC<LiveStreamPageProps> = async ({ params }) => {
   return notFound();
 };
 
-export default LiveStreamPage;
+export default StreamPage;

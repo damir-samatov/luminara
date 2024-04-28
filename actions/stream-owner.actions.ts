@@ -14,7 +14,7 @@ import {
   ActionDataResponse,
 } from "@/types/action.types";
 import { Stream, User } from "@prisma/client";
-import { StreamSettingsUpdateDto } from "@/types/stream.types";
+import { StreamEvents, StreamSettingsUpdateDto } from "@/types/stream.types";
 import {
   createIvsChannel,
   getIvsViewerToken,
@@ -27,6 +27,7 @@ import {
 import {
   createIvsChatRoom,
   deleteIvsChatMessage,
+  sendIvsChatEvent,
 } from "@/services/ivs-chat.service";
 import {
   getSubscriptionPlanById,
@@ -300,6 +301,12 @@ export const onGoOffline = async (): Promise<StreamActionsResponse> => {
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
     const stream = await updateStreamStatusByUserId(self.id, false);
     if (!stream) return ERROR_RESPONSES.NOT_FOUND;
+
+    await sendIvsChatEvent({
+      chatRoomArn: stream.chatRoomArn,
+      eventName: StreamEvents.STREAM_ENDED,
+    });
+
     return {
       success: true,
       data: { stream },

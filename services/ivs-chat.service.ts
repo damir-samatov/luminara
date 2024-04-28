@@ -4,6 +4,7 @@ import {
   CreateChatTokenCommand,
   CreateRoomCommand,
   DeleteMessageCommand,
+  SendEventCommand,
 } from "@aws-sdk/client-ivschat";
 import { ivsChat } from "@/lib/ivs-chat";
 import { IvsChatRoomToken } from "@/types/ivs.types";
@@ -106,6 +107,27 @@ export const deleteIvsChatMessage = async ({
     };
   } catch (error) {
     console.error("deleteIvsChatMessage", error);
+    return null;
+  }
+};
+
+type SendIvsChatEventProps = {
+  chatRoomArn: string;
+  eventName: string;
+};
+
+export const sendIvsChatEvent = async ({
+  chatRoomArn,
+  eventName,
+}: SendIvsChatEventProps) => {
+  try {
+    const command = new SendEventCommand({
+      roomIdentifier: chatRoomArn,
+      eventName,
+    });
+    return await ivsChat.send(command);
+  } catch (error) {
+    console.error("sendIvsChatEvent", error);
     return null;
   }
 };

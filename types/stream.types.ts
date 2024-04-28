@@ -30,3 +30,7 @@ export enum StreamUserRoles {
   STREAMER = "STREAMER",
   VIEWER = "VIEWER",
 }
+
+export enum StreamEvents {
+  STREAM_ENDED = "STREAM_ENDED",
+}

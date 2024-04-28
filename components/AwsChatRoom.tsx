@@ -1,6 +1,6 @@
 "use client";
-import { FC, useEffect, useRef, useState } from "react";
-import { ChatMessage, ChatRoom } from "amazon-ivs-chat-messaging";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { ChatEvent, ChatMessage, ChatRoom } from "amazon-ivs-chat-messaging";
 import { Button } from "@/components/Button";
 import { v4 as uuid } from "uuid";
 import { TextInput } from "@/components/TextInput";
@@ -13,11 +13,15 @@ import { StreamUserRoles } from "@/types/stream.types";
 type AwsChatRoomProps = {
   streamerUsername: string;
   userRole: StreamUserRoles;
+  isChatEnabled: boolean;
+  onStreamEvent?: (event: ChatEvent) => void;
 };
 
 export const AwsChatRoom: FC<AwsChatRoomProps> = ({
   streamerUsername,
   userRole,
+  isChatEnabled,
+  onStreamEvent,
 }) => {
   const [room] = useState(
     () =>
@@ -31,7 +35,15 @@ export const AwsChatRoom: FC<AwsChatRoomProps> = ({
 
   const [message, setMessage] = useState("");
 
+  const onChatRoomEvent = useCallback(
+    (event: ChatEvent) => {
+      onStreamEvent && onStreamEvent(event);
+    },
+    [onStreamEvent]
+  );
+
   useEffect(() => {
+    const unsubscribeOnEvent = room.addListener("event", onChatRoomEvent);
     const unsubscribeOnConnecting = room.addListener("connecting", console.log);
     const unsubscribeOnConnected = room.addListener("connect", console.log);
     const unsubscribeOnDisconnected = room.addListener(
@@ -52,6 +64,7 @@ export const AwsChatRoom: FC<AwsChatRoomProps> = ({
     if (room.state === "disconnected") room.connect();
 
     return () => {
+      unsubscribeOnEvent();
       unsubscribeOnMessage();
       unsubscribeOnConnecting();
       unsubscribeOnConnected();
@@ -85,49 +98,57 @@ export const AwsChatRoom: FC<AwsChatRoomProps> = ({
     chatScrollerRef.current.scrollTop = chatScrollerRef.current.scrollHeight;
   }, [messages, chatScrollerRef]);
 
+  if (!isChatEnabled) return null;
+
   return (
-    <div className="flex h-full w-full flex-col gap-6">
-      <div
-        ref={chatScrollerRef}
-        id="chat"
-        className="relative flex-grow overflow-y-auto"
-      >
-        <div className="inset-0 mt-auto flex flex-col justify-end gap-4">
-          {messages.map((message) => {
-            const name = message.sender.attributes?.username || "unnamed";
-            const color = stringToColor(name);
-            const text = message.content;
-            return (
-              <div key={message.id} className="break-words text-sm">
-                <span
-                  style={{
-                    color,
-                  }}
-                >
-                  @{name}:{" "}
-                </span>
-                <span>{text}</span>
-                {userRole === StreamUserRoles.STREAMER && (
-                  <button onClick={() => onDeleteMessage(message.id)}>
-                    <TrashIcon className="h-4 w-4 text-red-500"></TrashIcon>
-                  </button>
-                )}
-              </div>
-            );
-          })}
+    <div className="absolute bottom-0 right-0 h-72 w-full bg-gray-900 p-4 lg:top-0 lg:h-auto lg:max-w-96">
+      <div className="flex h-full w-full flex-col gap-6">
+        <div
+          ref={chatScrollerRef}
+          id="chat"
+          className="relative flex-grow overflow-y-auto"
+        >
+          <div className="inset-0 mt-auto flex flex-col justify-end gap-4">
+            {messages.map((message) => {
+              const name = message.sender.attributes?.username || "unnamed";
+              const color = stringToColor(name);
+              const text = message.content;
+              return (
+                <div key={message.id} className="break-words text-sm">
+                  <span
+                    style={{
+                      color,
+                    }}
+                  >
+                    @{name}:{" "}
+                  </span>
+                  <span>{text}</span>
+                  {userRole === StreamUserRoles.STREAMER && (
+                    <button onClick={() => onDeleteMessage(message.id)}>
+                      <TrashIcon className="h-4 w-4 text-red-500"></TrashIcon>
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
-      <div className="flex items-stretch gap-2">
-        <TextInput
-          value={message}
-          maxLength={100}
-          onChange={setMessage}
-          placeholder="Type your message..."
-          onEnter={onSendMessage}
-        />
-        <Button type="secondary" onClick={onSendMessage} className="max-w-max">
-          <PaperAirplaneIcon className="h-6 w-6" />
-        </Button>
+        <div className="flex items-stretch gap-2">
+          <TextInput
+            value={message}
+            maxLength={100}
+            onChange={setMessage}
+            placeholder="Type your message..."
+            onEnter={onSendMessage}
+          />
+          <Button
+            type="secondary"
+            onClick={onSendMessage}
+            className="max-w-max"
+          >
+            <PaperAirplaneIcon className="h-6 w-6" />
+          </Button>
+        </div>
       </div>
     </div>
   );

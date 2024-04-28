@@ -1,10 +1,10 @@
 import { onGetStreamModerationData } from "@/actions/stream-viewer.actions";
 import { notFound } from "next/navigation";
-import { AwsStream } from "@/components/AwsStream";
 import { FC } from "react";
 import Head from "next/head";
 import { StreamUserRoles } from "@/types/stream.types";
 import { stringToColor } from "@/utils/style.utils";
+import { StreamWrapper } from "@/components/StreamWrapper";
 
 type StreamModerationPageProps = {
   params: {
@@ -41,7 +41,7 @@ const StreamModerationPage: FC<StreamModerationPageProps> = async ({
           <span style={{ color }}>@</span>
           {streamerUsername}&apos;s Stream Moderation
         </div>
-        <AwsStream
+        <StreamWrapper
           isChatEnabled={isChatEnabled}
           title={title}
           description={description}

@@ -5,6 +5,7 @@ import { AwsChatRoom } from "@/components/AwsChatRoom";
 import Link from "next/link";
 import { classNames, stringToColor } from "@/utils/style.utils";
 import { StreamUserRoles } from "@/types/stream.types";
+import { ChatEvent } from "amazon-ivs-chat-messaging";
 
 type AwsStreamProps = {
   streamerImageUrl: string;
@@ -15,6 +16,7 @@ type AwsStreamProps = {
   description: string;
   isChatEnabled: boolean;
   userRole?: StreamUserRoles;
+  onStreamEvent?: (event: ChatEvent) => void;
 };
 
 export const AwsStream: FC<AwsStreamProps> = ({
@@ -26,6 +28,7 @@ export const AwsStream: FC<AwsStreamProps> = ({
   streamerImageUrl,
   isChatEnabled,
   userRole = StreamUserRoles.VIEWER,
+  onStreamEvent,
 }) => {
   const streamerColor = stringToColor(streamerUsername);
 
@@ -76,14 +79,12 @@ export const AwsStream: FC<AwsStreamProps> = ({
           )}
         </div>
       </div>
-      {isChatEnabled && (
-        <div className="absolute bottom-0 right-0 h-72 w-full bg-gray-900 p-4 lg:top-0 lg:h-auto lg:max-w-96">
-          <AwsChatRoom
-            streamerUsername={streamerUsername}
-            userRole={userRole}
-          />
-        </div>
-      )}
+      <AwsChatRoom
+        isChatEnabled={isChatEnabled}
+        streamerUsername={streamerUsername}
+        userRole={userRole}
+        onStreamEvent={onStreamEvent}
+      />
     </div>
   );
 };
