@@ -3,6 +3,7 @@ import { onGetVideoPostByIdAsViewer } from "@/actions/video-post-viewer.actions"
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { stringToColor } from "@/utils/style.utils";
+import { CommentsSection } from "@/components/CommentsSection";
 
 type VideoPostPageProps = {
   params: {
@@ -15,7 +16,7 @@ const VideoPostPage: FC<VideoPostPageProps> = async ({ params }) => {
 
   if (!res.success) return notFound();
 
-  const { title, body, videoUrl, thumbnailUrl } = res.data.videoPost;
+  const { title, body, videoUrl, thumbnailUrl, id } = res.data.videoPost;
   const { username, imageUrl: userImageUrl } = res.data.user;
 
   return (
@@ -61,8 +62,8 @@ const VideoPostPage: FC<VideoPostPageProps> = async ({ params }) => {
           />
         </div>
 
-        <div className="flex flex-col gap-2">
-          <p>Some Comment</p>
+        <div>
+          <CommentsSection comments={res.data.comments} postId={id} />
         </div>
       </div>
     </>

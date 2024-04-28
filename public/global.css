@@ -7,23 +7,12 @@ body {
   @apply text-gray-100;
 }
 
-img {
+img, video {
   @apply block;
   @apply w-full;
   @apply h-full;
   @apply object-contain;
   @apply object-center;
-  @apply rounded-lg;
-  @apply bg-black;
-}
-
-video {
-  @apply block;
-  @apply w-full;
-  @apply h-full;
-  @apply object-contain;
-  @apply object-center;
-  @apply rounded-lg;
   @apply bg-black;
 }
 

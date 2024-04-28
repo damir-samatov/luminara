@@ -11,6 +11,7 @@ import {
 } from "@/services/post.service";
 import { getSignedFileReadUrl } from "@/services/s3.service";
 import { UserDto } from "@/types/user.types";
+import { CommentDto } from "@/types/comment.types";
 
 type OnGetBlogPostsByUserId = (props: {
   username: string;
@@ -78,9 +79,13 @@ export const onGetBlogPostsByUsername: OnGetBlogPostsByUserId = async ({
   }
 };
 
-type OnGetBlogPostById = (props: {
-  id: string;
-}) => Promise<ActionDataResponse<{ blogPost: BlogPostDto; user: UserDto }>>;
+type OnGetBlogPostById = (props: { id: string }) => Promise<
+  ActionDataResponse<{
+    blogPost: BlogPostDto;
+    comments: CommentDto[];
+    user: UserDto;
+  }>
+>;
 
 export const onGetBlogPostByIdAsViewer: OnGetBlogPostById = async ({ id }) => {
   try {
@@ -133,6 +138,7 @@ export const onGetBlogPostByIdAsViewer: OnGetBlogPostById = async ({ id }) => {
           createdAt: blogPost.createdAt,
           updatedAt: blogPost.updatedAt,
         },
+        comments: blogPost.comments,
         user: {
           id: user.id,
           username: user.username,

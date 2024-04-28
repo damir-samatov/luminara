@@ -3,6 +3,7 @@ import { onGetBlogPostByIdAsViewer } from "@/actions/blog-post-viewer.actions";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { stringToColor } from "@/utils/style.utils";
+import { CommentsSection } from "@/components/CommentsSection";
 
 type BlogPostPageProps = {
   params: {
@@ -10,11 +11,11 @@ type BlogPostPageProps = {
   };
 };
 
-const BlogPostPageProps: FC<BlogPostPageProps> = async ({ params: { id } }) => {
-  const res = await onGetBlogPostByIdAsViewer({ id });
+const BlogPostPageProps: FC<BlogPostPageProps> = async ({ params }) => {
+  const res = await onGetBlogPostByIdAsViewer({ id: params.id });
   if (!res.success) return notFound();
 
-  const { title, body, imageUrl, updatedAt } = res.data.blogPost;
+  const { title, body, imageUrl, updatedAt, id } = res.data.blogPost;
   const { username, imageUrl: userImageUrl } = res.data.user;
 
   return (
@@ -61,8 +62,8 @@ const BlogPostPageProps: FC<BlogPostPageProps> = async ({ params: { id } }) => {
           />
         </div>
 
-        <div className="flex flex-col gap-2">
-          <p>Some Comment</p>
+        <div>
+          <CommentsSection comments={res.data.comments} postId={id} />
         </div>
       </div>
     </>

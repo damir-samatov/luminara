@@ -8,6 +8,7 @@ export const getPostById = async (id: string) => {
         id,
       },
       include: {
+        subscriptionPlan: true,
         images: true,
         videos: true,
       },
@@ -88,6 +89,24 @@ export const getBlogPostById = async (id: string) => {
       include: {
         images: true,
         subscriptionPlan: true,
+        comments: {
+          select: {
+            id: true,
+            postId: true,
+            body: true,
+            createdAt: true,
+            user: {
+              select: {
+                id: true,
+                username: true,
+                imageUrl: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
       },
     });
   } catch (error) {
@@ -131,6 +150,24 @@ export const getVideoPostById = async (id: string) => {
       include: {
         videos: true,
         subscriptionPlan: true,
+        comments: {
+          select: {
+            id: true,
+            postId: true,
+            body: true,
+            createdAt: true,
+            user: {
+              select: {
+                id: true,
+                username: true,
+                imageUrl: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
       },
     });
   } catch (error) {

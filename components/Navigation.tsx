@@ -40,16 +40,22 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
             isActive={activeOn.indexOf(pathname) !== -1}
           />
         ))}
+
         <hr className="my-2 border-gray-600" />
+
         <p className="p-2 text-sm font-semibold leading-6 text-gray-400">
           Studio:
         </p>
+
         <UserProfileLink
-          isActive={pathname === `/users/${self.username}`}
+          isActive={pathname
+            .split("/")
+            .some((route) => route === self.username)}
           key={self.id}
           imageUrl={self.imageUrl}
           username={self.username}
         />
+
         {STUDIO_LINKS.map(({ href, label, icon, activeOn }) => (
           <SidebarLink
             key={href}
@@ -59,14 +65,20 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
             isActive={activeOn.indexOf(pathname) !== -1}
           />
         ))}
+
         {subscriptions.length > 0 && (
-          <p className="p-2 text-sm font-semibold leading-6 text-gray-400">
-            Recent Subscriptions:
-          </p>
+          <>
+            <hr className="my-2 border-gray-600" />
+            <p className="p-2 text-sm font-semibold leading-6 text-gray-400">
+              Recent Subscriptions:
+            </p>
+          </>
         )}
         {subscriptions.map((subscription) => (
           <UserProfileLink
-            isActive={pathname === `/users/${subscription.user.username}`}
+            isActive={pathname
+              .split("/")
+              .some((route) => route === subscription.user.username)}
             key={subscription.user.id}
             imageUrl={subscription.user.imageUrl}
             username={subscription.user.username}
@@ -74,7 +86,7 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
         ))}
       </nav>
     ),
-    [subscriptions, pathname]
+    [subscriptions, pathname, self]
   );
 
   const siderbarTop = useMemo(

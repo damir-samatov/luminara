@@ -11,6 +11,7 @@ import {
 } from "@/services/post.service";
 import { getSignedFileReadUrl } from "@/services/s3.service";
 import { UserDto } from "@/types/user.types";
+import { CommentDto } from "@/types/comment.types";
 
 type OnGetBlogPostsByUserId = (props: {
   username: string;
@@ -82,9 +83,13 @@ export const onGetVideoPostsByUsername: OnGetBlogPostsByUserId = async ({
   }
 };
 
-type OnGetVideoPostById = (props: {
-  id: string;
-}) => Promise<ActionDataResponse<{ videoPost: VideoPostDto; user: UserDto }>>;
+type OnGetVideoPostById = (props: { id: string }) => Promise<
+  ActionDataResponse<{
+    videoPost: VideoPostDto;
+    comments: CommentDto[];
+    user: UserDto;
+  }>
+>;
 
 export const onGetVideoPostByIdAsViewer: OnGetVideoPostById = async ({
   id,
@@ -141,6 +146,7 @@ export const onGetVideoPostByIdAsViewer: OnGetVideoPostById = async ({
           createdAt: videoPost.createdAt,
           updatedAt: videoPost.updatedAt,
         },
+        comments: videoPost.comments,
         user: {
           id: user.id,
           username: user.username,
