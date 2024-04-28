@@ -42,7 +42,7 @@ export const ProfileHead: FC<ProfileHeadProps> = ({
   );
 
   const onStreamViewClick = useCallback(() => {
-    router.push(`/streams/${username}/?x=${Date.now()}`);
+    router.push(`/users/${username}/stream?x=${Date.now()}`);
   }, [router, username]);
 
   return (
