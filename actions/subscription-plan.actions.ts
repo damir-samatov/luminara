@@ -34,7 +34,6 @@ type OnGetSelfSubscriptionPlansResponse = ActionDataResponse<{
   subscriptionPlans: SubscriptionPlanDto[];
   freeFollowerImageUrl: string;
 }>;
-
 export const onGetSelfSubscriptionPlans =
   async (): Promise<OnGetSelfSubscriptionPlansResponse> => {
     try {

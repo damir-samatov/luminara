@@ -34,7 +34,13 @@ export const onGetVideoPostsByUsername: OnGetBlogPostsByUserId = async ({
       accessibleVideoPosts = await getVideoPostsByUserId(user.id);
     } else {
       const subscription = await getSubscriptionWithPlan(self.id, user.id);
-      if (!subscription) return ERROR_RESPONSES.NOT_SUBSCRIBED;
+      if (!subscription)
+        return {
+          success: true,
+          data: {
+            videoPosts: [],
+          },
+        };
 
       accessibleVideoPosts = await getVideoPostsByUserIdAndPrice(
         user.id,

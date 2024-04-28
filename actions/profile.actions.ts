@@ -3,18 +3,20 @@ import { getUserByUsername } from "@/services/user.service";
 import { authSelf } from "@/services/auth.service";
 import { getSubscription } from "@/services/subscription.service";
 import { getBan } from "@/services/ban.service";
-import { Subscription, SubscriptionPlan, User } from "@prisma/client";
+import { Subscription, User } from "@prisma/client";
 import { ActionDataResponse } from "@/types/action.types";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import { getSubscriptionPlansByUserId } from "@/services/subscription-plan.service";
 import { getStreamByUserId } from "@/services/stream.service";
+import { SubscriptionPlanDto } from "@/types/subscription-plan.types";
+import { getSignedFileReadUrl } from "@/services/s3.service";
 
 type OnGetProfileDataResponse = ActionDataResponse<{
   user: User;
   isLive: boolean;
   isSelf: boolean;
   subscription: Subscription | null;
-  subscriptionPlans: SubscriptionPlan[];
+  subscriptionPlans: SubscriptionPlanDto[];
 }>;
 
 export const onGetProfileData = async (
@@ -40,7 +42,17 @@ export const onGetProfileData = async (
       getStreamByUserId(user.id),
     ]);
 
-    if (!subscriptionPlans) return ERROR_RESPONSES.NOT_FOUND;
+    if (!subscriptionPlans) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    const subscriptionPlansWithImageUrls = await Promise.all(
+      subscriptionPlans.map(async (subscriptionPlan) => {
+        const imageUrl = await getSignedFileReadUrl(subscriptionPlan.imageKey);
+        return {
+          ...subscriptionPlan,
+          imageUrl,
+        };
+      })
+    );
 
     return {
       success: true,
@@ -49,7 +61,7 @@ export const onGetProfileData = async (
         isLive: stream?.isLive || false,
         isSelf: self.id === user.id,
         subscription,
-        subscriptionPlans,
+        subscriptionPlans: subscriptionPlansWithImageUrls,
       },
     };
   } catch (error) {

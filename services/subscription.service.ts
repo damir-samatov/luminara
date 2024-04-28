@@ -2,6 +2,19 @@
 import { db } from "@/lib/db";
 import { SubscriptionWithUser } from "@/types/subscription.types";
 
+export const getSubscriptionById = async (id: string) => {
+  try {
+    return await db.subscription.findUnique({
+      where: {
+        id,
+      },
+    });
+  } catch (error) {
+    console.error("getSubscriptionById", error);
+    return null;
+  }
+};
+
 export const getSubscription = async (subscriberId: string, userId: string) => {
   try {
     return await db.subscription.findUnique({
@@ -61,19 +74,24 @@ export const deleteSubscription = async (
   subscriberId: string,
   userId: string
 ) => {
-  return db.subscription.delete({
-    where: {
-      userId_subscriberId: {
-        userId,
-        subscriberId,
+  try {
+    return await db.subscription.delete({
+      where: {
+        userId_subscriberId: {
+          userId,
+          subscriberId,
+        },
       },
-    },
-  });
+    });
+  } catch (error) {
+    console.error("deleteSubscription", error);
+    return null;
+  }
 };
 
 type UpdateSubscriptionActivePlanProps = {
   subscriptionId: string;
-  subscriptionPlanId: string;
+  subscriptionPlanId: string | null;
 };
 
 export const updateSubscriptionActivePlan = async ({

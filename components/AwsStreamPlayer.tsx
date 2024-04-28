@@ -124,7 +124,12 @@ export const AwsStreamPlayer: FC<AwsStreamPlayerProps> = ({
           isReady ? "block" : "hidden"
         )}
       >
-        <video playsInline ref={videoElRef} className="video-js" controls />
+        <video
+          playsInline
+          ref={videoElRef}
+          className="video-js object-contain"
+          controls
+        />
       </div>
     </div>
   );

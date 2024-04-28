@@ -59,7 +59,12 @@ export const StreamEditor: FC<StreamEditorProps> = ({
   const [moderationWindow, setModerationWindow] = useState<Window | null>(null);
 
   const onOpenModerationPage = useCallback(() => {
-    moderationWindow?.close();
+    if (moderationWindow) {
+      moderationWindow.location.reload();
+      moderationWindow.focus();
+      return;
+    }
+
     const newModerationWindow = window.open(
       `/moderation/${user.username}`,
       "_blank"
@@ -110,7 +115,8 @@ export const StreamEditor: FC<StreamEditorProps> = ({
     if (!settingsChangeDetected) return;
     try {
       const res = await onUpdateStreamSettings(streamSettings);
-      if (!res.success) return;
+      if (!res.success)
+        return toast("Failed to update the stream settings", { type: "error" });
       const { title, isChatEnabled, description } = res.data.stream;
       setSettingsPrevState({
         title,
@@ -123,14 +129,30 @@ export const StreamEditor: FC<StreamEditorProps> = ({
         isChatEnabled,
         description,
       }));
+      moderationWindow?.location.reload();
+      toast("Successfully updated the stream settings", { type: "success" });
     } catch (error) {
+      toast("Failed to update the stream settings", { type: "error" });
       console.error(error);
     }
-  }, [settingsChangeDetected, streamSettings, setSettingsPrevState]);
+  }, [
+    settingsChangeDetected,
+    streamSettings,
+    setSettingsPrevState,
+    moderationWindow,
+  ]);
 
   const onDiscardSettings = useCallback(() => {
     setStreamSettings(settingsPrevState);
   }, [settingsPrevState]);
+
+  const onThumbnailUrlChange = useCallback(
+    (url: string) => {
+      setAppliedThumbnailUrl(url);
+      moderationWindow?.location.reload();
+    },
+    [moderationWindow]
+  );
 
   const tabs = useMemo(
     () => [
@@ -176,7 +198,7 @@ export const StreamEditor: FC<StreamEditorProps> = ({
         component: (
           <StreamThumbnail
             fallbackThumbnailUrl={user.imageUrl}
-            setThumbnailUrl={setAppliedThumbnailUrl}
+            onThumbnailUrlChange={onThumbnailUrlChange}
             thumbnailUrl={thumbnailUrl}
           />
         ),

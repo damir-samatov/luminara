@@ -34,7 +34,13 @@ export const onGetBlogPostsByUsername: OnGetBlogPostsByUserId = async ({
       accessibleBlogPosts = await getBlogPostsByUserId(user.id);
     } else {
       const subscription = await getSubscriptionWithPlan(self.id, user.id);
-      if (!subscription) return ERROR_RESPONSES.NOT_SUBSCRIBED;
+      if (!subscription)
+        return {
+          success: true,
+          data: {
+            blogPosts: [],
+          },
+        };
 
       accessibleBlogPosts = await getBlogPostsByUserIdAndPrice(
         user.id,

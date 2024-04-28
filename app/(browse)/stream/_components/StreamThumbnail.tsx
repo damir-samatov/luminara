@@ -15,13 +15,13 @@ import { FileDrop } from "@/components/FileDrop";
 type StreamThumbnailProps = {
   fallbackThumbnailUrl: string;
   thumbnailUrl: string;
-  setThumbnailUrl: (url: string) => void;
+  onThumbnailUrlChange: (url: string) => void;
 };
 
 export const StreamThumbnail: FC<StreamThumbnailProps> = ({
   fallbackThumbnailUrl,
   thumbnailUrl,
-  setThumbnailUrl,
+  onThumbnailUrlChange,
 }) => {
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -45,7 +45,7 @@ export const StreamThumbnail: FC<StreamThumbnailProps> = ({
         return toast("Failed to upload the stream thumbnail", {
           type: "error",
         });
-      setThumbnailUrl(URL.createObjectURL(file));
+      onThumbnailUrlChange(URL.createObjectURL(file));
       setFile(null);
       toast("Stream thumbnail uploaded successfully", { type: "success" });
     } catch (error) {
@@ -55,7 +55,7 @@ export const StreamThumbnail: FC<StreamThumbnailProps> = ({
       setIsLoading(false);
       setProgress(0);
     }
-  }, [file, isLoading, setThumbnailUrl]);
+  }, [file, isLoading, onThumbnailUrlChange]);
 
   const onFileChange = (files: File[]) => {
     const file = files[0] || null;

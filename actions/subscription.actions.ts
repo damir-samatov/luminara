@@ -1,43 +1,48 @@
 "use server";
-import { getSelf } from "@/services/auth.service";
+import { authSelf } from "@/services/auth.service";
 import {
   createSubscription,
   deleteSubscription,
   getSubscriptionsByUserId,
   updateSubscriptionActivePlan,
-  getSubscription,
+  getSubscriptionById,
 } from "@/services/subscription.service";
 import { SubscriptionWithUser } from "@/types/subscription.types";
-import { ERROR_RESPONSES, SUCCESS_RESPONSES } from "@/configs/responses.config";
-import {
-  ActionCombinedResponse,
-  ActionDataResponse,
-} from "@/types/action.types";
+import { ERROR_RESPONSES } from "@/configs/responses.config";
+import { ActionDataResponse } from "@/types/action.types";
 import { getSubscriptionPlanById } from "@/services/subscription-plan.service";
 import { Subscription } from "@prisma/client";
 
-type OnChangeSubscriptionResponse = ActionDataResponse<{
-  subscription: Subscription;
-}>;
+type OnChangeSubscriptionPlan = (props: {
+  subscriptionId: string;
+  subscriptionPlanId: string | null;
+}) => Promise<
+  ActionDataResponse<{
+    subscription: Subscription;
+  }>
+>;
 
-export const onChangeSubscriptionPlan = async (
-  subscriptionPlanId: string
-): Promise<OnChangeSubscriptionResponse> => {
+export const onChangeSubscriptionPlan: OnChangeSubscriptionPlan = async ({
+  subscriptionId,
+  subscriptionPlanId,
+}) => {
   try {
-    const self = await getSelf();
+    const [self, existingSubscription] = await Promise.all([
+      authSelf(),
+      getSubscriptionById(subscriptionId),
+    ]);
+
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+    if (!existingSubscription) return ERROR_RESPONSES.NOT_FOUND;
 
-    const subscriptionPlan = await getSubscriptionPlanById(subscriptionPlanId);
+    if (self.id !== existingSubscription.subscriberId)
+      return ERROR_RESPONSES.UNAUTHORIZED;
 
-    if (!subscriptionPlan || self.id === subscriptionPlan.userId)
-      return ERROR_RESPONSES.NOT_FOUND;
-
-    const existingSubscription = await getSubscription(
-      self.id,
-      subscriptionPlan.userId
-    );
-
-    if (!existingSubscription) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+    if (subscriptionPlanId !== null) {
+      const subscriptionPlan =
+        await getSubscriptionPlanById(subscriptionPlanId);
+      if (!subscriptionPlan) return ERROR_RESPONSES.NOT_FOUND;
+    }
 
     const subscription = await updateSubscriptionActivePlan({
       subscriptionId: existingSubscription.id,
@@ -58,30 +63,51 @@ export const onChangeSubscriptionPlan = async (
   }
 };
 
-export const onSubscribe = async (
+type OnSubscribe = (
   userId: string
-): Promise<ActionCombinedResponse> => {
+) => Promise<ActionDataResponse<{ subscription: Subscription }>>;
+
+export const onSubscribe: OnSubscribe = async (userId) => {
   try {
-    const self = await getSelf();
+    const self = await authSelf();
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
-    if (self.id === userId) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-    await createSubscription(self.id, userId);
-    return SUCCESS_RESPONSES.SUCCESS;
+    if (self.id === userId) return ERROR_RESPONSES.SELF_SUBSCRIPTION;
+
+    const subscription = await createSubscription(self.id, userId);
+    if (!subscription) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    return {
+      success: true,
+      data: {
+        subscription,
+      },
+    };
   } catch (error) {
     console.error("onSubscribe", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };
 
-export const onUnsubscribe = async (
+type OnUnsubscribe = (
   userId: string
-): Promise<ActionCombinedResponse> => {
+) => Promise<ActionDataResponse<{ subscription: Subscription }>>;
+
+export const onUnsubscribe: OnUnsubscribe = async (userId) => {
   try {
-    const self = await getSelf();
+    const self = await authSelf();
+
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
-    if (self.id === userId) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
-    await deleteSubscription(self.id, userId);
-    return SUCCESS_RESPONSES.SUCCESS;
+    if (self.id === userId) return ERROR_RESPONSES.SELF_SUBSCRIPTION;
+
+    const subscription = await deleteSubscription(self.id, userId);
+    if (!subscription) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    return {
+      success: true,
+      data: {
+        subscription,
+      },
+    };
   } catch (error) {
     console.error("onUnsubscribe", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
@@ -95,9 +121,11 @@ type OnGetSubscriptionsResponse = ActionDataResponse<{
 export const onGetSubscriptions =
   async (): Promise<OnGetSubscriptionsResponse> => {
     try {
-      const self = await getSelf();
+      const self = await authSelf();
       if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+
       const subscriptions = await getSubscriptionsByUserId(self.id);
+
       return {
         success: true,
         data: {

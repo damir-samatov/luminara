@@ -17,7 +17,7 @@ export const VideoPlaceholder: FC<VideoPlaceholderProps> = ({
     <div className="relative aspect-video w-full rounded">
       <div className="absolute bottom-0 left-0 right-0 top-0">
         <img
-          className="absolute rounded"
+          className="absolute rounded object-contain"
           src={url}
           onError={(e) => {
             e.currentTarget.setAttribute("src", fallbackUrl);

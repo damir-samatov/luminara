@@ -1,8 +1,8 @@
 "use client";
-import { FC, useMemo } from "react";
+import { FC, useCallback, useMemo } from "react";
 import { classNames, stringToColor } from "@/utils/style.utils";
-import Link from "next/link";
 import { useGlobalContext } from "@/contexts/GlobalContext";
+import { useRouter } from "next/navigation";
 
 type ProfileHeadProps = {
   isLive: boolean;
@@ -22,6 +22,7 @@ export const ProfileHead: FC<ProfileHeadProps> = ({
   lastName,
   avatarUrl,
 }) => {
+  const router = useRouter();
   const { self } = useGlobalContext();
 
   const image = useMemo(
@@ -32,7 +33,7 @@ export const ProfileHead: FC<ProfileHeadProps> = ({
         src={avatarUrl}
         alt={username}
         className={classNames(
-          "h-24 w-24 rounded-full border-4 md:h-32 md:w-32",
+          "h-20 w-20 rounded-full border-4 md:h-28 md:w-28",
           isLive ? "border-red-700" : "border-transparent"
         )}
       />
@@ -40,9 +41,13 @@ export const ProfileHead: FC<ProfileHeadProps> = ({
     [avatarUrl, isLive, username]
   );
 
+  const onStreamViewClick = useCallback(() => {
+    router.push(`/streams/${username}/?x=${Date.now()}`);
+  }, [router, username]);
+
   return (
-    <div className="flex items-end gap-4 p-4">
-      {isLive ? <Link href={`/streams/${username}`}>{image}</Link> : image}
+    <div className="flex items-end gap-4">
+      {isLive ? <button onClick={onStreamViewClick}>{image}</button> : image}
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2">
           <h1 className="text-xl">
@@ -55,12 +60,12 @@ export const ProfileHead: FC<ProfileHeadProps> = ({
             </p>
           )}
           {isLive && (
-            <Link
-              href={`/streams/${username}`}
+            <button
+              onClick={onStreamViewClick}
               className="rounded-lg bg-red-700 px-2 py-1 text-sm font-semibold"
             >
               LIVE
-            </Link>
+            </button>
           )}
         </div>
         {(firstName || lastName) && (

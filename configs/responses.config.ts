@@ -15,6 +15,11 @@ export const ERROR_RESPONSES = {
     message: "Not subscribed",
     type: ErrorResponseType.NOT_SUBSCRIBED,
   },
+  [ErrorResponseType.SELF_SUBSCRIPTION]: {
+    success: false,
+    message: "Self subscription",
+    type: ErrorResponseType.SELF_SUBSCRIPTION,
+  },
   [ErrorResponseType.BAD_REQUEST]: {
     success: false,
     message: "Bad request",
@@ -22,7 +27,7 @@ export const ERROR_RESPONSES = {
   },
   [ErrorResponseType.UNAUTHORIZED]: {
     success: false,
-    message: "Client is unauthorized",
+    message: "Unauthorized",
     type: ErrorResponseType.UNAUTHORIZED,
   },
   [ErrorResponseType.SOMETHING_WENT_WRONG]: {
@@ -32,12 +37,12 @@ export const ERROR_RESPONSES = {
   },
   [ErrorResponseType.STREAM_EXISTS]: {
     success: false,
-    message: "Client already has a stream",
+    message: "Stream exists",
     type: ErrorResponseType.STREAM_EXISTS,
   },
   [ErrorResponseType.NOT_FOUND]: {
     success: false,
-    message: "Resource not found",
+    message: "Not found",
     type: ErrorResponseType.NOT_FOUND,
   },
 } satisfies Record<ErrorResponseType, ActionErrorResponse>;
