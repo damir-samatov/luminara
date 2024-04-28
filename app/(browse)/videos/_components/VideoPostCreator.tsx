@@ -136,6 +136,7 @@ export const VideoPostCreator: FC<VideoPostCreatorProps> = ({
               <div className="flex flex-grow flex-col gap-2 sm:col-span-2">
                 <p>Title</p>
                 <TextInput
+                  maxLength={200}
                   isDisabled={isLoading}
                   value={content.title}
                   onChange={(value) => onPostContentChange("title", value)}

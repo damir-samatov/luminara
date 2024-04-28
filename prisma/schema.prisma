@@ -125,22 +125,19 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@fulltext([title, body])
+  @@fulltext([title])
 }
 
 model Image {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  key   String
-  title String
+  key String
 
   postId String @db.ObjectId
   post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@fulltext([title])
 }
 
 model Video {
@@ -148,15 +145,12 @@ model Video {
 
   key          String
   thumbnailKey String
-  title        String
 
   postId String @db.ObjectId
   post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@fulltext([title])
 }
 
 model Comment {
@@ -171,8 +165,6 @@ model Comment {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@fulltext([body])
 }
 
 model Like {
@@ -192,7 +184,7 @@ model SubscriptionPlan {
   userId String @db.ObjectId
 
   title       String
-  description String @default("")
+  description String
 
   imageKey String
   price    Float

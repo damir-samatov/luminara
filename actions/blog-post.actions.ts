@@ -103,7 +103,6 @@ export const onCreateBlogPost = async ({
       body,
       subscriptionPlanId,
       image: {
-        title,
         key: imageKey,
       },
     });

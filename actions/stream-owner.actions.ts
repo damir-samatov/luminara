@@ -182,7 +182,7 @@ export const onCreateStream = async () => {
       playbackUrl: ivsChannel.playbackUrl,
       thumbnailKey: generateFileKey(self.id),
       isLive: false,
-      isChatEnabled: false,
+      isChatEnabled: true,
     });
 
     if (!stream) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;

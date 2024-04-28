@@ -123,7 +123,6 @@ export const onCreateVideoPost = async ({
       body,
       subscriptionPlanId,
       video: {
-        title,
         key: videoKey,
         thumbnailKey,
       },

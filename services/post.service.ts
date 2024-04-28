@@ -25,7 +25,6 @@ type CreateBlogPostProps = {
   body: string;
   subscriptionPlanId: string | null;
   image: {
-    title: string;
     key: string;
   };
 };
@@ -182,7 +181,6 @@ type CreateVideoPostProps = {
   body: string;
   subscriptionPlanId: string | null;
   video: {
-    title: string;
     key: string;
     thumbnailKey: string;
   };

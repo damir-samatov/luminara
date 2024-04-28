@@ -104,6 +104,8 @@ export const BlogPostCreator: FC<BlogPostCreatorProps> = ({
         <div className="flex flex-grow flex-col gap-2 rounded-lg border-2 border-gray-700 p-4 sm:col-span-2">
           <p>Title</p>
           <TextInput
+            maxLength={200}
+            isDisabled={isLoading}
             value={content.title}
             onChange={(value) => onPostContentChange("title", value)}
           />
