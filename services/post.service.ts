@@ -76,6 +76,22 @@ export const getBlogPostsByUserId = async (userId: string) => {
   }
 };
 
+export const getBlogPostsCountByUserId = async (userId: string) => {
+  try {
+    return await db.post.count({
+      where: {
+        userId,
+        videos: {
+          none: {},
+        },
+      },
+    });
+  } catch (error) {
+    console.error("getBlogPostsCountByUserId", error);
+    return null;
+  }
+};
+
 export const getBlogPostById = async (id: string) => {
   try {
     return await db.post.findUnique({
@@ -134,6 +150,22 @@ export const getVideoPostsByUserId = async (userId: string) => {
   } catch (error) {
     console.error("getVideoPostsByUserId", error);
     return [];
+  }
+};
+
+export const getVideoPostsCountByUserId = async (userId: string) => {
+  try {
+    return await db.post.count({
+      where: {
+        userId,
+        videos: {
+          some: {},
+        },
+      },
+    });
+  } catch (error) {
+    console.error("getVideoPostsCountByUserId", error);
+    return 0;
   }
 };
 

@@ -8,6 +8,7 @@ import {
   getVideoPostById,
   getVideoPostsByUserId,
   getVideoPostsByUserIdAndPrice,
+  getVideoPostsCountByUserId,
 } from "@/services/post.service";
 import { getSignedFileReadUrl } from "@/services/s3.service";
 import { UserDto } from "@/types/user.types";
@@ -15,7 +16,9 @@ import { CommentDto } from "@/types/comment.types";
 
 type OnGetBlogPostsByUserId = (props: {
   username: string;
-}) => Promise<ActionDataResponse<{ videoPosts: VideoPostDto[] }>>;
+}) => Promise<
+  ActionDataResponse<{ videoPosts: VideoPostDto[]; totalCount: number }>
+>;
 
 export const onGetVideoPostsByUsername: OnGetBlogPostsByUserId = async ({
   username,
@@ -33,6 +36,9 @@ export const onGetVideoPostsByUsername: OnGetBlogPostsByUserId = async ({
       ReturnType<typeof getVideoPostsByUserIdAndPrice>
     > = [];
 
+    const totalCount = await getVideoPostsCountByUserId(user.id);
+    if (totalCount === null) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
     if (self.id === user.id) {
       accessibleVideoPosts = await getVideoPostsByUserId(user.id);
     } else {
@@ -42,6 +48,7 @@ export const onGetVideoPostsByUsername: OnGetBlogPostsByUserId = async ({
           success: true,
           data: {
             videoPosts: [],
+            totalCount: 0,
           },
         };
 
@@ -75,6 +82,7 @@ export const onGetVideoPostsByUsername: OnGetBlogPostsByUserId = async ({
       success: true,
       data: {
         videoPosts: videoPostsDto,
+        totalCount,
       },
     };
   } catch (error) {

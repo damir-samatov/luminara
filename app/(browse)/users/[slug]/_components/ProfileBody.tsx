@@ -20,6 +20,8 @@ type ProfileBodyProps = {
   videoPosts: VideoPostDto[];
   blogPosts: BlogPostDto[];
   subscription: Subscription | null;
+  videoPostsTotalCount: number;
+  blogPostsTotalCount: number;
 };
 
 export const ProfileBody: FC<ProfileBodyProps> = ({
@@ -29,12 +31,14 @@ export const ProfileBody: FC<ProfileBodyProps> = ({
   subscriptionPlans,
   subscription: savedSubscription,
   videoPosts: savedVideoPosts,
-  blogPosts: savedBlogPostss,
+  blogPosts: savedBlogPosts,
   userId,
+  videoPostsTotalCount,
+  blogPostsTotalCount,
 }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [videoPosts, setVideoPosts] = useState(savedVideoPosts);
-  const [blogPosts, setBlogPosts] = useState(savedBlogPostss);
+  const [blogPosts, setBlogPosts] = useState(savedBlogPosts);
   const [subscription, setSubscription] = useState(savedSubscription);
 
   const onSubscriptionChanged = useCallback(
@@ -71,6 +75,7 @@ export const ProfileBody: FC<ProfileBodyProps> = ({
         component: (
           <VideoPostsList
             key={videoPosts.length}
+            totalCount={videoPostsTotalCount}
             isSelf={isSelf}
             posts={videoPosts}
             link={`/users/${username}/videos`}
@@ -82,6 +87,7 @@ export const ProfileBody: FC<ProfileBodyProps> = ({
         component: (
           <BlogPostsList
             key={blogPosts.length}
+            totalCount={blogPostsTotalCount}
             isSelf={isSelf}
             posts={blogPosts}
             link={`/users/${username}/posts`}
@@ -117,7 +123,7 @@ export const ProfileBody: FC<ProfileBodyProps> = ({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid max-w-2xl grid-cols-3 gap-2">
         {tabs.map((tab, i) => (
           <Button
             type={activeTab === i ? "primary" : "secondary"}

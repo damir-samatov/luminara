@@ -8,6 +8,7 @@ import {
   getBlogPostById,
   getBlogPostsByUserId,
   getBlogPostsByUserIdAndPrice,
+  getBlogPostsCountByUserId,
 } from "@/services/post.service";
 import { getSignedFileReadUrl } from "@/services/s3.service";
 import { UserDto } from "@/types/user.types";
@@ -15,7 +16,9 @@ import { CommentDto } from "@/types/comment.types";
 
 type OnGetBlogPostsByUserId = (props: {
   username: string;
-}) => Promise<ActionDataResponse<{ blogPosts: BlogPostDto[] }>>;
+}) => Promise<
+  ActionDataResponse<{ blogPosts: BlogPostDto[]; totalCount: number }>
+>;
 
 export const onGetBlogPostsByUsername: OnGetBlogPostsByUserId = async ({
   username,
@@ -33,6 +36,9 @@ export const onGetBlogPostsByUsername: OnGetBlogPostsByUserId = async ({
       ReturnType<typeof getBlogPostsByUserIdAndPrice>
     > = [];
 
+    const totalCount = await getBlogPostsCountByUserId(user.id);
+    if (totalCount === null) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
     if (self.id === user.id) {
       accessibleBlogPosts = await getBlogPostsByUserId(user.id);
     } else {
@@ -42,9 +48,9 @@ export const onGetBlogPostsByUsername: OnGetBlogPostsByUserId = async ({
           success: true,
           data: {
             blogPosts: [],
+            totalCount,
           },
         };
-
       accessibleBlogPosts = await getBlogPostsByUserIdAndPrice(
         user.id,
         subscription.subscriptionPlan?.price || 0
@@ -70,6 +76,7 @@ export const onGetBlogPostsByUsername: OnGetBlogPostsByUserId = async ({
     return {
       success: true,
       data: {
+        totalCount: totalCount,
         blogPosts: blogPostsDto,
       },
     };

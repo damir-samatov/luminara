@@ -19,13 +19,11 @@ const ProfilePage: FC<ProfilePageProps> = async ({ params }) => {
     onGetVideoPostsByUsername({ username: params.slug }),
   ]);
 
-  if (!profileRes.success) return notFound();
+  if (!profileRes.success || !videoPostsRes.success || !blogPostsRes.success)
+    return notFound();
 
   const { user, isLive, isSelf, subscription, subscriptionPlans } =
     profileRes.data;
-
-  const videoPosts = videoPostsRes.success ? videoPostsRes.data.videoPosts : [];
-  const blogPosts = blogPostsRes.success ? blogPostsRes.data.blogPosts : [];
 
   return (
     <div className="min-h-screen">
@@ -48,6 +46,9 @@ const ProfilePage: FC<ProfilePageProps> = async ({ params }) => {
           avatarUrl={user.imageUrl}
           posterUrl={user.imageUrl}
         />
+
+        <hr className="border-gray-600" />
+
         <ProfileBody
           isSelf={isSelf}
           userId={user.id}
@@ -55,8 +56,10 @@ const ProfilePage: FC<ProfilePageProps> = async ({ params }) => {
           username={user.username}
           subscription={subscription}
           subscriptionPlans={subscriptionPlans}
-          videoPosts={videoPosts}
-          blogPosts={blogPosts}
+          videoPosts={videoPostsRes.data.videoPosts}
+          videoPostsTotalCount={videoPostsRes.data.totalCount}
+          blogPosts={blogPostsRes.data.blogPosts}
+          blogPostsTotalCount={blogPostsRes.data.totalCount}
         />
       </div>
     </div>
