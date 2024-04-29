@@ -4,7 +4,6 @@ import { Button } from "@/components/Button";
 import { BlogPostDto, VideoPostDto } from "@/types/post.types";
 import { BlogPostsList } from "@/components/BlogPostsList";
 import { VideoPostsList } from "@/components/VideoPostsList";
-import { ProfileSubscriptionEditor } from "@/app/(browse)/users/[slug]/_components/ProfileSubscriptionEditor";
 import { Subscription } from "@prisma/client";
 import { SubscriptionPlanDto } from "@/types/subscription-plan.types";
 import { onGetBlogPostsByUsername } from "@/actions/blog-post-viewer.actions";
@@ -73,40 +72,50 @@ export const ProfileBody: FC<ProfileBodyProps> = ({
       {
         label: "Videos",
         component: (
-          <VideoPostsList
-            key={videoPosts.length}
-            totalCount={videoPostsTotalCount}
-            isSelf={isSelf}
-            posts={videoPosts}
-            link={`/users/${username}/videos`}
-          />
+          <div className="flex flex-col gap-6">
+            <p className="text-lg">
+              You have access to {videoPosts.length} out of{" "}
+              {videoPostsTotalCount} videos
+            </p>
+            <VideoPostsList
+              key={videoPosts.length}
+              isSelf={isSelf}
+              posts={videoPosts}
+              link={`/users/${username}/videos`}
+            />
+          </div>
         ),
       },
       {
         label: "Posts",
         component: (
-          <BlogPostsList
-            key={blogPosts.length}
-            totalCount={blogPostsTotalCount}
-            isSelf={isSelf}
-            posts={blogPosts}
-            link={`/users/${username}/posts`}
-          />
+          <div className="flex flex-col gap-6">
+            <p className="text-lg">
+              You have access to {blogPosts.length} out of {blogPostsTotalCount}{" "}
+              posts
+            </p>
+            <BlogPostsList
+              key={blogPosts.length}
+              isSelf={isSelf}
+              posts={blogPosts}
+              link={`/users/${username}/posts`}
+            />
+          </div>
         ),
       },
-      {
-        label: "Subscription Plans",
-        component: (
-          <ProfileSubscriptionEditor
-            onSubscriptionChanged={onSubscriptionChanged}
-            userId={userId}
-            imageUrl={imageUrl}
-            username={username}
-            subscription={subscription}
-            subscriptionPlans={subscriptionPlans}
-          />
-        ),
-      },
+      // {
+      //   label: "Subscription Plans",
+      //   component: (
+      //     <ProfileSubscriptionEditor
+      //       onSubscriptionChanged={onSubscriptionChanged}
+      //       userId={userId}
+      //       imageUrl={imageUrl}
+      //       username={username}
+      //       subscription={subscription}
+      //       subscriptionPlans={subscriptionPlans}
+      //     />
+      //   ),
+      // },
     ],
     [
       onSubscriptionChanged,
@@ -123,7 +132,7 @@ export const ProfileBody: FC<ProfileBodyProps> = ({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="grid max-w-2xl grid-cols-3 gap-2">
+      <div className="grid max-w-96 grid-cols-2 gap-2">
         {tabs.map((tab, i) => (
           <Button
             type={activeTab === i ? "primary" : "secondary"}

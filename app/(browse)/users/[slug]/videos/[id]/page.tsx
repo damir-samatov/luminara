@@ -1,9 +1,8 @@
 import { FC } from "react";
 import { onGetVideoPostByIdAsViewer } from "@/actions/video-post-viewer.actions";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { stringToColor } from "@/utils/style.utils";
 import { CommentsSection } from "@/components/CommentsSection";
+import { PostContentSection } from "@/components/PostContentSection";
 
 type VideoPostPageProps = {
   params: {
@@ -16,7 +15,8 @@ const VideoPostPage: FC<VideoPostPageProps> = async ({ params }) => {
 
   if (!res.success) return notFound();
 
-  const { title, body, videoUrl, thumbnailUrl, id } = res.data.videoPost;
+  const { title, body, videoUrl, thumbnailUrl, id, updatedAt } =
+    res.data.videoPost;
   const { username, imageUrl: userImageUrl } = res.data.user;
 
   return (
@@ -32,39 +32,15 @@ const VideoPostPage: FC<VideoPostPageProps> = async ({ params }) => {
               className="aspect-video w-full overflow-hidden rounded-xl bg-black object-contain"
             />
           </div>
-          <h2 className="text-lg lg:text-3xl">{title}</h2>
-          <Link
-            className="flex w-max items-end gap-2"
-            href={`/users/${username}`}
-          >
-            <img
-              className="h-12 w-12 rounded-full"
-              src={userImageUrl}
-              alt={username}
-              height={360}
-              width={360}
-              loading="eager"
-            />
-            <p className="text-lg">
-              <span
-                style={{
-                  color: stringToColor(username),
-                }}
-              >
-                @
-              </span>
-              <span>{username}</span>
-            </p>
-          </Link>
-          <div
-            className="hidden text-sm lg:block"
-            dangerouslySetInnerHTML={{ __html: body }}
+          <PostContentSection
+            title={title}
+            body={body}
+            updatedAt={updatedAt}
+            username={username}
+            userImageUrl={userImageUrl}
           />
         </div>
-
-        <div>
-          <CommentsSection comments={res.data.comments} postId={id} />
-        </div>
+        <CommentsSection comments={res.data.comments} postId={id} />
       </div>
     </>
   );
