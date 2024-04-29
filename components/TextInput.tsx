@@ -16,7 +16,7 @@ export const TextInput: FC<TextInputProps> = ({
   value,
   onChange,
   placeholder,
-  maxLength = 255,
+  maxLength = 200,
   className = "",
   onEnter,
   isDisabled = false,

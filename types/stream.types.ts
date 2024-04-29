@@ -20,11 +20,6 @@ export type StreamSettingsUpdateDto = {
   isChatEnabled: boolean;
 };
 
-export type StreamCredentialsUpdateDto = {
-  serverUrl: string;
-  streamKey: string;
-};
-
 export enum StreamUserRoles {
   MODERATOR = "MODERATOR",
   STREAMER = "STREAMER",
@@ -33,4 +28,5 @@ export enum StreamUserRoles {
 
 export enum StreamEvents {
   STREAM_ENDED = "STREAM_ENDED",
+  USER_BANNED = "USER_BANNED",
 }
