@@ -20,4 +20,5 @@ export type UserDto = {
   imageUrl: string;
   firstName: string;
   lastName: string;
+  createdAt: Date;
 };

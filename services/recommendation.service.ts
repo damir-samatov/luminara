@@ -1,11 +1,9 @@
 "use server";
-
 import { db } from "@/lib/db";
 
-export const getRecommendationsByUserId = async (userId: string) => {
+export const getRecommendedUsersByUserId = async (userId: string) => {
   try {
     return await db.user.findMany({
-      take: 20,
       where: {
         subscribedBy: {
           none: {
@@ -24,9 +22,17 @@ export const getRecommendationsByUserId = async (userId: string) => {
       orderBy: {
         createdAt: "desc",
       },
+      select: {
+        id: true,
+        username: true,
+        imageUrl: true,
+        firstName: true,
+        lastName: true,
+        createdAt: true,
+      },
     });
   } catch (error) {
-    console.error("getRecommendationsByUserId", error);
+    console.error("getRecommendedUsersByUserId", error);
     return null;
   }
 };

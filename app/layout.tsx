@@ -52,8 +52,8 @@ const RootLayout: FC<BrowseLayoutProps> = ({ children }) => {
         >
           {children}
           <ToastContainer
-            position="top-center"
-            autoClose={3000}
+            position="bottom-center"
+            autoClose={10000000}
             theme="dark"
             hideProgressBar
             newestOnTop

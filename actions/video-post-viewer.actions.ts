@@ -1,3 +1,4 @@
+"use server";
 import { ActionDataResponse } from "@/types/action.types";
 import { VideoPostDto } from "@/types/post.types";
 import { authSelf } from "@/services/auth.service";
@@ -161,6 +162,7 @@ export const onGetVideoPostByIdAsViewer: OnGetVideoPostById = async ({
           imageUrl: user.imageUrl,
           firstName: user.firstName,
           lastName: user.lastName,
+          createdAt: user.createdAt,
         },
       },
     };

@@ -3,18 +3,18 @@ import { getUserByUsername } from "@/services/user.service";
 import { authSelf } from "@/services/auth.service";
 import { getSubscription } from "@/services/subscription.service";
 import { getBan } from "@/services/ban.service";
-import { Subscription, User } from "@prisma/client";
+import { Subscription } from "@prisma/client";
 import { ActionDataResponse } from "@/types/action.types";
 import { ERROR_RESPONSES } from "@/configs/responses.config";
 import { getSubscriptionPlansByUserId } from "@/services/subscription-plan.service";
 import { getStreamByUserId } from "@/services/stream.service";
 import { SubscriptionPlanDto } from "@/types/subscription-plan.types";
 import { getSignedFileReadUrl } from "@/services/s3.service";
+import { UserDto } from "@/types/user.types";
 
 type OnGetProfileDataResponse = ActionDataResponse<{
-  user: User;
+  user: UserDto;
   isLive: boolean;
-  isSelf: boolean;
   subscription: Subscription | null;
   subscriptionPlans: SubscriptionPlanDto[];
 }>;
@@ -57,9 +57,15 @@ export const onGetProfileData = async (
     return {
       success: true,
       data: {
-        user,
+        user: {
+          id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          username: user.username,
+          imageUrl: user.imageUrl,
+          createdAt: user.createdAt,
+        },
         isLive: stream?.isLive || false,
-        isSelf: self.id === user.id,
         subscription,
         subscriptionPlans: subscriptionPlansWithImageUrls,
       },

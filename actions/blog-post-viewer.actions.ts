@@ -1,3 +1,4 @@
+"use server";
 import { ActionDataResponse } from "@/types/action.types";
 import { BlogPostDto } from "@/types/post.types";
 import { authSelf } from "@/services/auth.service";
@@ -152,6 +153,7 @@ export const onGetBlogPostByIdAsViewer: OnGetBlogPostById = async ({ id }) => {
           imageUrl: user.imageUrl,
           firstName: user.firstName,
           lastName: user.lastName,
+          createdAt: user.createdAt,
         },
       },
     };

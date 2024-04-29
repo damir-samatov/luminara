@@ -1,3 +1,4 @@
+"use server";
 import { db } from "@/lib/db";
 import { StreamCreateDto, StreamSettingsUpdateDto } from "@/types/stream.types";
 

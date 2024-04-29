@@ -9,6 +9,7 @@ import { SubscriptionPlanDto } from "@/types/subscription-plan.types";
 import { onGetBlogPostsByUsername } from "@/actions/blog-post-viewer.actions";
 import { onGetVideoPostsByUsername } from "@/actions/video-post-viewer.actions";
 import { toast } from "react-toastify";
+import { ProfileSubscriptionEditor } from "@/app/(browse)/users/[slug]/_components/ProfileSubscriptionEditor";
 
 type ProfileBodyProps = {
   isSelf: boolean;
@@ -103,19 +104,19 @@ export const ProfileBody: FC<ProfileBodyProps> = ({
           </div>
         ),
       },
-      // {
-      //   label: "Subscription Plans",
-      //   component: (
-      //     <ProfileSubscriptionEditor
-      //       onSubscriptionChanged={onSubscriptionChanged}
-      //       userId={userId}
-      //       imageUrl={imageUrl}
-      //       username={username}
-      //       subscription={subscription}
-      //       subscriptionPlans={subscriptionPlans}
-      //     />
-      //   ),
-      // },
+      {
+        label: "Subscription Plans",
+        component: (
+          <ProfileSubscriptionEditor
+            onSubscriptionChanged={onSubscriptionChanged}
+            userId={userId}
+            imageUrl={imageUrl}
+            username={username}
+            subscription={subscription}
+            subscriptionPlans={subscriptionPlans}
+          />
+        ),
+      },
     ],
     [
       onSubscriptionChanged,

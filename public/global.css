@@ -71,3 +71,7 @@ img, video {
   @apply cursor-not-allowed;
   @apply opacity-80;
 }
+
+.Toastify__toast {
+  @apply bg-gray-800 !important;
+}
