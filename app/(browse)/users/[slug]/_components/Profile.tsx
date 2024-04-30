@@ -7,7 +7,7 @@ import { Subscription } from "@prisma/client";
 import { SubscriptionPlanDto } from "@/types/subscription-plan.types";
 import { useGlobalContext } from "@/contexts/GlobalContext";
 import { BlogPostDto, VideoPostDto } from "@/types/post.types";
-import Image from "next/image";
+import { ProfileBanner } from "@/app/(browse)/users/[slug]/_components/ProfileBanner";
 
 type ProfileProps = {
   user: UserDto;
@@ -18,6 +18,9 @@ type ProfileProps = {
   blogPosts: BlogPostDto[];
   videoPostsTotalCount: number;
   blogPostsTotalCount: number;
+  coverImageUrl: string;
+  title: string;
+  body: string;
 };
 
 export const Profile: FC<ProfileProps> = ({
@@ -29,20 +32,20 @@ export const Profile: FC<ProfileProps> = ({
   videoPostsTotalCount,
   blogPosts,
   blogPostsTotalCount,
+  // title,
+  // body,
+  coverImageUrl,
 }) => {
   const { self } = useGlobalContext();
 
   return (
     <div className="min-h-screen">
-      <div className="aspect-[3/1] w-full md:aspect-[8/1]">
-        <Image
-          width={1920}
-          height={1080}
-          src={user.imageUrl}
-          alt={user.username}
-          className="aspect-[5/1] w-full object-cover"
-        />
-      </div>
+      <ProfileBanner
+        coverImageUrl={coverImageUrl}
+        fallbackImageUrl={user.imageUrl}
+        username={user.username}
+        isSelf={self.id === user.id}
+      />
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 p-4 pb-96">
         <ProfileHead
           isLive={isLive}

@@ -70,8 +70,8 @@ model Profile {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
   userId String @unique @db.ObjectId
 
-  title         String
-  description   String
+  title         String @default("")
+  body          String @default("<p></p>")
   coverImageKey String
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)

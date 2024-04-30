@@ -44,7 +44,7 @@ export const BlogPostImageEditor: FC<BlogPostImageEditorProps> = ({
         onProgress: setProgress,
       });
       if (!uploadRes)
-        return toast("Failed to upload the stream", {
+        return toast("Failed to upload the image", {
           type: "error",
         });
       setFile(null);
@@ -57,7 +57,7 @@ export const BlogPostImageEditor: FC<BlogPostImageEditorProps> = ({
       setIsLoading(false);
       setProgress(0);
     }
-  }, [file, isLoading]);
+  }, [file, isLoading, postId]);
 
   const onFileChange = (files: File[]) => {
     const file = files[0] || null;

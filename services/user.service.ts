@@ -50,6 +50,9 @@ export const getUserByUsername = async (username: string) => {
       where: {
         username,
       },
+      include: {
+        profile: true,
+      },
     });
   } catch (error) {
     console.error("getUserByUsername", error);

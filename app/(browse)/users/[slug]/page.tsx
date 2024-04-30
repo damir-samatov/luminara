@@ -33,6 +33,9 @@ const ProfilePage: FC<ProfilePageProps> = async ({ params }) => {
       videoPostsTotalCount={videoPostsRes.data.totalCount}
       blogPosts={blogPostsRes.data.blogPosts}
       blogPostsTotalCount={blogPostsRes.data.totalCount}
+      title={profileRes.data.profile.title}
+      body={profileRes.data.profile.body}
+      coverImageUrl={profileRes.data.profile.coverImageUrl}
     />
   );
 };

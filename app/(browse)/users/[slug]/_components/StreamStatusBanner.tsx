@@ -23,7 +23,7 @@ export const StreamStatusBanner: FC<StreamBannerProps> = ({
       <div className="flex w-full max-w-xl flex-col gap-4 rounded-lg border-2 border-gray-700 p-6">
         <Link
           className="mx-auto flex w-full max-w-max items-end gap-2"
-          href={`/users/${streamerUsername}`}
+          href={`/users/${streamerUsername}?x=${Date.now()}`}
         >
           <Image
             className="h-12 w-12 rounded-full"
