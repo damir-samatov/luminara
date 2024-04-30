@@ -1,6 +1,19 @@
 "use server";
 import { db } from "@/lib/db";
 
+export const getComment = async (id: string) => {
+  try {
+    return await db.comment.findUnique({
+      where: {
+        id,
+      },
+    });
+  } catch (error) {
+    console.error("getComment", error);
+    return null;
+  }
+};
+
 type CreateCommentProps = {
   userId: string;
   postId: string;

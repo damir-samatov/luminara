@@ -1,13 +1,12 @@
 "use client";
 import { CommentDto } from "@/types/comment.types";
 import { FC, useCallback, useState } from "react";
-import { stringToColor } from "@/utils/style.utils";
-import Link from "next/link";
 import { Button } from "@/components/Button";
 import { toast } from "react-toastify";
 import { onComment } from "@/actions/post-viewer.actions";
 import { Modal } from "@/components/Modal";
 import { TextInput } from "@/components/TextInput";
+import { CommentListItem } from "@/components/CommentListItem";
 
 type CommentsListProps = {
   comments: CommentDto[];
@@ -46,6 +45,10 @@ export const CommentsSection: FC<CommentsListProps> = ({
       setIsLoading(false);
     }
   }, [isLoading, postId, setIsLoading, setComments, commentText]);
+
+  const onCommentDeleted = useCallback((commentId: string) => {
+    setComments((prev) => prev.filter((c) => c.id !== commentId));
+  }, []);
 
   return (
     <>
@@ -89,6 +92,7 @@ export const CommentsSection: FC<CommentsListProps> = ({
           <Button
             type="secondary"
             className="ml-auto max-w-max"
+            isDisabled={isLoading}
             onClick={() => setIsModalOpen(true)}
           >
             <span className="text-xs">Leave a Comment</span>
@@ -96,34 +100,11 @@ export const CommentsSection: FC<CommentsListProps> = ({
         </div>
         <hr className="my-2 border-gray-600" />
         {comments.map((comment) => (
-          <div key={comment.id}>
-            <Link
-              className="flex items-end gap-2"
-              href={`/users/${comment.user.username}`}
-            >
-              <img
-                className="h-8 w-8 rounded-full"
-                src={comment.user.imageUrl}
-                alt={comment.user.username}
-              />
-              <p className="text-sm">
-                <span
-                  style={{
-                    color: stringToColor(comment.user.username),
-                  }}
-                >
-                  @
-                </span>
-                {comment.user.username}
-              </p>
-            </Link>
-            <p className="mt-4 whitespace-pre-wrap break-words text-xs">
-              {comment.body}
-            </p>
-            <p className="text-end text-xs text-gray-500">
-              {comment.createdAt.toDateString()}
-            </p>
-          </div>
+          <CommentListItem
+            key={comment.id}
+            comment={comment}
+            onDeleted={() => onCommentDeleted(comment.id)}
+          />
         ))}
       </div>
     </>

@@ -9,6 +9,7 @@ const CLASSNAME_MAP = {
   danger: "border-red-700 bg-transparent enabled:hover:bg-red-700",
   success: "border-green-700 bg-transparent enabled:hover:bg-green-700",
   transparent: "border-transparent bg-transparent enabled:hover:bg-gray-700",
+  blank: "",
 };
 
 type ButtonProps = {
@@ -33,7 +34,8 @@ export const Button: FC<ButtonProps> = ({
   return (
     <button
       className={classNames(
-        "block w-full rounded border-2 px-4 py-2 text-center text-xs font-semibold text-gray-100 md:text-sm",
+        type !== "blank" &&
+          "block w-full rounded border-2 px-4 py-2 text-center text-xs font-semibold text-gray-100 md:text-sm",
         isDisabled && "cursor-not-allowed text-gray-500",
         CLASSNAME_MAP[type],
         className

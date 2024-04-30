@@ -1,10 +1,17 @@
 "use server";
-import { ERROR_RESPONSES } from "@/configs/responses.config";
-import { ActionDataResponse } from "@/types/action.types";
+import { ERROR_RESPONSES, SUCCESS_RESPONSES } from "@/configs/responses.config";
+import {
+  ActionCombinedResponse,
+  ActionDataResponse,
+} from "@/types/action.types";
 import { authSelf } from "@/services/auth.service";
 import { getPostById } from "@/services/post.service";
 import { getSubscriptionWithPlan } from "@/services/subscription.service";
-import { createComment } from "@/services/comment.service";
+import {
+  createComment,
+  deleteComment,
+  getComment,
+} from "@/services/comment.service";
 import { CommentDto } from "@/types/comment.types";
 
 type OnComment = (props: { postId: string; body: string }) => Promise<
@@ -50,6 +57,30 @@ export const onComment: OnComment = async ({ postId, body }) => {
     };
   } catch (error) {
     console.error("onComment", error);
+    return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+  }
+};
+type OnDeleteCommentAsViewer = (
+  commentId: string
+) => Promise<ActionCombinedResponse>;
+export const onDeleteCommentAsViewer: OnDeleteCommentAsViewer = async (
+  commentId: string
+) => {
+  try {
+    const [self, comment] = await Promise.all([
+      authSelf(),
+      getComment(commentId),
+    ]);
+
+    if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
+    if (!comment) return ERROR_RESPONSES.NOT_FOUND;
+    if (comment.userId !== self.id) return ERROR_RESPONSES.UNAUTHORIZED;
+
+    const res = await deleteComment(commentId);
+    if (!res) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+    return SUCCESS_RESPONSES.SUCCESS;
+  } catch (error) {
+    console.error("onDeleteSelfComment", error);
     return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
   }
 };
