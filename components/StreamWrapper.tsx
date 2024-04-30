@@ -72,7 +72,9 @@ export const StreamWrapper: FC<StreamWrapperProps> = ({
           </div>
           <Button
             className="mx-auto max-w-60"
-            onClick={() => router.push(`/users/${streamerUsername}`)}
+            onClick={() =>
+              router.push(`/users/${streamerUsername}/${Date.now()}`)
+            }
           >
             Go Back
           </Button>
@@ -114,7 +116,9 @@ export const StreamWrapper: FC<StreamWrapperProps> = ({
           </div>
           <Button
             className="mx-auto max-w-60"
-            onClick={() => router.push(`/users/${streamerUsername}`)}
+            onClick={() =>
+              router.push(`/users/${streamerUsername}/${Date.now()}`)
+            }
           >
             Go Back
           </Button>

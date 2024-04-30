@@ -51,10 +51,10 @@ export const ProfileHead: FC<ProfileHeadProps> = ({
       {image}
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2">
-          <h1 className="text-xl">
+          <h2 className="text-xl">
             <span style={{ color: stringToColor(username) }}>@</span>
             {username}
-          </h1>
+          </h2>
           {isLive && (
             <button
               onClick={onStreamViewClick}

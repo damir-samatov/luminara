@@ -34,7 +34,7 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
         {SIDEBAR_LINKS.map(({ href, label, icon, activeOn }) => (
           <SidebarLink
             key={href}
-            href={href}
+            href={`${href}?x=${Date.now()}`}
             label={label}
             icon={icon}
             isActive={activeOn.indexOf(pathname) !== -1}
@@ -59,7 +59,7 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
         {STUDIO_LINKS.map(({ href, label, icon, activeOn }) => (
           <SidebarLink
             key={href}
-            href={href}
+            href={`${href}?x=${Date.now()}`}
             label={label}
             icon={icon}
             isActive={activeOn.indexOf(pathname) !== -1}

@@ -17,6 +17,7 @@ import { Button } from "@/components/Button";
 import { SubscriptionPlanSelector } from "@/components/SubscriptionPlanSelector";
 import { SubscriptionPlanDto } from "@/types/subscription-plan.types";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 type StreamEditorProps = {
   stream: Stream;
@@ -33,6 +34,7 @@ export const StreamEditor: FC<StreamEditorProps> = ({
   user,
   playbackUrl,
 }) => {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
   const [stream, setStream] = useState<Stream>(savedStream);
@@ -291,9 +293,19 @@ export const StreamEditor: FC<StreamEditorProps> = ({
           <p>Starting the stream will make it available for your audience</p>
 
           {stream.isLive && (
-            <Button type="secondary" onClick={onOpenModerationPage}>
-              Moderation Tab
-            </Button>
+            <>
+              <Button
+                type="secondary"
+                onClick={() =>
+                  router.push(`/users/${user.username}/stream?x=${Date.now()}`)
+                }
+              >
+                View Stream
+              </Button>
+              <Button type="secondary" onClick={onOpenModerationPage}>
+                Moderation Page
+              </Button>
+            </>
           )}
 
           <Button
