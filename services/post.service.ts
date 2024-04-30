@@ -165,7 +165,7 @@ export const getVideoPostsCountByUserId = async (userId: string) => {
     });
   } catch (error) {
     console.error("getVideoPostsCountByUserId", error);
-    return 0;
+    return null;
   }
 };
 
