@@ -5,11 +5,6 @@ export const getRecommendedUsersByUserId = async (userId: string) => {
   try {
     return await db.user.findMany({
       where: {
-        subscribedBy: {
-          none: {
-            subscriberId: userId,
-          },
-        },
         bannedUsers: {
           none: {
             bannedUserId: userId,

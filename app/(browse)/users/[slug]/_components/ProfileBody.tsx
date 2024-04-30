@@ -124,7 +124,6 @@ export const ProfileBody: FC<ProfileBodyProps> = ({
           </div>
         ),
       },
-
       {
         label: "Subscription",
         component: (

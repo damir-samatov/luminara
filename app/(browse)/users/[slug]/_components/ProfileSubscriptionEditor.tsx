@@ -6,9 +6,11 @@ import {
 } from "@/actions/subscription.actions";
 import { Subscription } from "@prisma/client";
 import { Button } from "@/components/Button";
-import { SubscriptionPlanSelector } from "@/components/SubscriptionPlanSelector";
 import { SubscriptionPlanDto } from "@/types/subscription-plan.types";
 import { toast } from "react-toastify";
+import { useGlobalContext } from "@/contexts/GlobalContext";
+import { PencilIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
 
 type ProfileSubscriptionPLanProps = {
   userId: string;
@@ -27,6 +29,7 @@ export const ProfileSubscriptionEditor: FC<ProfileSubscriptionPLanProps> = ({
   subscriptionPlans,
   onSubscriptionChanged,
 }) => {
+  const { self } = useGlobalContext();
   const [isLoading, setIsLoading] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState<boolean>(!!subscription);
   const [activeSubscriptionPlan, setActiveSubscriptionPlan] = useState(
@@ -106,34 +109,120 @@ export const ProfileSubscriptionEditor: FC<ProfileSubscriptionPLanProps> = ({
     [subscription, onSubscriptionChanged]
   );
 
+  const isSelf = self.id === userId;
+
   return (
-    <div className="mx-auto flex max-w-52 flex-col gap-4">
-      {isSubscribed && (
-        <SubscriptionPlanSelector
-          freeFollowerImageUrl={imageUrl}
-          subscriptionPlans={subscriptionPlans}
-          activeSubscriptionPlan={activeSubscriptionPlan}
-          onChange={onSubscriptionPlanChange}
-        />
-      )}
-      {!isSubscribed ? (
+    <div className="mx-auto flex max-w-4xl flex-col gap-4">
+      {!isSelf && (
         <Button
           isLoading={isLoading}
           isDisabled={isLoading}
+          className="mx-auto w-full max-w-80"
           loadingText="Subscribing..."
-          onClick={onSubscribeClick}
+          onClick={isSubscribed ? onUnsubscribeClick : onSubscribeClick}
         >
-          Subscribe
+          {isSubscribed ? `Unfollow @${username}` : `Follow @${username}`}
         </Button>
-      ) : (
-        <Button
-          isLoading={isLoading}
-          isDisabled={isLoading}
-          loadingText="Unsubscribing..."
-          onClick={onUnsubscribeClick}
-        >
-          Unsubscribe
-        </Button>
+      )}
+      {(isSubscribed || isSelf) && (
+        <>
+          <div className="grid grid-cols-4 gap-4 rounded-lg bg-gray-900 p-4">
+            <div className="col-span-1 aspect-square overflow-hidden rounded">
+              <img
+                src={imageUrl}
+                alt="Follower"
+                width={640}
+                height={640}
+                className="rounded-lg object-contain"
+                loading="eager"
+              />
+            </div>
+            <div className="col-span-3 flex flex-col gap-4">
+              <p className="text-xl">Follower</p>
+              <p className="text-xl">Free</p>
+              {!isSelf && (
+                <div className="ml-auto mt-auto">
+                  {!activeSubscriptionPlan ? (
+                    <p className="font-semibold text-gray-200">Active Plan</p>
+                  ) : (
+                    <Button
+                      isLoading={isLoading}
+                      isDisabled={isLoading}
+                      type="secondary"
+                      onClick={() => onSubscriptionPlanChange(null)}
+                    >
+                      Downgrade Plan
+                    </Button>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+          {subscriptionPlans
+            .sort((a, b) => a.price - b.price)
+            .map((subscriptionPlan) => (
+              <div
+                key={subscriptionPlan.id}
+                className="grid grid-cols-4 gap-4 rounded-lg bg-gray-900 p-4"
+              >
+                {subscriptionPlan.imageUrl && (
+                  <div className="col-span-1 aspect-square overflow-hidden rounded">
+                    <img
+                      src={subscriptionPlan.imageUrl}
+                      alt={subscriptionPlan.title}
+                      width={640}
+                      height={640}
+                      className="rounded-lg object-contain"
+                      loading="eager"
+                    />
+                  </div>
+                )}
+                <div className="col-span-3 flex flex-col gap-4">
+                  <p className="text-xl">{subscriptionPlan.title}</p>
+                  <p className="text-xl">{subscriptionPlan.price}$</p>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: subscriptionPlan.description,
+                    }}
+                  />
+                  {isSelf ? (
+                    <div className="ml-auto mt-auto">
+                      <Link
+                        href={`/subscription-plans/${subscriptionPlan.id}`}
+                        className="ml-auto flex w-full items-center justify-center gap-2 rounded border-2 border-gray-700 bg-transparent px-2 py-2 text-center text-xs font-semibold text-gray-100 hover:border-gray-600 hover:bg-gray-600 md:px-4 md:text-sm"
+                      >
+                        <PencilIcon className="h-3 w-3" />
+                        <span>Edit</span>
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="ml-auto mt-auto">
+                      {activeSubscriptionPlan &&
+                      activeSubscriptionPlan.id === subscriptionPlan.id ? (
+                        <p className="font-semibold text-gray-200">
+                          Active Plan
+                        </p>
+                      ) : (
+                        <Button
+                          isLoading={isLoading}
+                          isDisabled={isLoading}
+                          type="secondary"
+                          onClick={() =>
+                            onSubscriptionPlanChange(subscriptionPlan)
+                          }
+                        >
+                          {subscriptionPlan.price >
+                          (activeSubscriptionPlan?.price || 0)
+                            ? "Upgrade Plan"
+                            : "Downgrade Plan"}
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+        </>
       )}
     </div>
   );
