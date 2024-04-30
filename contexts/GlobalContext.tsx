@@ -9,13 +9,9 @@ import {
   useState,
   useContext,
 } from "react";
-import { onGetSubscriptions } from "@/actions/subscription.actions";
 import { User } from "@prisma/client";
 
 type GlobalContext = {
-  subscriptions: SubscriptionWithUser[];
-  setSubscriptions: Dispatch<SetStateAction<SubscriptionWithUser[]>>;
-  refresh: () => void;
   self: User;
   setSelf: Dispatch<SetStateAction<User>>;
 };
@@ -31,10 +27,7 @@ const GlobalContext = createContext<GlobalContext>({
     createdAt: new Date(),
     updatedAt: new Date(),
   },
-  subscriptions: [],
-  setSubscriptions: () => {},
   setSelf: () => {},
-  refresh: () => {},
 });
 
 type GlobalContextProviderProps = {
@@ -44,28 +37,16 @@ type GlobalContextProviderProps = {
 };
 
 export const GlobalContextProvider: FC<GlobalContextProviderProps> = ({
-  subscriptions: savedSubscriptions,
   self: savedSelf,
   children,
 }) => {
   const [self, setSelf] = useState<User>(savedSelf);
-  const [subscriptions, setSubscriptions] =
-    useState<SubscriptionWithUser[]>(savedSubscriptions);
-
-  const refresh = async () => {
-    const res = await onGetSubscriptions();
-    if (!res.success) return;
-    setSubscriptions(res.data.subscriptions);
-  };
 
   return (
     <GlobalContext.Provider
       value={{
         self,
-        subscriptions,
-        setSubscriptions,
         setSelf,
-        refresh,
       }}
     >
       {children}
