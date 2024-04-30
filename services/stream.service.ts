@@ -39,6 +39,7 @@ export const getStreamByUsername = async (username: string) => {
       },
       include: {
         user: true,
+        subscriptionPlan: true,
       },
     });
   } catch (error) {

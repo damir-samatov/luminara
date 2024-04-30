@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { FC } from "react";
 import { onGetStreamWatchData } from "@/actions/stream-viewer.actions";
+import { StreamStatusBanner } from "@/app/(browse)/users/[slug]/_components/StreamStatusBanner";
 import { StreamWrapper } from "@/components/StreamWrapper";
 
 type LiveStreamPageProps = {
@@ -21,7 +22,27 @@ const StreamPage: FC<LiveStreamPageProps> = async ({ params }) => {
       streamerImageUrl,
       streamerUsername,
       isChatEnabled,
+      isLive,
+      hasAccess,
     } = res.data;
+
+    if (!isLive)
+      return (
+        <StreamStatusBanner
+          streamerImageUrl={streamerImageUrl}
+          streamerUsername={streamerUsername}
+          text="Stream is not Live"
+        />
+      );
+
+    if (!hasAccess)
+      return (
+        <StreamStatusBanner
+          streamerImageUrl={streamerImageUrl}
+          streamerUsername={streamerUsername}
+          text="You don't have access to view this Stream!"
+        />
+      );
 
     return (
       <StreamWrapper

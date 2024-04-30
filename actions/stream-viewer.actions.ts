@@ -54,6 +54,8 @@ type OnGetStreamDataAsViewerResponse = ActionDataResponse<{
   streamerUsername: string;
   streamerImageUrl: string;
   isChatEnabled: boolean;
+  isLive: boolean;
+  hasAccess: boolean;
 }>;
 
 export const onGetStreamWatchData = async (
@@ -64,14 +66,40 @@ export const onGetStreamWatchData = async (
     if (!self) return ERROR_RESPONSES.UNAUTHORIZED;
 
     const stream = await getStreamByUsername(streamerUsername);
-    if (!stream || !stream.isLive) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+    if (!stream) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
+
+    const data = {
+      isLive: true,
+      hasAccess: true,
+      playbackUrl: "",
+      thumbnailUrl: "",
+      title: stream.title,
+      description: stream.description,
+      streamerImageUrl: stream.user.imageUrl,
+      streamerUsername: stream.user.username,
+      isChatEnabled: stream.isChatEnabled,
+    };
+
+    if (!stream.isLive) {
+      data.isLive = false;
+      return {
+        success: true,
+        data,
+      };
+    }
 
     const hasAccess = await hasRequiredSubscriptionPlan({
       userId: self.id,
       requiredSubscriptionPlanId: stream.subscriptionPlanId,
     });
 
-    if (!hasAccess) return ERROR_RESPONSES.FORBIDDEN;
+    if (!hasAccess) {
+      data.hasAccess = false;
+      return {
+        success: true,
+        data,
+      };
+    }
 
     const [viewerToken, thumbnailUrl] = await Promise.all([
       getIvsViewerToken(stream.channelArn),
@@ -80,17 +108,12 @@ export const onGetStreamWatchData = async (
 
     if (!viewerToken) return ERROR_RESPONSES.SOMETHING_WENT_WRONG;
 
+    data.playbackUrl = `${stream.playbackUrl}?token=${viewerToken}`;
+    data.thumbnailUrl = thumbnailUrl;
+
     return {
       success: true,
-      data: {
-        title: stream.title,
-        description: stream.description,
-        playbackUrl: `${stream.playbackUrl}?token=${viewerToken}`,
-        thumbnailUrl: thumbnailUrl,
-        streamerImageUrl: stream.user.imageUrl,
-        streamerUsername: stream.user.username,
-        isChatEnabled: stream.isChatEnabled,
-      },
+      data,
     };
   } catch (error) {
     console.error("onGetStreamWatchData", error);
