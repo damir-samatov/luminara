@@ -1,9 +1,10 @@
 "use client";
-import { FC, useCallback, useMemo } from "react";
+import { FC, useCallback } from "react";
 import { classNames, stringToColor } from "@/utils/style.utils";
 import { useGlobalContext } from "@/contexts/GlobalContext";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/Button";
+import Image from "next/image";
 
 type ProfileHeadProps = {
   isLive: boolean;
@@ -26,11 +27,15 @@ export const ProfileHead: FC<ProfileHeadProps> = ({
   const router = useRouter();
   const { self } = useGlobalContext();
 
-  const image = useMemo(
-    () => (
-      <img
-        width={200}
-        height={200}
+  const onStreamViewClick = useCallback(() => {
+    router.push(`/users/${username}/stream?x=${Date.now()}`);
+  }, [router, username]);
+
+  return (
+    <div className="flex items-end gap-4">
+      <Image
+        width={240}
+        height={240}
         src={avatarUrl}
         alt={username}
         className={classNames(
@@ -38,17 +43,6 @@ export const ProfileHead: FC<ProfileHeadProps> = ({
           isLive ? "border-red-700" : "border-transparent"
         )}
       />
-    ),
-    [avatarUrl, isLive, username]
-  );
-
-  const onStreamViewClick = useCallback(() => {
-    router.push(`/users/${username}/stream?x=${Date.now()}`);
-  }, [router, username]);
-
-  return (
-    <div className="flex items-end gap-4">
-      {image}
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2">
           <h2 className="text-xl">

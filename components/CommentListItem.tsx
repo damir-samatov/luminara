@@ -6,6 +6,7 @@ import { onDeleteCommentAsViewer } from "@/actions/post-viewer.actions";
 import { toast } from "react-toastify";
 import { useGlobalContext } from "@/contexts/GlobalContext";
 import { Button } from "@/components/Button";
+import Image from "next/image";
 
 type CommentListItemProps = {
   comment: CommentDto;
@@ -43,7 +44,9 @@ export const CommentListItem: FC<CommentListItemProps> = ({
           className="flex items-end gap-2"
           href={`/users/${comment.user.username}`}
         >
-          <img
+          <Image
+            width={120}
+            height={120}
             className="h-8 w-8 rounded-full"
             src={comment.user.imageUrl}
             alt={comment.user.username}

@@ -24,8 +24,8 @@ const UserCard: FC<UserCardProps> = ({ username, imageUrl, date }) => {
         href={`/users/${username}`}
       >
         <Image
-          height={100}
-          width={100}
+          height={240}
+          width={240}
           src={imageUrl}
           alt={username}
           className="h-24 w-24 rounded-full"

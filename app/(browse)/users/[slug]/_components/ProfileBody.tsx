@@ -119,6 +119,8 @@ export const ProfileBody: FC<ProfileBodyProps> = ({
       },
     ],
     [
+      blogPostsTotalCount,
+      videoPostsTotalCount,
       onSubscriptionChanged,
       subscription,
       isSelf,

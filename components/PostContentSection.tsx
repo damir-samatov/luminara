@@ -2,6 +2,7 @@ import { FC } from "react";
 import Link from "next/link";
 import { stringToColor } from "@/utils/style.utils";
 import { PencilIcon } from "@heroicons/react/24/outline";
+import Image from "next/image";
 
 type PostContentSectionProps = {
   title: string;
@@ -29,7 +30,7 @@ export const PostContentSection: FC<PostContentSectionProps> = ({
             className="flex w-max items-end gap-2"
             href={`/users/${username}`}
           >
-            <img
+            <Image
               className="h-12 w-12 rounded-full"
               src={userImageUrl}
               alt={username}

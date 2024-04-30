@@ -7,6 +7,7 @@ import { Subscription } from "@prisma/client";
 import { SubscriptionPlanDto } from "@/types/subscription-plan.types";
 import { useGlobalContext } from "@/contexts/GlobalContext";
 import { BlogPostDto, VideoPostDto } from "@/types/post.types";
+import Image from "next/image";
 
 type ProfileProps = {
   user: UserDto;
@@ -34,7 +35,7 @@ export const Profile: FC<ProfileProps> = ({
   return (
     <div className="min-h-screen">
       <div className="aspect-[3/1] w-full md:aspect-[8/1]">
-        <img
+        <Image
           width={1920}
           height={1080}
           src={user.imageUrl}
