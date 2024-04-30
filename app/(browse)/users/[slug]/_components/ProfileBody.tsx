@@ -10,6 +10,7 @@ import { onGetBlogPostsByUsername } from "@/actions/blog-post-viewer.actions";
 import { onGetVideoPostsByUsername } from "@/actions/video-post-viewer.actions";
 import { toast } from "react-toastify";
 import { ProfileSubscriptionEditor } from "@/app/(browse)/users/[slug]/_components/ProfileSubscriptionEditor";
+import { ProfileAbout } from "@/app/(browse)/users/[slug]/_components/ProfileAbout";
 
 type ProfileBodyProps = {
   isSelf: boolean;
@@ -22,9 +23,13 @@ type ProfileBodyProps = {
   subscription: Subscription | null;
   videoPostsTotalCount: number;
   blogPostsTotalCount: number;
+  title: string;
+  body: string;
 };
 
 export const ProfileBody: FC<ProfileBodyProps> = ({
+  title: savedtitle,
+  body: savedBody,
   isSelf,
   username,
   imageUrl,
@@ -36,6 +41,10 @@ export const ProfileBody: FC<ProfileBodyProps> = ({
   videoPostsTotalCount,
   blogPostsTotalCount,
 }) => {
+  const [content, setContent] = useState({
+    title: savedtitle,
+    body: savedBody,
+  });
   const [activeTab, setActiveTab] = useState(0);
   const [videoPosts, setVideoPosts] = useState(savedVideoPosts);
   const [blogPosts, setBlogPosts] = useState(savedBlogPosts);
@@ -71,6 +80,17 @@ export const ProfileBody: FC<ProfileBodyProps> = ({
   const tabs = useMemo(
     () => [
       {
+        label: "About",
+        component: (
+          <ProfileAbout
+            title={content.title || username}
+            body={content.body}
+            isSelf={isSelf}
+            onContentChanged={setContent}
+          />
+        ),
+      },
+      {
         label: "Videos",
         component: (
           <div className="flex flex-col gap-6">
@@ -104,8 +124,9 @@ export const ProfileBody: FC<ProfileBodyProps> = ({
           </div>
         ),
       },
+
       {
-        label: "Subscription Plans",
+        label: "Subscription",
         component: (
           <ProfileSubscriptionEditor
             onSubscriptionChanged={onSubscriptionChanged}
@@ -130,12 +151,13 @@ export const ProfileBody: FC<ProfileBodyProps> = ({
       imageUrl,
       userId,
       subscriptionPlans,
+      content,
     ]
   );
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="grid max-w-96 grid-cols-2 gap-2">
+    <div className="flex flex-col gap-8">
+      <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
         {tabs.map((tab, i) => (
           <Button
             type={activeTab === i ? "primary" : "secondary"}
@@ -146,6 +168,7 @@ export const ProfileBody: FC<ProfileBodyProps> = ({
           </Button>
         ))}
       </div>
+      <hr className="border-gray-600" />
       <div>{tabs[activeTab]?.component}</div>
     </div>
   );

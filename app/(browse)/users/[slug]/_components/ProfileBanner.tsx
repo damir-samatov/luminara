@@ -71,7 +71,7 @@ export const ProfileBanner: FC<ProfileBannerProps> = ({
 
   return (
     <>
-      <div className="relative aspect-[3/1] w-full md:aspect-[8/1]">
+      <div className="relative aspect-[3/1] w-full md:aspect-[6/1]">
         <img
           width={1920}
           height={1080}

@@ -32,8 +32,8 @@ export const Profile: FC<ProfileProps> = ({
   videoPostsTotalCount,
   blogPosts,
   blogPostsTotalCount,
-  // title,
-  // body,
+  title,
+  body,
   coverImageUrl,
 }) => {
   const { self } = useGlobalContext();
@@ -46,7 +46,7 @@ export const Profile: FC<ProfileProps> = ({
         username={user.username}
         isSelf={self.id === user.id}
       />
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 p-4 pb-96">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 p-4 pb-96">
         <ProfileHead
           isLive={isLive}
           userId={user.id}
@@ -56,10 +56,9 @@ export const Profile: FC<ProfileProps> = ({
           avatarUrl={user.imageUrl}
           posterUrl={user.imageUrl}
         />
-
-        <hr className="border-gray-600" />
-
         <ProfileBody
+          title={title}
+          body={body}
           isSelf={self?.id === user.id}
           userId={user.id}
           imageUrl={user.imageUrl}

@@ -62,8 +62,6 @@ export const PostContentEditor: FC<PostContentEditorProps> = ({
     setForceUpdate((prev) => prev + 1);
   };
 
-  console.log({ changeDetected, prevState, content });
-
   return (
     <div className="flex flex-col gap-2 rounded-lg border-2 border-gray-700 p-4 text-gray-300">
       <p>Title</p>
