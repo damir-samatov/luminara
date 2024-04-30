@@ -65,7 +65,7 @@ export const onChangeSubscriptionPlan: OnChangeSubscriptionPlan = async ({
 
 type OnSubscribe = (
   userId: string
-) => Promise<ActionDataResponse<{ subscription: Subscription }>>;
+) => Promise<ActionDataResponse<{ subscription: SubscriptionWithUser }>>;
 
 export const onSubscribe: OnSubscribe = async (userId) => {
   try {

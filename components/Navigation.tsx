@@ -21,7 +21,7 @@ type NavigationProps = {
 
 export const Navigation: FC<NavigationProps> = ({ children }) => {
   const pathname = usePathname();
-  const { self } = useGlobalContext();
+  const { subscriptions, self } = useGlobalContext();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
@@ -66,10 +66,27 @@ export const Navigation: FC<NavigationProps> = ({ children }) => {
           />
         ))}
 
-        <hr className="my-2 border-gray-600" />
+        {subscriptions.length > 0 && (
+          <>
+            <hr className="my-2 border-gray-600" />
+            <p className="p-2 text-sm font-semibold leading-6 text-gray-400">
+              Recent Subscriptions:
+            </p>
+          </>
+        )}
+        {subscriptions.map((subscription) => (
+          <UserProfileLink
+            isActive={pathname
+              .split("/")
+              .some((route) => route === subscription.user.username)}
+            key={subscription.user.id}
+            imageUrl={subscription.user.imageUrl}
+            username={subscription.user.username}
+          />
+        ))}
       </nav>
     ),
-    [pathname, self]
+    [subscriptions, pathname, self]
   );
 
   const siderbarTop = useMemo(

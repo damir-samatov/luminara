@@ -29,7 +29,7 @@ export const ProfileSubscriptionEditor: FC<ProfileSubscriptionPLanProps> = ({
   subscriptionPlans,
   onSubscriptionChanged,
 }) => {
-  const { self } = useGlobalContext();
+  const { self, setSubscriptions } = useGlobalContext();
   const [isLoading, setIsLoading] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState<boolean>(!!subscription);
   const [activeSubscriptionPlan, setActiveSubscriptionPlan] = useState(
@@ -48,6 +48,7 @@ export const ProfileSubscriptionEditor: FC<ProfileSubscriptionPLanProps> = ({
       toast(`Subscribed to @${username}`, { type: "success" });
       setIsSubscribed(true);
       onSubscriptionChanged(res.data.subscription);
+      setSubscriptions((prev) => [...prev, res.data.subscription]);
     } catch (error) {
       console.error(error);
       toast("Something went wrong", { type: "error" });
@@ -64,6 +65,7 @@ export const ProfileSubscriptionEditor: FC<ProfileSubscriptionPLanProps> = ({
       toast(`Unsubscribed from @${username}`, { type: "success" });
       setIsSubscribed(false);
       onSubscriptionChanged(null);
+      setSubscriptions((prev) => prev.filter((sub) => sub.userId !== userId));
     } catch (error) {
       console.error(error);
       toast("Something went wrong", { type: "error" });
@@ -188,7 +190,9 @@ export const ProfileSubscriptionEditor: FC<ProfileSubscriptionPLanProps> = ({
                   {isSelf ? (
                     <div className="ml-auto mt-auto">
                       <Link
-                        href={`/subscription-plans/${subscriptionPlan.id}`}
+                        href={`/subscription-plans/${
+                          subscriptionPlan.id
+                        }?x=${Date.now()}`}
                         className="ml-auto flex w-full items-center justify-center gap-2 rounded border-2 border-gray-700 bg-transparent px-2 py-2 text-center text-xs font-semibold text-gray-100 hover:border-gray-600 hover:bg-gray-600 md:px-4 md:text-sm"
                       >
                         <PencilIcon className="h-3 w-3" />

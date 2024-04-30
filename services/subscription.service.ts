@@ -63,6 +63,9 @@ export const createSubscription = async (
         userId,
         subscriberId,
       },
+      include: {
+        user: true,
+      },
     });
   } catch (error) {
     console.error("createSubscription", error);
