@@ -92,7 +92,7 @@ export const ProfileBody: FC<ProfileBodyProps> = ({
       },
       {
         label: "Videos",
-        component: (
+        component: subscription ? (
           <div className="flex flex-col gap-6">
             <p className="text-lg">
               You have access to {videoPosts.length} out of{" "}
@@ -105,11 +105,15 @@ export const ProfileBody: FC<ProfileBodyProps> = ({
               link={`/users/${username}/videos`}
             />
           </div>
+        ) : (
+          <p className="mt-6 text-center text-2xl">
+            You have to follow the user to view the Videos
+          </p>
         ),
       },
       {
         label: "Posts",
-        component: (
+        component: subscription ? (
           <div className="flex flex-col gap-6">
             <p className="text-lg">
               You have access to {blogPosts.length} out of {blogPostsTotalCount}{" "}
@@ -122,6 +126,10 @@ export const ProfileBody: FC<ProfileBodyProps> = ({
               link={`/users/${username}/posts`}
             />
           </div>
+        ) : (
+          <p className="mt-6 text-center text-2xl">
+            You have to follow the user to view the Posts
+          </p>
         ),
       },
       {

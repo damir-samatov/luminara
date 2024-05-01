@@ -49,7 +49,7 @@ export const onGetVideoPostsByUsername: OnGetBlogPostsByUserId = async ({
           success: true,
           data: {
             videoPosts: [],
-            totalCount: 0,
+            totalCount,
           },
         };
 
