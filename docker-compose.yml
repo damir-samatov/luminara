@@ -1,0 +1,15 @@
+services:
+  next:
+    build: .
+    ports:
+      - "3000:3000"
+    develop:
+      watch:
+        - action: sync
+          path: ./
+          target: /app
+        - action: sync+restart
+          path: ./package.json
+          target: /app/package.json
+    env_file:
+      - ./.env

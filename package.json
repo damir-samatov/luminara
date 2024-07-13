@@ -1,9 +1,10 @@
 {
-  "name": "my-app",
+  "name": "luminara",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "docker-dev": "yarn && yarn dev",
     "build": "prisma generate && next build",
     "start": "next start",
     "format": "prettier --write --ignore-unknown .",
