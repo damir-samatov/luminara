@@ -5,11 +5,17 @@ services:
       - "3000:3000"
     develop:
       watch:
-        - action: sync
-          path: ./
+        - path: .
+          action: sync
           target: /app
-        - action: sync+restart
-          path: ./package.json
+        - path: ./package.json
           target: /app/package.json
+          action: sync+restart
+        - path: ./yarn.lock
+          target: /app/yarn.lock
+          action: sync+restart
+        - path: ./next.config.js
+          target: /app/next.config.js
+          action: sync+restart
     env_file:
       - ./.env
